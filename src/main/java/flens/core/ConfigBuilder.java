@@ -31,23 +31,29 @@ public class ConfigBuilder {
 	}
 	
 	private void construct() {
-		load((Map)config.get("inputs"));
-		load((Map)config.get("outputs"));
-		if(config.containsKey("filter")){
-			load((Map)config.get("filter"));
-		}
+		load((Map)config.remove("input"));
+		load((Map)config.remove("output"));
+		load((Map)config.remove("filter"));
 	}
 
 	private void load(Map map) {
+		if(map == null)
+			return;
+		
 		for (Object entry : map.keySet()) {
 			Config c = pluginRepo.get((String) entry);
-			c.readConfigPart(map.get(entry), engine);
+			if(c==null){
+				engine = null;
+				throw new IllegalArgumentException("plugin not found: " + entry);
+			}
+				
+			c.readConfigPart((String) entry,(Map<String, Object>) map.get(entry), engine);
 		}
 		
 	}
 
 	private void loadPlugins() {
-		this.pluginRepo = new PluginRepo(getClass().getResourceAsStream("plugins.json"));
+		this.pluginRepo = new PluginRepo(getClass().getResourceAsStream("/plugins.json"));
 	}
 
 }

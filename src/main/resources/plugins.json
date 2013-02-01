@@ -1,7 +1,7 @@
 {
- "system-in" : "flens.config.SystemIn"
- "self" : "flens.config.Self"
- "system-out" : "flens.config.SystemOut"
- "tsdb" : "flens.config.tsdb"
+ "system-in" : "flens.config.SystemIn",
+ "self" : "flens.config.Self",
+ "system-out" : "flens.config.SystemOut",
+ "tsdb-in" : "flens.config.OpenTsdbIn"
 }
  

@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.concurrent.BlockingQueue;
 
 import flens.core.Record;
+import flens.core.Tagger;
 
 public class StreamOutPump implements Runnable {
 
@@ -12,6 +13,7 @@ public class StreamOutPump implements Runnable {
 	private Thread worker;
 	private volatile boolean running;
 	private String name;
+	
 
 	public StreamOutPump(BlockingQueue<Record> queue, PrintStream out,String name) {
 		this.q = queue;

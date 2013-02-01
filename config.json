@@ -4,16 +4,16 @@
  			"name" : "in",
  			"type" : "log",
  			"add-tag" : "raw"
- 		}
+ 		},
  		
- 		"tsdb" : {
+ 		"tsdb-in" : {
  			"name" : "tsdb",
- 			"host" : "0.0.0.0",
  			"port" : "4242",
  			"type" : "metric"
- 		}
+ 		},
  		
  		"self" : {
+ 			"interval":1000,
  			"name" : "self",
  			"type" : "metric",
  			"add-tag" : "raw"
@@ -23,7 +23,7 @@
  	"output" : {
  		"system-out" : {
  			"name" : "out",
- 			"type" : "metric",
+ 			"type" : "metric"
  		}
  	}
  		 

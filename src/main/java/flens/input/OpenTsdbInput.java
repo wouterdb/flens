@@ -14,11 +14,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import flens.core.Record;
+import flens.core.Tagger;
 
 public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 
-	private static final int port = 4242;
-	private String type = "opentsdb";
+	private int port = 4242;
+
+	public OpenTsdbInput(String name, Tagger tagger, int port) {
+		super(name,tagger);
+		this.port = port;
+	}
 
 	@Override
 	protected ServerSocket makeListener() throws IOException {
@@ -64,8 +69,8 @@ public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 			tags.put("metric", metricName);
 			tags.put("value", metric);
 			
-			Record r = new Record(type,time,host,tags);
-			this.in.add(r);
+			Record r = new Record("tsdb-in",time,host,tags);
+			dispatch(r);
 		} catch (NoSuchElementException e) {
 			warn("line too short", line);
 		}

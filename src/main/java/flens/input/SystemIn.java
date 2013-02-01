@@ -9,10 +9,15 @@ import java.util.logging.Logger;
 
 import flens.core.Input;
 import flens.core.Record;
+import flens.core.Tagger;
 
 public class SystemIn extends AbstractInput {
 
 	private BufferedReader inr;
+
+	public SystemIn(String name,Tagger tagger) {
+		super(name,tagger);
+	}
 
 	public void start() {
 		this.inr = new BufferedReader(new InputStreamReader(System.in));

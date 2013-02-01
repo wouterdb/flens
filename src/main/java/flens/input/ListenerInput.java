@@ -11,10 +11,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import flens.core.Tagger;
+
 public abstract class ListenerInput<T> extends AbstractInput {
 
 	private ServerSocket listener;
 	private List<Handler> handlers = new LinkedList<Handler>();
+
+	public ListenerInput(String name,Tagger tagger) {
+		super(name,tagger);
+	}
 
 	@Override
 	public void start() {
