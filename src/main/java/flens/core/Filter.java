@@ -13,6 +13,8 @@ public interface Filter extends Plugin {
 	 * each record is passed along all filters in order
 	 * new records go back to the start of the pipe. 
 	 * 
+	 * if the type of in is set to null, in is discarded
+	 * 
 	 * @param in
 	 * @return
 	 */

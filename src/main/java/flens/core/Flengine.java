@@ -31,11 +31,14 @@ public class Flengine {
 			while (!newrecords.isEmpty()) {
 				Record current = newrecords.remove();
 				for (Filter f : filters) {
-					if (f.getMatcher().matches(current))
+					if (f.getMatcher().matches(current)) {
 						newrecords.addAll(f.process(current));
+						if (current.getType() == null)
+							break;
+					}
 				}
-
-				dispatch(current);
+				if (current.getType() != null)
+					dispatch(current);
 
 				i++;
 				// FIXME make configurable
@@ -258,14 +261,14 @@ public class Flengine {
 		}
 	}
 
-	
 	public void report(Record out) {
-		
-		Map<String,Object> values = out.getValues();
-		
+
+		Map<String, Object> values = out.getValues();
+
 		values.put("q-in-size", executor.getQueue().size());
-		for(Output o:outputs){
-			values.put(String.format("q-%s-size",o.getName()),o.getOutputQueue().size());
+		for (Output o : outputs) {
+			values.put(String.format("q-%s-size", o.getName()), o
+					.getOutputQueue().size());
 		}
 		values.put("exec-threads-active", executor.getActiveCount());
 		values.put("exec-threads-live", executor.getPoolSize());

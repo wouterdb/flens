@@ -16,7 +16,15 @@
  			"interval":1000,
  			"name" : "self",
  			"type" : "metric",
- 			"add-tag" : "raw"
+ 			"add-tag" : ["raw","packed"]
+ 		}
+ 	},
+ 	
+ 	"filter" : {
+ 		"unpacker" : {
+ 			"type" : "metric",
+ 			"tags" : ["packed"],
+ 			"remove-tag" : ["packed"]
  		}
  	},
  	

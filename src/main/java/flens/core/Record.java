@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+
 public class Record {
 
 	private String source;
@@ -38,13 +40,23 @@ public class Record {
 	}
 
 	public Record(String type, long timestamp, String host,
-			Map<String, Object> tags) {
+			Map<String, Object> values) {
 		super();
 		this.type = type;
 		this.timestamp = timestamp;
 		this.source = host;
-		this.values = tags;
+		this.values = values;
 		
+	}
+	
+	public Record(String type, long timestamp, String host,
+			Map<String, Object> values,Set<String> tags) {
+		super();
+		this.type = type;
+		this.timestamp = timestamp;
+		this.source = host;
+		this.values = values;
+		this.tags = tags;
 	}
 
 	public String getType() {
@@ -96,6 +108,15 @@ public class Record {
 		return "Record [type=" + type + ", timestamp=" + timestamp
 				+ ", source=" + source + ", tags=" + tags + ", values="
 				+ values + "]";
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return new Record(type,timestamp,source,new HashMap<String, Object>(values),new HashSet<String>(tags)) ;
+	}
+	
+	public Record cloneNoValues()  {
+		return new Record(type,timestamp,source,null,new HashSet<String>(tags)) ;
 	}
 
 }
