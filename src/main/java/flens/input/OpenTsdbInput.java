@@ -39,6 +39,9 @@ public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 	@Override
 	public void readAndProcess(BufferedReader in) throws IOException {
 		String line = in.readLine();
+		if(line==null)
+			throw new IOException("connection lost");
+		
 		Scanner st = new Scanner(line);
 
 		try {
@@ -69,7 +72,7 @@ public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 			tags.put("metric", metricName);
 			tags.put("value", metric);
 			
-			Record r = new Record("tsdb-in",time,host,tags);
+			Record r = new Record("tsdb-in",time*1000,host,tags);
 			dispatch(r);
 		} catch (NoSuchElementException e) {
 			warn("line too short", line);

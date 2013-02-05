@@ -108,10 +108,8 @@ public abstract class ListenerInput<T> extends AbstractInput {
 		public void run() {
 			try {
 				while (running) {
-
 					readAndProcess(in);
 				}
-
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING,
 						"socket broken", e);

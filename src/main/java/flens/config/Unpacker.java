@@ -4,7 +4,9 @@ import flens.core.AbstractConfig;
 
 public class Unpacker extends AbstractConfig{
 	
-	//TODO make different unpacker modes
+	enum Modes{
+		
+	}
 
 	@Override
 	protected boolean isIn() {

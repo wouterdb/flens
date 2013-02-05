@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 
+
+//time in milis
 public class Record {
 
 	private String source;
@@ -46,7 +48,7 @@ public class Record {
 		this.timestamp = timestamp;
 		this.source = host;
 		this.values = values;
-		
+		this.tags = new HashSet<String>();
 	}
 	
 	public Record(String type, long timestamp, String host,

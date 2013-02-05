@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//TODO reconnect!
 public class Flengine {
 
 	public class FilterWorker implements Runnable {
@@ -265,13 +266,13 @@ public class Flengine {
 
 		Map<String, Object> values = out.getValues();
 
-		values.put("q-in-size", executor.getQueue().size());
+		values.put("fles.q-in-size", executor.getQueue().size());
 		for (Output o : outputs) {
 			values.put(String.format("q-%s-size", o.getName()), o
 					.getOutputQueue().size());
 		}
-		values.put("exec-threads-active", executor.getActiveCount());
-		values.put("exec-threads-live", executor.getPoolSize());
-		values.put("exec-seen", executor.getCompletedTaskCount());
+		values.put("fles.exec-threads-active", executor.getActiveCount());
+		values.put("fles.exec-threads-live", executor.getPoolSize());
+		values.put("fles.exec-seen", executor.getCompletedTaskCount());
 	}
 }

@@ -1,50 +1,31 @@
 package flens.output;
 
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.io.PrintStream;
 
-import flens.core.Constants;
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
-import flens.core.Tagger;
-import flens.output.util.StreamOutPump;
+import flens.output.util.StreamPump;
 
-public class SystemOut implements Output {
+public class SystemOut extends StreamPump implements Output {
 
-	public final Matcher matcher;
-	private BlockingQueue<Record> queue = new LinkedBlockingQueue<Record>();
-	private StreamOutPump worker;
-	private String name; 
-	
+	private PrintStream stream;
 	
 	public SystemOut(String name, Matcher matcher) {
-		this.name = name;
-		this.matcher = matcher;
-		worker = new StreamOutPump(queue,System.out,name);
+		super(name, matcher);
+		stream = System.out;
 	}
 
-	public Matcher getMatcher() {
-		return matcher;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Queue<Record> getOutputQueue() {
-		return queue ;
-	}
-
-	public void start() {
-		worker.start();
+	public void run() {
+		
+		try {
+			while (running) {
+				Record r = queue.take();
+				stream.println(String.format("[%s] %s",getName(),r.toLine()));
+			}
+		} catch (InterruptedException e) {
+			// break loop
+		}
 
 	}
-
-	public void stop() {
-		worker.stop();
-
-	}
-
 }

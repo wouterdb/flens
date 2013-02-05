@@ -13,7 +13,7 @@
  		},
  		
  		"self" : {
- 			"interval":1000,
+ 			"interval":60000,
  			"name" : "self",
  			"type" : "metric",
  			"add-tag" : ["raw","packed"]
@@ -32,6 +32,12 @@
  		"system-out" : {
  			"name" : "out",
  			"type" : "metric"
+ 		},
+ 		
+ 		"tsdb-out" : {
+ 			"name":"tsdb-out",
+ 			"type":"metric",
+ 			"port": 4243
  		}
  	}
  		 

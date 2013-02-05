@@ -29,7 +29,8 @@ public class Unpacker extends AbstractFilter implements Filter{
 	private Record makeRecord(Record in, String name, Object value) {
 		Record out = in.cloneNoValues();
 		HashMap<String, Object> values = new HashMap<String, Object>();
-		values.put(name, value);
+		values.put("metric", name);
+		values.put("value", value);
 		out.setValues(values);
 		return tag(out);
 	}
