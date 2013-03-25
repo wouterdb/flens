@@ -1,6 +1,10 @@
 package flens.config;
 
-import flens.core.AbstractConfig;
+import java.util.LinkedList;
+import java.util.List;
+
+import flens.core.Config.Option;
+import flens.core.util.AbstractConfig;
 import flens.input.SelfMonitor;
 
 public class Self extends AbstractConfig{
@@ -20,6 +24,18 @@ public class Self extends AbstractConfig{
 	@Override
 	protected boolean isOut() {
 		return false;
+	}
+	
+	@Override
+	public List<Option> getOptions() {
+		List<Option>  out = new LinkedList(super.getOptions());
+		out.add(new Option("interval", "int", "60000", "interval (in ms) between subsequent reports"));
+		return out;
+	}
+
+	@Override
+	public String getDescription() {
+		return "send out records packed with self diagnostics";
 	}
 
 }

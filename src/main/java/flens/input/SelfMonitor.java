@@ -7,6 +7,7 @@ import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.util.AbstractInput;
 
 //TODO make timer/executor based
 public class SelfMonitor extends AbstractInput implements Input {

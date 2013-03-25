@@ -1,6 +1,9 @@
 package flens.config;
 
-import flens.core.AbstractConfig;
+import java.util.LinkedList;
+import java.util.List;
+
+import flens.core.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class OpenTsdbIn extends AbstractConfig {
@@ -20,6 +23,19 @@ public class OpenTsdbIn extends AbstractConfig {
 	@Override
 	protected boolean isOut() {
 		return false;
+	}
+	
+	@Override
+	public List<Option> getOptions() {
+		List<Option>  out = new LinkedList(super.getOptions());
+		out.add(new Option("port", "int", "4242", "port on which to listen"));
+		return out;
+	}
+
+
+	@Override
+	public String getDescription() {
+		return "Listen on TCP socket for opentsdb messages";
 	}
 
 }

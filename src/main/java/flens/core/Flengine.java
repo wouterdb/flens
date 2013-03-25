@@ -268,7 +268,7 @@ public class Flengine {
 
 		values.put("fles.q-in-size", executor.getQueue().size());
 		for (Output o : outputs) {
-			values.put(String.format("q-%s-size", o.getName()), o
+			values.put(String.format("fels.q-%s-size", o.getName()), o
 					.getOutputQueue().size());
 		}
 		values.put("fles.exec-threads-active", executor.getActiveCount());

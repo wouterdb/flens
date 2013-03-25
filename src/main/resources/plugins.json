@@ -4,6 +4,16 @@
  "system-out" : "flens.config.SystemOut",
  "tsdb-in" : "flens.config.OpenTsdbIn",
  "tsdb-out" : "flens.config.OpenTsdbOut",
- "unpacker" : "flens.config.Unpacker"
+ "unpacker" : "flens.config.ValuesUnpacker",
+ "mvel" : "flens.config.MvelFilter",
+ "template" : "flens.config.MvelTemplate",
+ "amqp-in" : "flens.config.AMQPInput",
+ "amqp-out" : "flens.config.AMQPOutput",
+ "decoder" : "flens.config.CharacterDecoder",
+ "json-decoder" : "flens.config.JSonDecoder",
+ "json-encoder" : "flens.config.JsonEncoder",
+ "websockets" : "flens.config.WebSockets",
+ "collectd-in" : "flens.config.CollectdIn",
+ "rename":"flens.config.RenameFilter"
 }
  

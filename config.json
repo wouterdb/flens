@@ -17,6 +17,14 @@
  			"name" : "self",
  			"type" : "metric",
  			"add-tag" : ["raw","packed"]
+ 		},
+ 		
+ 		"AMQP-in" : {
+ 			"name" : "amqp-in",
+ 			"type" : "metric",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "192.168.122.159",
+ 			"exchange":"metrics"
  		}
  	},
  	
@@ -25,19 +33,38 @@
  			"type" : "metric",
  			"tags" : ["packed"],
  			"remove-tag" : ["packed"]
+ 		},"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		},
+ 		"mvel" : {
+ 			"name" : "theMVEL",
+ 			"tags" : ["raw"],
+ 			"script" : "message = \"test\""
+ 		},
+ 		"template" : {
+ 			"name" : "theTemplate",
+ 			"tags" : ["raw"],
+ 			"remove-tag" : ["raw"],
+ 			"template" : "@{metric} = @{value}",
+ 			"field":"packed"
  		}
  	},
  	
  	"output" : {
  		"system-out" : {
  			"name" : "out",
- 			"type" : "metric"
+ 			"type" : ""
  		},
  		
  		"tsdb-out" : {
  			"name":"tsdb-out",
  			"type":"metric",
- 			"port": 4243
+ 			"host":"192.168.122.159",
+ 			"port": 4242
  		}
  	}
  		 

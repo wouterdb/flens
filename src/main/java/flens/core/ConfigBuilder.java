@@ -41,13 +41,18 @@ public class ConfigBuilder {
 			return;
 		
 		for (Object entry : map.keySet()) {
-			Config c = pluginRepo.get((String) entry);
+			Map<String, Object> child = (Map<String, Object>) map.get(entry);
+			String plugin = (String) child.remove("plugin");
+			if(plugin == null)
+				plugin = (String) entry;
+			
+			Config c = pluginRepo.get(plugin);
 			if(c==null){
 				engine = null;
 				throw new IllegalArgumentException("plugin not found: " + entry);
 			}
 				
-			c.readConfigPart((String) entry,(Map<String, Object>) map.get(entry), engine);
+			c.readConfigPart((String)entry,child, engine);
 		}
 		
 	}

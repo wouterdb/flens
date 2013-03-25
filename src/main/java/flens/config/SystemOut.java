@@ -1,6 +1,6 @@
 package flens.config;
 
-import flens.core.AbstractConfig;
+import flens.core.util.AbstractConfig;
 
 public class SystemOut extends AbstractConfig{
 
@@ -18,6 +18,11 @@ public class SystemOut extends AbstractConfig{
 	@Override
 	protected boolean isOut() {
 		return true;
+	}
+
+	@Override
+	public String getDescription() {
+		return "send logs to system out" ;
 	}
 
 }

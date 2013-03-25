@@ -9,6 +9,7 @@ import flens.core.Filter;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.filter.util.AbstractFilter;
 
 public class Unpacker extends AbstractFilter implements Filter{
 

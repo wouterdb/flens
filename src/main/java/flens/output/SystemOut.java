@@ -5,9 +5,9 @@ import java.io.PrintStream;
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
-import flens.output.util.StreamPump;
+import flens.output.util.AbstractPumpOutput;
 
-public class SystemOut extends StreamPump implements Output {
+public class SystemOut extends AbstractPumpOutput implements Output {
 
 	private PrintStream stream;
 	

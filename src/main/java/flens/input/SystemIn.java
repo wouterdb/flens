@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.util.AbstractInput;
 
 public class SystemIn extends AbstractInput {
 
@@ -43,7 +44,7 @@ public class SystemIn extends AbstractInput {
 
 				line = inr.readLine();
 
-				in.add(new Record("sys.in",  line));
+				dispatch(new Record("sys.in",  line));
 			}
 
 		} catch (IOException e) {

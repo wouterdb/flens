@@ -13,13 +13,16 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.util.ListenerInput;
 
 public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 
 	private int port = 4242;
-
+	
+	
 	public OpenTsdbInput(String name, Tagger tagger, int port) {
 		super(name,tagger);
 		this.port = port;
@@ -69,8 +72,8 @@ public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING,
 						"tsdb metric has no host tag: " + line);
 			}
-			tags.put("metric", metricName);
-			tags.put("value", metric);
+			tags.put(Constants.METRIC, metricName);
+			tags.put(Constants.VALUE, metric);
 			
 			Record r = new Record("tsdb-in",time*1000,host,tags);
 			dispatch(r);
