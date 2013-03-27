@@ -1,20 +1,19 @@
-package flens.input;
+package flens.input.util;
 
 import java.util.concurrent.BlockingQueue;
 
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.core.util.AbstractPlugin;
 
-public abstract class AbstractInput implements Input, Runnable {
+public abstract class AsyncInput extends AbstractPlugin implements Input{
 
 	protected BlockingQueue<Record> in;
-	protected Thread runner = new Thread(this);
-	protected volatile boolean running;
 	private Tagger tagger;
 	private String name;
 
-	public AbstractInput(String name,Tagger tagger) {
+	public AsyncInput(String name,Tagger tagger) {
 		this.name = name;
 		this.tagger = tagger;
 	}
@@ -33,19 +32,4 @@ public abstract class AbstractInput implements Input, Runnable {
 	public void setInputQueue(BlockingQueue<Record> queue) {
 		this.in = queue;
 	}
-
-	public void start() {
-		running = true;
-		runner.start();
-	}
-
-	public void stop() {
-		running = false;
-		runner.interrupt();
-	}
-
-	public void join() throws InterruptedException {
-		runner.join();
-	}
-
 }

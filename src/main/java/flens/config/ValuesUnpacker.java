@@ -1,15 +1,9 @@
 package flens.config;
 
-import java.util.List;
+import flens.core.util.AbstractConfig;
 
-import flens.core.AbstractConfig;
-
-public class Unpacker extends AbstractConfig{
+public class ValuesUnpacker extends AbstractConfig{
 	
-	enum Modes{
-		
-	}
-
 	@Override
 	protected boolean isIn() {
 		
@@ -30,15 +24,8 @@ public class Unpacker extends AbstractConfig{
 	}
 
 	@Override
-	public List<Option> getOptions() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "unpack all field into records of the form 'metric=$key, value=$value'";
 	}
 
 }

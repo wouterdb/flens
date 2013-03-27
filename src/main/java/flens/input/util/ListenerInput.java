@@ -1,4 +1,4 @@
-package flens.input;
+package flens.input.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import flens.core.Tagger;
-import flens.input.util.AbstractInput;
 
 public abstract class ListenerInput<T> extends AbstractInput {
 
