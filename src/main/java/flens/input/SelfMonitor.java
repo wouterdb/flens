@@ -7,10 +7,10 @@ import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractInput;
+import flens.input.util.AbstractActiveInput;
 
 //TODO make timer/executor based
-public class SelfMonitor extends AbstractInput implements Input {
+public class SelfMonitor extends AbstractActiveInput implements Input {
 	
 	public static final String type = "flens";
 	

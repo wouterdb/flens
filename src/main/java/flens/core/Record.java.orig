@@ -1,6 +1,5 @@
 package flens.core;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,12 +62,6 @@ public class Record {
 		this.tags = tags;
 	}
 
-	public Record(long timestamp, Map<String, Object> values) {
-		this.values = values;
-		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  Util.hostName());
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -86,19 +79,9 @@ public class Record {
 	}
 
 	public long getTimestamp() {
-		Object o = values.get(Constants.TIME);
-		if(o instanceof Number)
-			return ((Number)o).longValue();
-		if(o instanceof Date)
-			return ((Date)o).getTime();
-		throw new IllegalStateException("timestamp of unexpected form:" + o+o.getClass());
+		return (long) values.get(Constants.TIME);
 	}
 
-	/**
-	 * @param timestamp
-	 * 
-	 * milis since epoch
-	 */
 	public void setTimestamp(long timestamp) {
 		values.put(Constants.TIME, timestamp);
 	}
@@ -140,14 +123,6 @@ public class Record {
 	
 	public Record cloneNoValues()  {
 		return new Record(type,null,new HashSet<String>(tags)) ;
-	}
-
-	public void setValue(String name, Object value) {
-		if(value==null)
-			values.remove(name);
-		else
-			values.put(name, value);
-		
 	}
 
 }

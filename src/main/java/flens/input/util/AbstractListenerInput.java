@@ -1,4 +1,4 @@
-package flens.input;
+package flens.input.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,14 +12,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import flens.core.Tagger;
-import flens.input.util.AbstractInput;
 
-public abstract class ListenerInput<T> extends AbstractInput {
+public abstract class AbstractListenerInput<T> extends AbstractActiveInput {
 
 	private ServerSocket listener;
 	private List<Handler> handlers = new LinkedList<Handler>();
 
-	public ListenerInput(String name,Tagger tagger) {
+	public AbstractListenerInput(String name,Tagger tagger) {
 		super(name,tagger);
 	}
 

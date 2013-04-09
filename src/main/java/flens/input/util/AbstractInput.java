@@ -7,11 +7,9 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.core.util.AbstractPlugin;
 
-public abstract class AbstractInput extends AbstractPlugin implements Input, Runnable {
+public abstract class AbstractInput extends AbstractPlugin implements Input{
 
 	protected BlockingQueue<Record> in;
-	protected Thread runner = new Thread(this);
-	protected volatile boolean running;
 	private Tagger tagger;
 	private String name;
 
@@ -34,19 +32,4 @@ public abstract class AbstractInput extends AbstractPlugin implements Input, Run
 	public void setInputQueue(BlockingQueue<Record> queue) {
 		this.in = queue;
 	}
-
-	public void start() {
-		running = true;
-		runner.start();
-	}
-
-	public void stop() {
-		running = false;
-		runner.interrupt();
-	}
-
-	public void join() throws InterruptedException {
-		runner.join();
-	}
-
 }

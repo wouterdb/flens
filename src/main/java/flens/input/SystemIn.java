@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractInput;
+import flens.input.util.AbstractActiveInput;
 
-public class SystemIn extends AbstractInput {
+public class SystemIn extends AbstractActiveInput {
 
 	private BufferedReader inr;
 

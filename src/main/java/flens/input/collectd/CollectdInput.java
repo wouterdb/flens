@@ -37,12 +37,12 @@ import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.Severity;
-import flens.input.util.AbstractInput;
+import flens.input.util.AbstractActiveInput;
 
 /**
  * collectd UDP protocol receiver. See collectd/src/network.c:parse_packet
  */
-public class CollectdInput extends AbstractInput {
+public class CollectdInput extends AbstractActiveInput {
 
 	public CollectdInput(String name, Tagger tagger, int port,
 			String bindAddress, String _ifAddress) {

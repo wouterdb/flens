@@ -71,4 +71,25 @@
 		</plugins>
 
 	</build>
+
+	<profiles>
+		<profile>
+			<id>default-tools.jar</id>
+			<activation>
+				<property>
+					<name>java.vendor</name>
+					<value>Oracle Corporation</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.sun</groupId>
+					<artifactId>tools</artifactId>
+					<version>1.7.0</version>
+					<scope>system</scope>
+					<systemPath>/usr/lib/jvm/java-1.7.0/lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>

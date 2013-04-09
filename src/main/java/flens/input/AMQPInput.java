@@ -15,10 +15,10 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.util.AbstractActiveInput;
 import flens.input.util.AbstractInput;
-import flens.input.util.AsyncInput;
 
-public class AMQPInput extends AsyncInput implements Consumer {
+public class AMQPInput extends AbstractInput implements Consumer {
 
 	private String queue;
 	private String exchange;

@@ -13,17 +13,19 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractListenerInput;
 
-public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
+public class GraphiteInput extends AbstractListenerInput<Pair<String,BufferedReader>> {
 
-	private int port = 4242;
+	private int port = 2003;
 	
 	
-	public OpenTsdbInput(String name, Tagger tagger, int port) {
+	public GraphiteInput(String name, Tagger tagger, int port) {
 		super(name,tagger);
 		this.port = port;
 	}
@@ -34,13 +36,18 @@ public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
 	}
 
 	@Override
-	public BufferedReader getStream(Socket newSocket) throws IOException {
-		return new BufferedReader(new InputStreamReader(
-				newSocket.getInputStream()));
+	public Pair<String,BufferedReader> getStream(Socket newSocket) throws IOException {
+		String hostname = newSocket.getInetAddress().getHostName();
+		return Pair.of(hostname,new BufferedReader(new InputStreamReader(
+				newSocket.getInputStream())));
 	}
 
 	@Override
-	public void readAndProcess(BufferedReader in) throws IOException {
+	//metric_path value timestamp\n  
+	//http://graphite.wikidot.com/getting-your-data-into-graphite
+	public void readAndProcess(Pair<String,BufferedReader> inx) throws IOException {
+		BufferedReader in = inx.getRight();
+		String host = inx.getLeft();
 		String line = in.readLine();
 		if(line==null)
 			throw new IOException("connection lost");
@@ -48,34 +55,18 @@ public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
 		Scanner st = new Scanner(line);
 
 		try {
-			if (!st.next().equals("put")) {
-				warn("bad line", line);
-				return;
-			}
-
+			
 			String metricName = st.next();
-			long time = st.nextLong();
 			String metric = st.next();
+			long time = st.nextLong();
+			
 			
 			Map<String, Object> tags = new HashMap<String, Object>();
 			
-			while(st.hasNext()){
-				String tag = st.next();
-				String[] parts = tag.split("=");
-				tags.put(parts[0], parts.length>1?parts[1]:"");
-			}
-
-			String host = (String) tags.remove("host");
-			
-			if(host == null){
-				host = "UNKNOW";
-				Logger.getLogger(getClass().getName()).log(Level.WARNING,
-						"tsdb metric has no host tag: " + line);
-			}
 			tags.put(Constants.METRIC, metricName);
 			tags.put(Constants.VALUE, metric);
 			
-			Record r = new Record("tsdb-in",time*1000,host,tags);
+			Record r = new Record(null,time*1000,host,tags);
 			dispatch(r);
 		} catch (NoSuchElementException e) {
 			warn("line too short", line);
@@ -90,9 +81,8 @@ public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
 	}
 
 	@Override
-	public void tearDown(BufferedReader in2) throws IOException {
-		in2.close();
-
+	public void tearDown(Pair<String,BufferedReader> in2) throws IOException {
+		in2.getRight().close();
 	}
 
 }

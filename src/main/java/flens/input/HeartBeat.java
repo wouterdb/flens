@@ -6,9 +6,10 @@ import java.util.TimerTask;
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AsyncInput;
+import flens.input.util.AbstractInput;
+import flens.input.util.AbstractPeriodicInput;
 
-public class HeartBeat extends AsyncInput {
+public class HeartBeat extends AbstractPeriodicInput {
 	
 	public class HeartBeatTask extends TimerTask {
 
@@ -21,30 +22,17 @@ public class HeartBeat extends AsyncInput {
 
 	}
 
-	protected Timer t;
-	protected int interval;
 
 	public HeartBeat(String name, Tagger tagger,int interval) {
-		super(name, tagger);
-		this.interval = interval;
+		super(name, tagger,interval);
 	}
 
-	@Override
-	public void start() {
-		t = new Timer(true);
-		t.scheduleAtFixedRate(new HeartBeatTask(), 0, interval);
-	}
 
 	@Override
-	public void stop() {
-		t.cancel();
+	protected TimerTask getWorker() {
+		return new HeartBeatTask();
 	}
 
-	@Override
-	public void join() throws InterruptedException {
-		
-		
-	}
 
 	
 

@@ -16,13 +16,12 @@ import java.util.logging.Logger;
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractListenerInput;
+import flens.input.util.ListenerInput;
 
-public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
+public class OpenTsdbInput extends ListenerInput<BufferedReader> {
 
 	private int port = 4242;
-	
-	
+
 	public OpenTsdbInput(String name, Tagger tagger, int port) {
 		super(name,tagger);
 		this.port = port;
