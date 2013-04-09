@@ -17,8 +17,22 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+
 import com.sun.tools.classfile.Dependency.Finder;
 
+import flens.core.Constants;
+import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.jmx.JMXUtils;
 import flens.input.jmx.JVM;
@@ -41,21 +55,77 @@ public class JMXInput extends AbstractPeriodicInput {
 		}
 
 		private void pumpMetrics() {
-			for (JVM jvm : jvms) {
-				pump(jvm);
+			for (Iterator jmvit = jvms.iterator(); jmvit.hasNext();) {
+				JVM jvm = (JVM) jmvit.next();
+				try {
+					Set<ObjectName> beans = collectBeans(jvm);
+					dispatch(jvm.getConnection(), beans);
+				} catch (IOException e) {
+					warn("jvm lost", e);
+					try {
+						jvm.disconnect();
+					} catch (IOException e1) {
+						warn("jvm connection close failed", e);
+					}
+					jmvit.remove();
+				}
 			}
+			
 		}
 
-		private void pump(JVM jvm) {
-			jvm.getConnection().queryMBeans(, query)
-			
+		private void dispatch(MBeanServerConnection con, Set<ObjectName> beans)
+				throws IOException {
+			for (ObjectName bean : beans) {
+				dispatch(con, bean);
+			}
+
+		}
+
+		private void dispatch(MBeanServerConnection con, ObjectName name)
+				throws IOException {
+			try {
+				Record r = new Record(System.currentTimeMillis(),
+						new HashMap<String, Object>(name.getKeyPropertyList()));
+				MBeanInfo mbi = con.getMBeanInfo(name);
+
+				for (MBeanAttributeInfo mbai : mbi.getAttributes()) {
+					if (!mbai.isReadable())
+						continue;
+					Record r2 = r.doClone();
+					r2.setValue(Constants.METRIC, mbai.getName());
+					r2.setValue(Constants.VALUE,
+							con.getAttribute(name, mbai.getName()));
+					JMXInput.this.dispatch(r2);
+				}
+
+			} catch (InstanceNotFoundException | IntrospectionException
+					| ReflectionException | AttributeNotFoundException
+					| MBeanException e) {
+				err("bean went haywire", e);
+			}
+
+		}
+
+		private Set<ObjectName> collectBeans(JVM jvm) throws IOException {
+			Set<ObjectName> out = new HashSet<>();
+			for (String domain : domains)
+				try {
+					out.addAll(jvm.getConnection().queryNames(
+							new ObjectName(domain + ":*"), null));
+				} catch (MalformedObjectNameException e) {
+					err("bad domain selector", e);
+				}
+			return out;
 		}
 
 		private void findJVMs() {
 			try {
-				Set<JVM> jvms = JMXUtils.getJVMs(selector);
+				Set<JVM> jvms = JMXUtils.getJVMs(JVMselector);
 				jvms.removeAll(this.jvms);
 				this.jvms.addAll(jvms);
+				for (JVM jvm : jvms) {
+					info("found jvm: " + jvm);
+				}
 			} catch (VMSelectionException e) {
 				err("problem finding JVM's", e);
 			}
@@ -66,7 +136,7 @@ public class JMXInput extends AbstractPeriodicInput {
 				try {
 					vm.disconnect();
 				} catch (IOException e) {
-					err("exception trying to disconnect jmx",e);
+					err("exception trying to disconnect jmx", e);
 				}
 			}
 		}
@@ -74,14 +144,16 @@ public class JMXInput extends AbstractPeriodicInput {
 	}
 
 	private int findJvmMultiplier;
-	private String selector;
+	private String JVMselector;
 	private JMXInputWorker worker;
+	private String[] domains;
 
-	public JMXInput(String name, Tagger tagger, String selector, int interval,
-			int findJVMMultiplier) {
+	public JMXInput(String name, Tagger tagger, String jvmSelector,
+			List<String> domains, int interval, int findJVMMultiplier) {
 		super(name, tagger, interval);
 		this.findJvmMultiplier = findJVMMultiplier;
-		this.selector = selector;
+		this.JVMselector = jvmSelector;
+		this.domains = domains.toArray(new String[domains.size()]);
 	}
 
 	@Override

@@ -19,6 +19,11 @@ public abstract class AbstractPlugin {
 		Logger.getLogger(getClass().getName()).log(Level.WARNING, msg,e);
 		
 	}
+	
+	protected void info(String msg) {
+		Logger.getLogger(getClass().getName()).log(Level.INFO, msg);
+		
+	}
 
 	public abstract String getName() ;
 

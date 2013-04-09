@@ -3,6 +3,7 @@ package flens.core;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,6 +66,7 @@ public class Record {
 
 	public Record(long timestamp, Map<String, Object> values) {
 		this.values = values;
+		this.tags = new HashSet<String>();
 		values.put(Constants.TIME, timestamp);
 		values.put(Constants.SOURCE,  Util.hostName());
 	}

@@ -16,6 +16,7 @@
  "websockets" : "flens.config.WebSockets",
  "collectd-in" : "flens.config.CollectdIn",
  "rename":"flens.config.RenameFilter",
- "heartbeat":"flens.config.HeartBeatInput"
+ "heartbeat":"flens.config.HeartBeatInput",
+ "JMXInput":"flens.config.JMXInput"
 }
  
