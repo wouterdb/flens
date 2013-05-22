@@ -79,7 +79,7 @@ public class AMQPInput extends AbstractInput implements Consumer {
 
 			}
 
-			channel.basicConsume(queue, this);
+			channel.basicConsume(queue, true,this);
 
 		} catch (IOException e) {
 			err("could not connect to amqp", e);
