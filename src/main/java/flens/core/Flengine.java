@@ -1,6 +1,7 @@
 package flens.core;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 //TODO reconnect!
+//FIXME: cleanup locking
 public class Flengine {
 
 	public class FilterWorker implements Runnable {
@@ -31,11 +33,13 @@ public class Flengine {
 			int i = 0;
 			while (!newrecords.isEmpty()) {
 				Record current = newrecords.remove();
-				for (Filter f : filters) {
-					if (f.getMatcher().matches(current)) {
-						newrecords.addAll(f.process(current));
-						if (current.getType() == null)
-							break;
+				synchronized (filters) {
+					for (Filter f : filters) {
+						if (f.getMatcher().matches(current)) {
+							newrecords.addAll(f.process(current));
+							if (current.getType() == null)
+								break;
+						}
 					}
 				}
 				if (current.getType() != null)
@@ -53,9 +57,11 @@ public class Flengine {
 		}
 
 		private void dispatch(Record current) {
-			for (Output output : outputs) {
-				if (output.getMatcher().matches(current))
-					output.getOutputQueue().add(current);
+			synchronized (outputs) {
+				for (Output output : outputs) {
+					if (output.getMatcher().matches(current))
+						output.getOutputQueue().add(current);
+				}
 			}
 		}
 
@@ -182,33 +188,64 @@ public class Flengine {
 	private final BlockingQueue<Record> inqueue = new QueueWrapper();
 	private boolean running;
 	private ThreadPoolExecutor executor;
+	
+	private final Map<String,String> tags = new HashMap<String, String>();
 
 	public void addInput(Input inp) {
-		if (running)
-			throw new IllegalStateException(
-					"engine running, can not add inputs");
-		inputs.add(inp);
-		inp.setInputQueue(inqueue);
+		synchronized (inputs) {
+			inputs.add(inp);
+			inp.setInputQueue(inqueue);
+			if (running)
+				inp.start();
+		}
+	}
+
+	public void removeInput(Input inp) {
+		synchronized (inputs) {
+			inputs.remove(inp);
+			if (running) {
+				inp.stop();
+			}
+			inp.setInputQueue(null);
+		}
 	}
 
 	public void addOutput(Output outp) {
-		if (running)
-			throw new IllegalStateException(
-					"engine running, can not add outputs");
-		outputs.add(outp);
+		synchronized (outputs) {
+			outputs.add(outp);
+			if (running)
+				outp.start();
+		}
+	}
+
+	public void removeOutput(Output outp) {
+		synchronized (outputs) {
+			outputs.remove(outp);
+			if (running)
+				outp.stop();
+		}
 	}
 
 	/**
 	 * add filter behind the others
 	 */
 	public void addFilter(Filter f) {
-		if (running)
-			throw new IllegalStateException(
-					"engine running, can not add filters");
-		filters.add(f);
+		synchronized (filters) {
+			filters.add(f);
+		}
+	}
+
+	/**
+	 * add filter behind the others
+	 */
+	public void removeFilter(Filter f) {
+		synchronized (filters) {
+			filters.remove(f);
+		}
 	}
 
 	public void start() {
+		running=true;
 		for (Output output : outputs) {
 			output.start();
 		}
@@ -225,6 +262,7 @@ public class Flengine {
 	}
 
 	public void stop() {
+		running=false;
 		for (Input input : inputs) {
 			input.stop();
 		}
@@ -274,5 +312,35 @@ public class Flengine {
 		values.put("fles.exec-threads-active", executor.getActiveCount());
 		values.put("fles.exec-threads-live", executor.getPoolSize());
 		values.put("fles.exec-seen", executor.getCompletedTaskCount());
+	}
+
+	public void remove(String name) {
+		for (Input inp : inputs) {
+			if (inp.getName().equals(name)) {
+				removeInput(inp);
+				return;
+			}
+		}
+		for (Filter inp : filters) {
+			if (inp.getName().equals(name)) {
+				removeFilter(inp);
+				return;
+			}
+		}
+		for (Output inp : outputs) {
+			if (inp.getName().equals(name)) {
+				removeOutput(inp);
+				return;
+			}
+		}
+
+	}
+	
+	public void addTags(Map<String, String> tags){
+		this.tags.putAll(tags);
+	}
+	
+	public Map<String, String> getTags(){
+		return this.tags;
 	}
 }

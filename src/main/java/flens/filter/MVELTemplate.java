@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.mvel2.CompileException;
 import org.mvel2.MVEL;
+import org.mvel2.UnresolveablePropertyException;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
@@ -48,7 +49,8 @@ public class MVELTemplate extends AbstractFilter{
 		
 		String out = (String) TemplateRuntime.execute(compiled, in.getValues());
 		in.getValues().put(field,out);
-		}catch(CompileException e){
+		tag(in);
+		}catch(CompileException|UnresolveablePropertyException e){
 			log.log(Level.SEVERE, "MVEL failed, context: " + in.getValues(), e);
 		}
 		return Collections.EMPTY_LIST;

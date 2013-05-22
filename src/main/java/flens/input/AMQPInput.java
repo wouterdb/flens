@@ -137,7 +137,6 @@ public class AMQPInput extends AbstractInput implements Consumer {
 		
 		
 		Record r = new Record(
-				null,
 				timel,
 				null,
 				fields);

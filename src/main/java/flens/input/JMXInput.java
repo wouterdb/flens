@@ -28,6 +28,9 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.CompositeType;
 
 import com.sun.tools.classfile.Dependency.Finder;
 
@@ -91,10 +94,21 @@ public class JMXInput extends AbstractPeriodicInput {
 				for (MBeanAttributeInfo mbai : mbi.getAttributes()) {
 					if (!mbai.isReadable())
 						continue;
+					
 					Record r2 = r.doClone();
-					r2.setValue(Constants.METRIC, mbai.getName());
-					r2.setValue(Constants.VALUE,
-							con.getAttribute(name, mbai.getName()));
+					String metric = mbai.getName();
+					if(metric.equals("Value")){
+						String type = (String) r2.getValues().remove("type");
+						
+						if(type!=null)
+							metric = type;
+					}
+					r2.setValue(Constants.METRIC,metric);
+					Object val = con.getAttribute(name, mbai.getName()); 
+					/*if(val instanceof CompositeData)
+						dispatch(r2,(CompositeData)val);
+					else*/
+						r2.setValue(Constants.VALUE,val);
 					JMXInput.this.dispatch(r2);
 				}
 
@@ -106,11 +120,26 @@ public class JMXInput extends AbstractPeriodicInput {
 
 		}
 
+		private void dispatch(Record parent, CompositeData val) {
+			CompositeType ct = val.getCompositeType();
+			for(String type:ct.keySet()){
+				Record cur = parent.doClone();
+				cur.setValue(Constants.TYPE, type);
+				cur.setValue(Constants.VALUE, val.get(type));
+				JMXInput.this.dispatch(cur);
+			}
+			
+		}
+
 		private Set<ObjectName> collectBeans(JVM jvm) throws IOException {
 			Set<ObjectName> out = new HashSet<>();
 			for (String domain : domains)
 				try {
-					out.addAll(jvm.getConnection().queryNames(
+					if(domain.contains(":"))
+						out.addAll(jvm.getConnection().queryNames(
+								new ObjectName(domain), null));
+					else
+						out.addAll(jvm.getConnection().queryNames(
 							new ObjectName(domain + ":*"), null));
 				} catch (MalformedObjectNameException e) {
 					err("bad domain selector", e);

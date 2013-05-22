@@ -1,70 +1,35 @@
 {
-	"input" : {
- 		"system-in" : { 
- 			"name" : "in",
- 			"type" : "log",
- 			"add-tag" : "raw"
- 		},
- 		
- 		"tsdb-in" : {
- 			"name" : "tsdb",
- 			"port" : "4242",
- 			"type" : "metric"
- 		},
- 		
- 		"self" : {
- 			"interval":60000,
- 			"name" : "self",
- 			"type" : "metric",
- 			"add-tag" : ["raw","packed"]
- 		},
- 		
- 		"AMQP-in" : {
- 			"name" : "amqp-in",
+	"input" : {	
+ 		"amqp-in" : {
  			"type" : "metric",
  			"add-tag" : ["binary","json"],
- 			"host": "192.168.122.159",
+ 			"host": "127.0.0.1",
  			"exchange":"metrics"
+ 		},
+ 		"amqp-logs" : {
+ 			"plugin":"amqp-in",
+ 			"type" : "logs",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"logs"
  		}
+ 		
  	},
  	
  	"filter" : {
- 		"unpacker" : {
- 			"type" : "metric",
- 			"tags" : ["packed"],
- 			"remove-tag" : ["packed"]
- 		},"decoder" : {
+ 		"decoder" : {
  			"tags" : ["binary"],
  			"remove-tag" : ["binary"] 
  		},"json-decoder" : {
  			"tags" : ["json"],
  			"remove-tag" : ["json"]
- 		},
- 		"mvel" : {
- 			"name" : "theMVEL",
- 			"tags" : ["raw"],
- 			"script" : "message = \"test\""
- 		},
- 		"template" : {
- 			"name" : "theTemplate",
- 			"tags" : ["raw"],
- 			"remove-tag" : ["raw"],
- 			"template" : "@{metric} = @{value}",
- 			"field":"packed"
  		}
  	},
  	
  	"output" : {
  		"system-out" : {
- 			"name" : "out",
- 			"type" : ""
- 		},
- 		
- 		"tsdb-out" : {
- 			"name":"tsdb-out",
- 			"type":"metric",
- 			"host":"192.168.122.159",
- 			"port": 4242
+ 			"name" : "out"
+ 			
  		}
  	}
  		 

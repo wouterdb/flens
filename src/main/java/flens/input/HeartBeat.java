@@ -15,7 +15,7 @@ public class HeartBeat extends AbstractPeriodicInput {
 
 		@Override
 		public void run() {
-			Record r = new Record(null);
+			Record r = new Record();
 			r.getValues().put(Constants.METRIC, "heartbeat");
 			dispatch(r);
 		}

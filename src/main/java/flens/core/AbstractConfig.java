@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import flens.core.util.StandardTagger;
+
 public abstract class AbstractConfig implements Config {
 
 	protected Map<String, Object> tree;

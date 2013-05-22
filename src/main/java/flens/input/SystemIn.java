@@ -44,7 +44,7 @@ public class SystemIn extends AbstractActiveInput {
 
 				line = inr.readLine();
 
-				dispatch(new Record("sys.in",  line));
+				dispatch(new Record(line));
 			}
 
 		} catch (IOException e) {

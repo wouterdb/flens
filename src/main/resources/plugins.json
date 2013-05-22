@@ -17,6 +17,8 @@
  "collectd-in" : "flens.config.CollectdIn",
  "rename":"flens.config.RenameFilter",
  "heartbeat":"flens.config.HeartBeatInput",
- "JMXInput":"flens.config.JMXInput"
+ "JMXInput":"flens.config.JMXInput",
+ "grep":"flens.config.GrepIn",
+ "tag":"flens.config.TagFilter"
 }
  

@@ -10,9 +10,9 @@ public class StandardTagger implements Tagger {
 	private List rtags;
 
 	public StandardTagger(List<String> tags, List rtags) {
-		
 		this.tags = tags;
 		this.rtags = rtags;
+		System.out.println(this.rtags);
 	}
 
 	@Override

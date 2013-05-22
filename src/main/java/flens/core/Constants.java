@@ -18,6 +18,7 @@ public class Constants {
 	public static final String MESSAGE = "message";
 	public static final String SEVERITY = "severity";
 	public static final String VALUES = "values";
+	public static final String TAGS = "tags";
 	
 
 }

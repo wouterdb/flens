@@ -77,7 +77,7 @@ public final class JVM {
 						+ "management-agent.jar";
 				f = new File(agent);
 				if (!f.exists()) {
-					throw new RuntimeException("Management agent not found");
+					throw new RuntimeException("Management agent not found(" + agent +","+ f +")");
 				}
 			}
 

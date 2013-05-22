@@ -18,9 +18,7 @@ public class Record {
 	private Map<String, Object> values;
 
 
-	public Record(String type, String message) {
-		
-		this.type = type;
+	public Record(String message) {
 		this.tags = new HashSet<String>();
 		this.values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
@@ -28,26 +26,24 @@ public class Record {
 		values.put(Constants.L_MESSAGE, message);
 	}
 
-	public Record(String type) {
+	public Record() {
 		super();
-		this.type = type;
 		tags = new HashSet<String>();
 		values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
 		values.put(Constants.SOURCE,  Util.hostName());
 	}
 
-	public Record(String type, long timestamp, String host,
+	public Record(long timestamp, String host,
 			Map<String, Object> values) {
 		super();
-		this.type = type;
 		this.values = values;
 		this.tags = new HashSet<String>();
 		values.put(Constants.TIME, timestamp);
 		values.put(Constants.SOURCE,  host);
 	}
 	
-	public Record(String type, long timestamp, String host,
+	/*public Record(String type, long timestamp, String host,
 			Map<String, Object> values,Set<String> tags) {
 		super();
 		this.type = type;
@@ -55,9 +51,9 @@ public class Record {
 		this.tags = tags;
 		values.put(Constants.TIME, timestamp);
 		values.put(Constants.SOURCE,  host);
-	}
+	}*/
 
-	public Record(String type, HashMap<String, Object> values,
+	protected Record(String type, HashMap<String, Object> values,
 			HashSet<String> tags) {
 		this.type = type;
 		this.values = values;

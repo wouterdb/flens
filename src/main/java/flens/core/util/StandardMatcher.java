@@ -16,7 +16,6 @@ public class StandardMatcher implements Matcher {
 	public StandardMatcher(String type, List tags) {
 		this.type = type;
 		this.tags = new HashSet<String>(tags);
-		System.out.println(this.tags);
 	}
 
 	@Override

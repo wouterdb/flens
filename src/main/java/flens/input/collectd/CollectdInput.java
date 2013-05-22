@@ -157,7 +157,7 @@ public class CollectdInput extends AbstractActiveInput {
 		ByteArrayInputStream buffer = new ByteArrayInputStream(packet);
 		DataInputStream is = new DataInputStream(buffer);
 
-		Record out = new Record(null);
+		Record out = new Record();
 
 		while ((0 < total) && (total > HEADER_LEN)) {
 			int type = is.readUnsignedShort();

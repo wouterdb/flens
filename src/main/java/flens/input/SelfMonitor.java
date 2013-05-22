@@ -28,7 +28,7 @@ public class SelfMonitor extends AbstractActiveInput implements Input {
 	public void run() {
 		try {
 			while (running) {
-				Record r = new Record(type);
+				Record r = new Record();
 				engine.report(r);
 				dispatch(r);
 				Thread.sleep(interval);
