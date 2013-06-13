@@ -7,6 +7,7 @@
  "graphite-in" : "flens.config.GraphiteIn",
  "unpacker" : "flens.config.ValuesUnpacker",
  "mvel" : "flens.config.MvelFilter",
+ "grok" : "flens.config.GrokFilter",
  "template" : "flens.config.MvelTemplate",
  "amqp-in" : "flens.config.AMQPInput",
  "amqp-out" : "flens.config.AMQPOutput",
@@ -19,6 +20,7 @@
  "heartbeat":"flens.config.HeartBeatInput",
  "JMXInput":"flens.config.JMXInput",
  "grep":"flens.config.GrepIn",
- "tag":"flens.config.TagFilter"
+ "tag":"flens.config.TagFilter",
+ "set":"flens.config.SetFilter"
 }
  

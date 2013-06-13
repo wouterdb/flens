@@ -61,19 +61,25 @@ public abstract class AbstractConfig implements Config {
 	
 	private Tagger readTagger() {
 		List tags = getArray("add-tag",Collections.EMPTY_LIST);
-		
+		String stype = null;
 		if(isIn()){
 			String type = get("type",name);
 			return new InputTagger(type,tags);
+		}else{
+			stype = get("set-type",null);
 		}
 		
 		rtags = getArray("remove-tag",Collections.EMPTY_LIST);
 		
-		if(tags.isEmpty() && rtags.isEmpty())
-			return Tagger.empty;
-		
-		
-		return new StandardTagger(tags,rtags);
+		if(tags.isEmpty() && rtags.isEmpty()){
+			if(stype == null)
+				return Tagger.empty;
+			else
+				return new TypeTagger(stype);
+		}
+			
+		return new StandardTagger(stype,tags,rtags);
+	
 	}
 
 	private Matcher readMatcher() {

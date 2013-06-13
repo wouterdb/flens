@@ -2,7 +2,9 @@ package flens.config;
 
 import java.util.List;
 
-import flens.core.AbstractConfig;
+import flens.core.util.AbstractConfig;
+
+
 
 public class Unpacker extends AbstractConfig{
 	

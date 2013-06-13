@@ -53,8 +53,8 @@ public class Record {
 		values.put(Constants.SOURCE,  host);
 	}*/
 
-	protected Record(String type, HashMap<String, Object> values,
-			HashSet<String> tags) {
+	public Record(String type, HashMap<String, Object> values,
+			Set<String> tags) {
 		this.type = type;
 		this.values = values;
 		this.tags = tags;

@@ -36,8 +36,8 @@ public class MVELFilter extends AbstractFilter{
 	public Collection<Record> process(Record in) {
 		Object records = MVEL.executeExpression(compiled, in.getValues());
 		tag(in);
-		return Collections.EMPTY_LIST;
-		/*if(records == null)
+		
+		if(records == null)
 			return Collections.EMPTY_LIST;
 		if(records instanceof Record)
 			return Collections.singletonList((Record)records);
@@ -54,7 +54,7 @@ public class MVELFilter extends AbstractFilter{
 		}
 		
 		warn("mvel returned wrong type "+records.getClass().getName() + " should be list of records or record");
-		return Collections.EMPTY_LIST;*/
+		return Collections.EMPTY_LIST;
 	}
 
 }
