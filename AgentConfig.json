@@ -1,7 +1,8 @@
 {
-	"server":"127.0.0.1",
+	"server":"172.16.3.3",
 	"name" : "worker1",
-	"tags" : { "tier" : "agent", "type":"worker", "service":"start"},
+	"tags" : { "tier" : "agent", "type":"worker", "service":"master","query":"true"},
+	"query" : {"class":"flens.query.DumperToQvtd","model":"workQueue"},	
 	"init":{
 	"input" : {		
  		"heartbeat":{
@@ -12,7 +13,7 @@
 			"add-tag" : "collectd"
  		},"grep":{
 			"type":"log",
-			"file":"../planB/java.log"
+			"file":"/home/ec2-user/java.log"
 		},"JMXInput":{
 			"type":"metric",
 			"jvm":"sched",
@@ -21,14 +22,8 @@
 		}
  	},
  	
- 	"filter" : { 
- 		"tag":{},
- 		"sidestream timeings":{
- 			"type":"log",
- 			"plugin":"mvel",
- 			"script":"if(isdef message && message ~= 'INFO: workflow .* took: .*'){x=message.split(' '); return new flens.core.Record('metric',['metric':'workflow.complete','value':x[4],'temporalScope':x[2]],new java.util.HashSet()); }"
-
- 		},
+ 	"filter" : {
+		"tag":{}, 
  		"collectd name to metric" :{
  			"plugin" : "template",
  			"tags" : ["collectd"],
@@ -52,19 +47,35 @@
             "remove-tag" : ["jmx"],
 			"from": [ "plugin_instance","metric","imetric"],
 			"to":[ "instance","type","metric"]
-		},"json-encoder" : {
+		},
+		"grok" : {
+ 			"type":"log",
+ 			"infield":"message",
+ 			"add-tag" : ["newmetric","jobtiming"],
+ 			"set-type":"metric",
+ 			"script" : "INFO: workflow %{UUID:temporalScope} took: %{INT:value} for %{USERNAME:tenant}"
+ 		},
+ 		"set":{
+ 			"type":"metric",
+ 			"tags":["newmetric","jobtiming"],
+ 			"remove-tag":["jobtiming"],
+ 			"fields":["metric","type"],
+ 			"values":["job.run","Duration"]
+ 		},
+		"json-encoder" : {
  			"add-tag" : ["json"],
  			"field" : "json",
- 			"fields" : ["time","source","metric","value","type","instance","temporalScope","tenant","message","tags"] 
+ 			"fields" : ["time","source","metric","value","type","instance","temporalScope","message","tags","tenant"] 
  		} 
 		
 	},
  	
  	"output" : {
 		"amqp-out":{
-			"exchange":"metrics",
+			"type":"metric",		
+	"exchange":"metrics",
             "tags":["json"],
-			"host":"127.0.0.1",
+			"host":"172.16.3.3",
 			"field" : "json"
 		},
 		"amqp-out-logs":{
@@ -72,12 +83,9 @@
 			"type": "log",
 			"exchange":"logs",
              "tags":["json"],
-			"host":"127.0.0.1",
+			"host":"172.16.3.3",
 			"field" : "json"
-		},"system-out" : {
- 			"name" : "out",
- 			"type":"metric"	
- 		}
+		}
  		
  	}
  	}
