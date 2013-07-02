@@ -184,45 +184,91 @@ public class Flengine {
 	private final List<Input> inputs = new LinkedList<Input>();
 	private final List<Output> outputs = new LinkedList<Output>();
 	private final List<Filter> filters = new LinkedList<Filter>();
+	private final Map<String, Integer> refcounts = new HashMap<>();
 
 	private final BlockingQueue<Record> inqueue = new QueueWrapper();
 	private boolean running;
 	private ThreadPoolExecutor executor;
-	
-	private final Map<String,String> tags = new HashMap<String, String>();
+
+	private final Map<String, String> tags = new HashMap<String, String>();
+
+	protected boolean count(String name) {
+		synchronized (refcounts) {
+			if (refcounts.containsKey(name)) {
+				refcounts.put(name, refcounts.get(name) + 1);
+				return false;
+			} else {
+				refcounts.put(name, 1);
+				return true;
+			}
+		}
+
+		// TODO: detect collisions
+		// FIXME: locking is fishy
+	}
+
+	protected boolean decount(String name) {
+		synchronized (refcounts) {
+			int count = refcounts.get(name);
+
+			if (count == 1) {
+				refcounts.remove(name);
+				return true;
+			} else {
+				refcounts.put(name, refcounts.get(name) - 1);
+				return false;
+			}
+
+		}
+		// FIXME: locking is fishy
+	}
 
 	public void addInput(Input inp) {
-		synchronized (inputs) {
-			inputs.add(inp);
-			inp.setInputQueue(inqueue);
-			if (running)
-				inp.start();
+		if (count(inp.getName())) {
+			synchronized (inputs) {
+				inputs.add(inp);
+				inp.setInputQueue(inqueue);
+				if (running)
+					inp.start();
+			}
 		}
 	}
 
-	public void removeInput(Input inp) {
-		synchronized (inputs) {
-			inputs.remove(inp);
-			if (running) {
-				inp.stop();
+	protected void removeInput(Input inp) {
+		if (decount(inp.getName())) {
+			synchronized (inputs) {
+				inputs.remove(inp);
+				if (running) {
+					inp.stop();
+					try {
+						inp.join();
+					} catch (InterruptedException e) {
+						Logger.getLogger(getClass().getName()).log(
+								Level.SEVERE, "should not occur executor", e);
+					}
+				}
+				inp.setInputQueue(null);
 			}
-			inp.setInputQueue(null);
 		}
 	}
 
 	public void addOutput(Output outp) {
-		synchronized (outputs) {
-			outputs.add(outp);
-			if (running)
-				outp.start();
+		if (count(outp.getName())) {
+			synchronized (outputs) {
+				outputs.add(outp);
+				if (running)
+					outp.start();
+			}
 		}
 	}
 
-	public void removeOutput(Output outp) {
-		synchronized (outputs) {
-			outputs.remove(outp);
-			if (running)
-				outp.stop();
+	protected void removeOutput(Output outp) {
+		if (decount(outp.getName())) {
+			synchronized (outputs) {
+				outputs.remove(outp);
+				if (running)
+					outp.stop();
+			}
 		}
 	}
 
@@ -230,22 +276,26 @@ public class Flengine {
 	 * add filter behind the others
 	 */
 	public void addFilter(Filter f) {
-		synchronized (filters) {
-			filters.add(f);
+		if (count(f.getName())) {
+			synchronized (filters) {
+				filters.add(f);
+			}
 		}
 	}
 
 	/**
 	 * add filter behind the others
 	 */
-	public void removeFilter(Filter f) {
-		synchronized (filters) {
-			filters.remove(f);
+	protected void removeFilter(Filter f) {
+		if (decount(f.getName())) {
+			synchronized (filters) {
+				filters.remove(f);
+			}
 		}
 	}
 
 	public void start() {
-		running=true;
+		running = true;
 		for (Output output : outputs) {
 			output.start();
 		}
@@ -262,7 +312,7 @@ public class Flengine {
 	}
 
 	public void stop() {
-		running=false;
+		running = false;
 		for (Input input : inputs) {
 			input.stop();
 		}
@@ -335,12 +385,12 @@ public class Flengine {
 		}
 
 	}
-	
-	public void addTags(Map<String, String> tags){
+
+	public void addTags(Map<String, String> tags) {
 		this.tags.putAll(tags);
 	}
-	
-	public Map<String, String> getTags(){
+
+	public Map<String, String> getTags() {
 		return this.tags;
 	}
 }
