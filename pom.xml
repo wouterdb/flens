@@ -97,7 +97,7 @@
 				</executions>
 				<configuration>
 					<copyright>2013, Distrinet</copyright>
-					
+
 					<name>flens</name>
 					<packager>WDB</packager>
 					<prefix>/usr/share/java</prefix>
@@ -105,7 +105,7 @@
 					<mappings>
 						<mapping>
 							<directory>/usr/share/java</directory>
-						<filemode>644</filemode>
+							<filemode>644</filemode>
 							<username>root</username>
 							<groupname>root</groupname>
 							<artifact>
@@ -121,7 +121,11 @@
 							<filemode>644</filemode>
 							<username>root</username>
 							<groupname>root</groupname>
-							<sources><source><location>src/main/rpm/flens.service</location></source></sources>
+							<sources>
+								<source>
+									<location>src/main/rpm/flens.service</location>
+								</source>
+							</sources>
 						</mapping>
 					</mappings>
 
@@ -151,4 +155,27 @@
 			</dependencies>
 		</profile>
 	</profiles>
+
+	<repositories>
+		<repository>
+			<id>nflabs public repository release</id>
+			<url>https://github.com/NFLabs/mvn-repo/raw/master/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>nflabs public repository snapshot</id>
+			<url>https://github.com/NFLabs/mvn-repo/raw/master/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
