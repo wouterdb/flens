@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
@@ -61,11 +62,10 @@ public class ConfigParser {
 
 				Config c = pluginRepo.get(plugin);
 				if (c == null) {
-					throw new IllegalArgumentException("plugin not found: "
+					Logger.getLogger("flens").severe("plugin not found: "
 							+ entry);
-				}
-
-				c.readConfigPart((String) entry, child, engine);
+				}else
+					c.readConfigPart((String) entry, child, engine);
 			}
 		}
 

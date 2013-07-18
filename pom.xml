@@ -127,6 +127,29 @@
 								</source>
 							</sources>
 						</mapping>
+						<mapping>
+							<directoryIncluded>False</directoryIncluded>
+							<directory>/usr/bin/</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>src/main/rpm/flens-tailer.sh</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/share/flens</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>src/main/rpm/Tailer.json</location>
+								</source>
+							</sources>
+						</mapping>
 					</mappings>
 
 				</configuration>
