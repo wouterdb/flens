@@ -10,7 +10,7 @@ import flens.core.util.AbstractPlugin;
 public abstract class AbstractInput extends AbstractPlugin implements Input{
 
 	protected BlockingQueue<Record> in;
-	private Tagger tagger;
+	protected Tagger tagger;
 	private String name;
 
 	public AbstractInput(String name,Tagger tagger) {

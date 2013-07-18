@@ -62,16 +62,21 @@ public abstract class AbstractConfig implements Config {
 
 	
 	private Tagger readTagger() {
-		List tags = getArray("add-tag",Collections.EMPTY_LIST);
+		return readTagger("");
+	
+	}
+
+	protected Tagger readTagger(String prefix) {
+		List tags = getArray(prefix+"add-tag",Collections.EMPTY_LIST);
 		String stype = null;
 		if(isIn()){
-			String type = get("type",name);
+			String type = get(prefix+"type",name);
 			return new InputTagger(type,tags);
 		}else{
-			stype = get("set-type",null);
+			stype = get(prefix+"set-type",null);
 		}
 		
-		rtags = getArray("remove-tag",Collections.EMPTY_LIST);
+		rtags = getArray(prefix+"remove-tag",Collections.EMPTY_LIST);
 		
 		if(tags.isEmpty() && rtags.isEmpty()){
 			if(stype == null)
@@ -83,7 +88,7 @@ public abstract class AbstractConfig implements Config {
 		return new StandardTagger(stype,tags,rtags);
 	
 	}
-
+	
 	private Matcher readMatcher() {
 		tags = getArray("tags",Collections.EMPTY_LIST);
 		String type = get("type",null);

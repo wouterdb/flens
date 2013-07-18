@@ -40,6 +40,11 @@ public class Service {
 
 		String server = (String) myconfig.get("server");
 		String name = (String) myconfig.get("name");
+		
+		if(server==null || name==null){
+			System.out.println("no config,....");
+			System.exit(-1);
+		}
 
 		System.out.println(String.format("connecting to %s as %s, with tags %s",server,name,tags));
 		

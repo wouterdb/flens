@@ -21,6 +21,8 @@
  "JMXInput":"flens.config.JMXInput",
  "grep":"flens.config.GrepIn",
  "tag":"flens.config.TagFilter",
- "set":"flens.config.SetFilter"
+ "set":"flens.config.SetFilter",
+ "proc":"flens.config.ProcInput",
+ "proc-poll":"flens.config.ProcPollerInput"
 }
  

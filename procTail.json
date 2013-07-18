@@ -1,0 +1,37 @@
+{
+	"input" : {		
+ 		"proc" : {
+ 			"cmd" : "/usr/bin/journalctl",
+ 			"args": ["-o","json", "-f"],
+ 			"type" : "jsonLog",
+ 			"err-type" : "log"
+ 		}
+ 	},
+ 	
+ 	"filter" : {
+		"systemd-json-decoder" : {
+			"plugin":"json-decoder",
+ 			"type" : "jsonLog",
+ 			"prio":"1"
+ 		},"systemd-rename":{
+ 			"plugin":"rename",
+ 			"type":"jsonLog",
+ 			"prio":"2",
+ 			"from":["_HOSTNAME","__REALTIME_TIMESTAMP","MESSAGE"],
+ 			"to":["source","time","message"],
+ 			"set-type":"log"
+ 		}
+	},
+ 	
+ 	"output" : {
+ 		
+		"system-out" : {
+ 			"name" : "out",
+			"type":"log"
+ 			
+ 		}
+ 		
+ 	}
+ 		 
+
+}

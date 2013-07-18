@@ -97,11 +97,11 @@
 				</executions>
 				<configuration>
 					<copyright>2013, Distrinet</copyright>
-
+					<group>misc</group>
 					<name>flens</name>
 					<packager>WDB</packager>
 					<prefix>/usr/share/java</prefix>
-					<requires>java</requires>
+					<requires><require>java</require></requires>
 					<mappings>
 						<mapping>
 							<directory>/usr/share/java</directory>
