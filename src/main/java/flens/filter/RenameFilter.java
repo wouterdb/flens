@@ -16,9 +16,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class RenameFilter extends AbstractFilter {
 	private List<Pair<String, String>> names = new LinkedList<>();
 
-	public RenameFilter(String name, Tagger tagger, Matcher matcher,
+	public RenameFilter(String name, Tagger tagger, Matcher matcher,int prio,
 			List<String> f, List<String> t) {
-		super(name, tagger, matcher);
+		super(name, tagger, matcher,prio);
 		for (int i = 0; i < f.size(); i++)
 			this.names.add(Pair.of(f.get(i), t.get(i)));
 	}

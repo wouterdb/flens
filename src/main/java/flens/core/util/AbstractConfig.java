@@ -22,6 +22,7 @@ public abstract class AbstractConfig implements Config {
 	protected Matcher matcher;
 	protected Tagger tagger;
 	protected Logger logger = Logger.getLogger(getClass().getName());
+	protected int prio = 100;
 	
 	@Override
 	public void readConfigPart(String name, Map<String, Object> tree, Flengine engine) {
@@ -39,6 +40,7 @@ public abstract class AbstractConfig implements Config {
 
 		if(isFilter()){
 			checkLoopFree();
+			prio = getInt("prio", 5);
 		}
 		construct();
 		
@@ -197,6 +199,8 @@ public abstract class AbstractConfig implements Config {
 		filteropts.add(name);
 		filteropts.addAll(taggerOpts);
 		filteropts.addAll(matcherOpts);
+		filteropts.add(new Option("prio", "int", "5", "execution priority")); 
+				
 		
 		outopts = new LinkedList<Option>();
 		outopts.add(name);

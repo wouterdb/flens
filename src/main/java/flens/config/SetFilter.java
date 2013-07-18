@@ -22,7 +22,7 @@ public class SetFilter extends AbstractConfig
     if (f.size() != t.size()) {
       throw new IllegalArgumentException("to and from must be same size");
     }
-    this.engine.addFilter(new flens.filter.SetFilter(this.name, this.tagger, this.matcher, f, t));
+    this.engine.addFilter(new flens.filter.SetFilter(this.name, this.tagger, this.matcher,prio, f, t));
   }
 
   protected boolean isOut()

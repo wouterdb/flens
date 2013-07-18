@@ -13,8 +13,8 @@ import flens.filter.util.AbstractFilter;
 
 public class Unpacker extends AbstractFilter implements Filter{
 
-	public Unpacker(String name, Tagger tagger, Matcher matcher) {
-		super(name, tagger, matcher);
+	public Unpacker(String name, Tagger tagger, Matcher matcher,int prio) {
+		super(name, tagger, matcher,prio);
 	}
 
 	@Override

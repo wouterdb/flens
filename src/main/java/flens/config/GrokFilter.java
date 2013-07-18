@@ -17,7 +17,7 @@ public class GrokFilter extends AbstractConfig{
 	protected void construct() {
 		String s = get("script", "");
 		String inf = get("infield", "");
-		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,s,inf));
+		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf));
 	}
 
 	

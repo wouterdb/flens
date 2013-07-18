@@ -19,5 +19,7 @@ public interface Filter extends Plugin {
 	 * @return
 	 */
 	public Collection<Record> process(Record in);
+	
+	public int priority();
 
 }

@@ -17,7 +17,7 @@ public class JsonEncoder extends AbstractConfig{
 		String field = get("field", "json");
 		List<String> fields = getArray("fields", null);
 		
-		engine.addFilter(new flens.filter.JsonEncoder(name,tagger,matcher,field,fields));
+		engine.addFilter(new flens.filter.JsonEncoder(name,tagger,matcher,prio,field,fields));
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package flens.core;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -279,6 +281,13 @@ public class Flengine {
 		if (count(f.getName())) {
 			synchronized (filters) {
 				filters.add(f);
+				Collections.sort(filters, new Comparator<Filter>() {
+
+					@Override
+					public int compare(Filter o1, Filter o2) {
+						return o1.priority()-o2.priority();
+					}
+				});
 			}
 		}
 	}

@@ -19,9 +19,9 @@ public class GrokFilter extends AbstractFilter {
 	private Grok compiled;
 	private String field;
 
-	public GrokFilter(String name, Tagger tagger, Matcher matcher,
+	public GrokFilter(String name, Tagger tagger, Matcher matcher,int prio,
 			String script, String inField) {
-		super(name, tagger, matcher);
+		super(name, tagger, matcher,prio);
 		this.script = script;
 		this.field = inField;
 		start();

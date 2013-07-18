@@ -27,8 +27,8 @@ public class MVELTemplate extends AbstractFilter{
 	private String field;
 
 
-	public MVELTemplate(String name, Tagger tagger, Matcher matcher,String field,String script) {
-		super(name, tagger, matcher);
+	public MVELTemplate(String name, Tagger tagger, Matcher matcher,int prio,String field,String script) {
+		super(name, tagger, matcher,prio);
 		this.field = field;
 		this.script = script;
 		start();

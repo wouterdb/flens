@@ -11,7 +11,7 @@ public class CharacterDecoder extends AbstractConfig{
 
 	@Override
 	protected void construct() {
-		engine.addFilter(new flens.filter.CharacterDecoder(name,tagger,matcher));
+		engine.addFilter(new flens.filter.CharacterDecoder(name,tagger,matcher,prio));
 	}
 
 	@Override

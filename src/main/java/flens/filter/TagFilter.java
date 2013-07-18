@@ -15,9 +15,9 @@ public class TagFilter extends AbstractFilter {
 
 	private Map<String,String> tags;
 
-	public TagFilter(String name, Tagger tagger, Matcher matcher,
+	public TagFilter(String name, Tagger tagger, Matcher matcher,int prio,
 			Map<String,String> tags) {
-		super(name, tagger, matcher);
+		super(name, tagger, matcher,prio);
 		this.tags = tags;
 	}
 

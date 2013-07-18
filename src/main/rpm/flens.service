@@ -1,0 +1,12 @@
+[Unit]
+Description=The Flens Message Router
+After=syslog.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/usr/bin/java -cp /usr/share/java/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar flens.Service /etc/flens.d
+
+[Install]
+WantedBy=multi-user.target

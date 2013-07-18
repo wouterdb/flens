@@ -15,7 +15,7 @@ public class TagFilter extends AbstractConfig{
 	
 	@Override
 	protected void construct() {
-		engine.addFilter(new flens.filter.TagFilter(name,tagger,matcher,engine.getTags()));
+		engine.addFilter(new flens.filter.TagFilter(name,tagger,matcher,prio,engine.getTags()));
 	}
 
 	

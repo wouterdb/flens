@@ -17,9 +17,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SetFilter extends AbstractFilter {
 	private Map<String, String> pairs = new HashMap<>();
 
-	public SetFilter(String name, Tagger tagger, Matcher matcher,
+	public SetFilter(String name, Tagger tagger, Matcher matcher,int prio,
 			List<String> f, List<String> v) {
-		super(name, tagger, matcher);
+		super(name, tagger, matcher,prio);
 		for (int i = 0; i < f.size(); i++)
 			this.pairs.put(f.get(i),v.get(i));
 	}

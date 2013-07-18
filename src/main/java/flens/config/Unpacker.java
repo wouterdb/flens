@@ -21,7 +21,7 @@ public class Unpacker extends AbstractConfig{
 	@Override
 	protected void construct() {
 		requiresLoopFree();
-		engine.addFilter(new flens.filter.Unpacker(name,tagger,matcher));
+		engine.addFilter(new flens.filter.Unpacker(name,tagger,matcher,prio));
 	}
 
 	

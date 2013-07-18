@@ -16,7 +16,7 @@ public class MvelFilter extends AbstractConfig{
 	@Override
 	protected void construct() {
 		String s = get("script", "");
-		engine.addFilter(new flens.filter.MVELFilter(name,tagger,matcher,s));
+		engine.addFilter(new flens.filter.MVELFilter(name,tagger,matcher,prio,s));
 	}
 
 	

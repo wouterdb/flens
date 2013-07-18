@@ -16,8 +16,8 @@ public class JSonDecoder extends AbstractFilter {
 
 	private Gson decoder;
 
-	public JSonDecoder(String name, Tagger tagger, Matcher matcher) {
-		super(name, tagger, matcher);
+	public JSonDecoder(String name, Tagger tagger, Matcher matcher,int prio) {
+		super(name, tagger, matcher,prio);
 		decoder = new Gson();
 	}
 
@@ -27,7 +27,8 @@ public class JSonDecoder extends AbstractFilter {
 		
 		
 		Map x = decoder.fromJson((String) in.getValues().get("message"),HashMap.class);
-		in.getValues().putAll(x);
+		if(x!=null)
+			in.getValues().putAll(x);
 		tag(in);
 		return Collections.EMPTY_LIST;
 	}
