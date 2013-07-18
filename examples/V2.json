@@ -1,0 +1,21 @@
+{
+	"collectd-in" : {
+ 			"type" : "metric",
+			"add-tag" : "collectd"
+ 	},"tag":{
+ 			"prio":"1"
+ 	},"collectd name to metric" :{
+ 			"plugin" : "template",
+ 			"tags" : ["collectd"],
+ 			"template" : "@{plugin!=type?plugin+'.':''}@{type}",
+ 			"field":"metric",
+			"prio":2
+ 	},"rename" : {
+			"tags": ["collectd"],
+            "remove-tag" : ["collectd"],
+			"from": [ "type_instance"	,"plugin_instance"],
+			"to":[ 	  "type"		,"instance"],
+			"prio":3
+	} 
+}
+ 	

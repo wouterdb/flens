@@ -1,0 +1,37 @@
+{
+	"input" : {	
+ 		"amqp-in" : {
+ 			"type" : "metric",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"metrics"
+ 		},
+ 		"amqp-logs" : {
+ 			"plugin":"amqp-in",
+ 			"type" : "logs",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"logs"
+ 		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+ 		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		}
+ 	},
+ 	
+ 	"output" : {
+ 		"system-out" : {
+ 			"name" : "out"
+ 			
+ 		}
+ 	}
+ 		 
+
+}

@@ -1,0 +1,42 @@
+{
+	"input" : {		
+ 	"amqp-in" : {
+ 			"type" : "metric",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"metrics"
+ 		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		},"grok" : {
+ 			"type":"log",
+ 			"infield":"message",
+ 			"add-tag" : ["newmetric","jobtiming"],
+ 			"set-type":"metric",
+ 			"script" : "INFO: workflow %{UUID:temporalScope} took: %{INT:value} for %{USERNAME:tenant}"
+ 		},
+ 		"json-encoder" : {
+ 			"add-tag" : ["json"],
+ 			"field" : "json",
+ 			"fields" : ["time","source","metric","value","type","instance","temporalScope","tenant"] ,
+ 			"field" : "json"
+ 		} 
+	},
+ 	
+ 	"output" : {
+ 		"system-out":{
+ 			"type":"metric"
+ 		}
+ 		
+ 	}
+ 		 
+
+}

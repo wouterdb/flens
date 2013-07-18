@@ -1,0 +1,39 @@
+{
+	"collectd-in" : {
+ 			"type" : "metric",
+			"add-tag" : "collectd"
+ 	},"tag":{
+ 			"prio":"1"
+ 	},"collectd name to metric" :{
+ 			"plugin" : "template",
+ 			"tags" : ["collectd"],
+ 			"template" : "@{plugin!=type?plugin+'.':''}@{type}",
+ 			"field":"metric",
+			"prio":2
+ 	},"rename" : {
+			"tags": ["collectd"],
+            "remove-tag" : ["collectd"],
+			"from": [ "type_instance"	,"plugin_instance"],
+			"to":[ 	  "type"		,"instance"],
+			"prio":3
+	},"JMXInput":{
+			"type":"metric",
+			"jvm":"sched",
+			"domains" : ["metrics","metrics-details"],
+			"add-tag" : "jmx"
+	},"jmx name to metric" :{
+ 			"plugin" : "template",
+ 			"tags" : ["jmx"],
+ 			"template" : "@{plugin}@{(isdef type)?'.'+type:''}",
+ 			"field":"imetric",
+ 			"prio":"1"
+ 	},"jmx rename" : {
+ 			"prio":"2",
+			"plugin" : "rename",
+			"tags": ["jmx"],
+            "remove-tag" : ["jmx"],
+			"from": [ "plugin_instance","metric","imetric"],
+			"to":[ "instance","type","metric"]
+	}
+}
+ 	

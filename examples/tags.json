@@ -1,0 +1,9 @@
+{
+	"template" : {
+    	"template":"@{tags['service']}",
+        "field":"service",
+        "prio":"10"
+    },"tag":{
+ 		"prio":"1"
+ 	}
+}

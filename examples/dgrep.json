@@ -1,0 +1,17 @@
+{
+	"amqp-out-logs":{
+			"prio":0,
+			"plugin":"amqp-out",
+			"type": "log",
+			"exchange":"logs",
+             "tags":["json"],
+			"host":"172.16.3.3",
+			"field" : "json"
+	},"grepM":{
+			"plugin":"grep",
+			"type":"log",
+			"file":"/var/log/messages",
+			"regex":".*RSA1.*"
+	}
+}
+ 	

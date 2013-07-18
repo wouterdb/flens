@@ -5,6 +5,7 @@
  "tsdb-in" : "flens.config.OpenTsdbIn",
  "tsdb-out" : "flens.config.OpenTsdbOut",
  "graphite-in" : "flens.config.GraphiteIn",
+ "graphite-out" : "flens.config.GraphiteOut",
  "unpacker" : "flens.config.ValuesUnpacker",
  "mvel" : "flens.config.MvelFilter",
  "grok" : "flens.config.GrokFilter",

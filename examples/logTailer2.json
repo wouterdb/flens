@@ -1,0 +1,33 @@
+{
+	"input" : {		
+ 	"amqp-in" : {
+ 			"type" : "log",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"metrics"
+ 		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+		"decoder" : {
+			"prio":1,
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"prio":2,
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		},"mvel":{
+ 			"prio":3,
+ 			"script":"System.out.println(source + ':\t' +message);"
+ 		}
+	},
+ 	
+ 	"output" : {
+ 		
+ 		
+ 	}
+ 		 
+
+}

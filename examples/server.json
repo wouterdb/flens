@@ -1,0 +1,50 @@
+{
+"server":"172.16.3.3",
+"name" : "master",
+"tags" : { "tier" : "master", "type":"master"},
+"init":{
+	"input" : {		
+ 		"amqp-in" : {
+ 			"type" : "metric",
+			"exchange":"metrics",
+			"add-tag":["binary","json"]
+ 		},
+		"collectd-in" : {
+ 			"type" : "metric",
+			"add-tag" : "collectd"
+ 		}	
+ 	},
+ 	
+ 	"filter" : {
+	 	"collectd name to metric" :{
+ 			"plugin" : "template",
+ 			"tags" : ["collectd"],
+ 			"template" : "@{plugin!=type?plugin+'.':''}@{type}",
+ 			"field":"metric",
+			"prio":2
+ 		},"rename" : {
+			"tags": ["collectd"],
+            		"remove-tag" : ["collectd"],
+			"from": [ "type_instance"	,"plugin_instance"],
+			"to":[ 	  "type"		,"instance"],
+			"prio":3
+		},"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		}
+	},
+ 	
+ 	"output" : {
+ 		"tsdb-out" : {
+ 			"name":"tsdb-out",
+ 			"type":"metric",
+ 			"port": 4242,
+			"send-tags":["type","instance","service"]
+ 		},
+		"system-out" : {"type":"Nmetric"}
+ 	}
+}
+}
