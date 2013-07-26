@@ -24,6 +24,7 @@
  "tag":"flens.config.TagFilter",
  "set":"flens.config.SetFilter",
  "proc":"flens.config.ProcInput",
- "proc-poll":"flens.config.ProcPollerInput"
+ "proc-poll":"flens.config.ProcPollerInput",
+ "splitter":"flens.config.Splitter"
 }
  

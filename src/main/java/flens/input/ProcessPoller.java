@@ -33,6 +33,7 @@ public class ProcessPoller extends AbstractInput {
 		this.args = args;
 		this.outT = out;
 		this.errT = err;
+		this.period=period;
 		args.add(0, cmd);
 	}
 

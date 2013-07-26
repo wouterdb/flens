@@ -1,0 +1,32 @@
+{
+	"input" : {		
+ 		"proc-poll": {
+ 			"type" : "proc",
+ 			"cmd" : "cat",
+ 			"args" : ["/proc/loadavg"]
+ 		}
+ 	},
+ 	
+ 	"filter" : {
+ 		"grok":{
+ 			"prio":"1",
+ 			"type" : "proc",
+ 			"infield":"message",
+ 			"script" : "%{NUMBER:1m} %{NUMBER:5m} %{NUMBER:15m}"
+ 		},"splitter":{
+ 			"prio":2,
+ 			"type":"proc",
+ 			"fields":['1m','5m','15m'],
+ 			"set-type":"x"
+ 		},"proc name to metric" :{
+ 			"plugin" : "template",
+ 			"template" : "load.@{metric}",
+ 			"field":"metric"
+ 		}
+ 	},
+ 	
+ 	"output" : {
+ 		"system-out" : {}
+ 			
+ 	}
+}
