@@ -2,6 +2,8 @@ package flens.output.util;
 
 import java.net.Socket;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,6 +26,9 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 	protected BlockingQueue<Record> queue = new LinkedBlockingQueue<>();
 	private Thread thread;
 	protected volatile boolean running;
+	
+	protected int reconnectDelay = 10000;
+	protected int flushOnSize = 10000;
 
 	@Override
 	public Matcher getMatcher() {
@@ -53,4 +58,19 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 		thread.interrupt();
 	}
 
+	protected void reconnect(){
+		//FIXME:may lose records
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize)
+					getOutputQueue().clear();
+				start();
+			}
+		}, reconnectDelay );
+		
+		
+	}
 }

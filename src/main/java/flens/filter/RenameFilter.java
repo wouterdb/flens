@@ -1,5 +1,6 @@
 package flens.filter;
 
+import flens.core.Constants;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -30,6 +31,10 @@ public class RenameFilter extends AbstractFilter {
 			if (val != null) {
 				if(!((String)ren.getRight()).isEmpty())
 					vals.put(ren.getRight(), val);
+				if(ren.getRight().equals(Constants.TIME)){
+					
+					vals.put(Constants.TIME, in.getTimestamp());
+				}
 			}
 		}
 		

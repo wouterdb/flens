@@ -45,6 +45,12 @@
 			<artifactId>Grok</artifactId>
 			<version>0.0.3.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>0.90.2</version>
+			
+		</dependency>
 	</dependencies>
 
 	<build>

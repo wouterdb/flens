@@ -1,0 +1,42 @@
+{
+	"input" : {		
+ 		"proc" : {
+ 			"cmd" : "/usr/bin/journalctl",
+ 			"args": ["-o","json", "-f"],
+ 			"type" : "jsonLog",
+ 			"err-type" : "log"
+ 		}
+ 	},
+ 	
+ 	"filter" : {
+		"systemd-json-decoder" : {
+			"plugin":"json-decoder",
+ 			"type" : "jsonLog",
+ 			"prio":"1"
+ 		},"systemd-time":{
+ 			"plugin":"mvel",
+ 			"type":"jsonLog",
+ 			"prio":"2",
+ 			"script":"time=__REALTIME_TIMESTAMP\\1000; return null;"
+ 		},"systemd-rename":{
+ 			"plugin":"rename",
+ 			"type":"jsonLog",
+ 			"prio":"3",
+ 			"from":["_HOSTNAME","MESSAGE"],
+ 			"to":["source","message"],
+ 			"set-type":"log"
+ 		}
+	},
+ 	
+ 	"output" : {
+ 		"elasticsearch" : {
+ 			"type" : "log",
+ 			"transport": {
+ 				 "network.bind_host":"127.0.0.1"
+ 			}
+ 		},"system-out":{}
+ 		
+ 	}
+ 		 
+
+}

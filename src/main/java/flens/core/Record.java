@@ -89,6 +89,8 @@ public class Record {
 			return ((Number)o).longValue();
 		if(o instanceof Date)
 			return ((Date)o).getTime();
+		if(o instanceof String)
+			return Long.parseLong((String)o);
 		throw new IllegalStateException("timestamp of unexpected form:" + o+o.getClass());
 	}
 

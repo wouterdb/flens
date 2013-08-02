@@ -11,7 +11,7 @@ public abstract class AbstractPlugin {
 		
 	}
 	
-	protected void err(String msg, Exception e) {
+	protected void err(String msg, Throwable e) {
 		Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg,e);
 	}
 

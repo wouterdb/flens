@@ -363,14 +363,14 @@ public class Flengine {
 
 		Map<String, Object> values = out.getValues();
 
-		values.put("fles.q-in-size", executor.getQueue().size());
+		values.put("flens.q-in-size", executor.getQueue().size());
 		for (Output o : outputs) {
-			values.put(String.format("fels.q-%s-size", o.getName()), o
+			values.put(String.format("flens.q-%s-size", o.getName()), o
 					.getOutputQueue().size());
 		}
-		values.put("fles.exec-threads-active", executor.getActiveCount());
-		values.put("fles.exec-threads-live", executor.getPoolSize());
-		values.put("fles.exec-seen", executor.getCompletedTaskCount());
+		values.put("flens.exec-threads-active", executor.getActiveCount());
+		values.put("flens.exec-threads-live", executor.getPoolSize());
+		values.put("flens.exec-seen", executor.getCompletedTaskCount());
 	}
 
 	public void remove(String name) {

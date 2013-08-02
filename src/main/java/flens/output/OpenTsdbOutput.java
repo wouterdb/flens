@@ -59,8 +59,7 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
 
 	private int port = 4242;
 	private String host;
-	private int reconnectDelay = 10000;
-	private int flushOnSize = -1;
+	
     private Set<Pair<String, String>> sendTags = new HashSet<>();
 	private Thread errPump;
 	
@@ -144,21 +143,7 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
 		
 	}
 
-	protected void reconnect(){
-		//FIXME:may lose records
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize)
-					getOutputQueue().clear();
-				start();
-			}
-		}, reconnectDelay );
-		
-		
-	}
+	
 
 	@Override
 	public void stop() {
