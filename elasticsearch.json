@@ -17,7 +17,7 @@
  			"plugin":"mvel",
  			"type":"jsonLog",
  			"prio":"2",
- 			"script":"time=__REALTIME_TIMESTAMP\\1000; return null;"
+ 			"script":"time=(__REALTIME_TIMESTAMP/1000L); return null;"
  		},"systemd-rename":{
  			"plugin":"rename",
  			"type":"jsonLog",
