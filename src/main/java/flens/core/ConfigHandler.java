@@ -35,7 +35,7 @@ public class ConfigHandler extends ConfigClient {
 
 	public void load(Map<String, Object> initial) {
 		parser.construct(initial);
-		
+		configs.put(new UUID(0,0),initial);
 	}
 
 }
