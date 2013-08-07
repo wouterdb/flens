@@ -28,7 +28,10 @@
  			"field" : "json",
  			"fields" : ["time","source","metric","value","type","instance","temporalScope","tenant"] ,
  			"field" : "json"
- 		} 
+ 		} ,"mvel":{
+ 			"type":"metric",
+ 			"script":"if(metric!='entropy')DISCARD=true; return null;"
+ 		}
 	},
  	
  	"output" : {

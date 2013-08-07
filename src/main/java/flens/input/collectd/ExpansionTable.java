@@ -37,7 +37,7 @@ public class ExpansionTable {
 				return names;
 			}
 	
-			public boolean matches(String type, String plugin){
+			public boolean matches(String plugin,String type){
 				if(this.type!=null)
 					if(!this.type.equals(type))
 						return false;

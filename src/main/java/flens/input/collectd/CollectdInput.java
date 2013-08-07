@@ -260,7 +260,7 @@ public class CollectdInput extends AbstractActiveInput {
 		}
 	}
 
-	private final ExpansionTable cdet = new CollectdExpansionTable();
+	private final CollectdExpansionTable cdet = new CollectdExpansionTable();
 
 	/**
 	 * collectd has multi-valued metrics. The values are not self-descriptive

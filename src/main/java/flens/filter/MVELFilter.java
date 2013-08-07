@@ -36,8 +36,14 @@ public class MVELFilter extends AbstractFilter{
 
 	@Override
 	public Collection<Record> process(Record in) {
+		in.getValues().put("DISCARD", false);
 		Object records = MVEL.executeExpression(compiled, in.getValues());
+		
 		tag(in);
+		
+		Object d = in.getValues().remove("DISCARD");
+		if(d instanceof Boolean && ((Boolean)d))
+			in.setType(null);
 		
 		if(records == null)
 			return Collections.EMPTY_LIST;
