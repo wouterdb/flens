@@ -3,6 +3,8 @@ package flens.core;
 import java.util.Map;
 import java.util.UUID;
 
+import com.rits.cloning.Cloner;
+
 import dnet.monitor.control.Command;
 import dnet.monitor.control.config.ConfigClient;
 
@@ -34,8 +36,8 @@ public class ConfigHandler extends ConfigClient {
 	}
 
 	public void load(Map<String, Object> initial) {
+		configs.put(new UUID(0,0),(new Cloner()).deepClone(initial));
 		parser.construct(initial);
-		configs.put(new UUID(0,0),initial);
 	}
 
 }
