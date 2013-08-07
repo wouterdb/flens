@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,12 +71,16 @@ public class Service {
 		
 		Gson g = new Gson();
 		
-		for(File f:(new File(dir)).listFiles(new FilenameFilter() {
+		File[] files = (new File(dir)).listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith("json");
 			}
-		})){
+		});
+		
+		Arrays.sort(files);
+		
+		for(File f:files){
 			configs.add(g.fromJson(new FileReader(f),
 					HashMap.class));
 		}
