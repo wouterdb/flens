@@ -11,8 +11,7 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.core.util.AbstractPlugin;
 
-public class StreamPump extends AbstractActiveInput implements
-		Runnable {
+public class StreamPump extends AbstractActiveInput implements Runnable {
 
 	private BufferedReader reader;
 
@@ -26,20 +25,23 @@ public class StreamPump extends AbstractActiveInput implements
 		try {
 			while (running) {
 				String r = reader.readLine();
-				if(r==null)
+				if (r == null)
 					running = false;
 				else
-					dispatch(new Record(r));
+					dispatch(r);
 			}
 		} catch (IOException e) {
-			err("stream failed",e);
+			err("stream failed", e);
 		}
-		running=false;
+		running = false;
 	}
-	
 
-	protected void dispatch(Record r){
-		if(tagger!=null)
+	protected void dispatch(String s) {
+		dispatch(new Record(s));
+	}
+
+	protected void dispatch(Record r) {
+		if (tagger != null)
 			super.dispatch(r);
 	}
 }

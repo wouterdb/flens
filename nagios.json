@@ -1,0 +1,14 @@
+{
+	"input":{
+		"nagios":{
+			"type":"metric",
+			"metric":"ntp",
+			"target":"127.0.0.1",
+			"args":["-H","switch1"]
+		}
+	},
+	"output":{
+		"system-out":{}
+	}
+}
+	

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -359,18 +360,17 @@ public class Flengine {
 		}
 	}
 
-	public void report(Record out) {
+	public void report(Set<Record> out) {
 
-		Map<String, Object> values = out.getValues();
 
-		values.put("flens.q-in-size", executor.getQueue().size());
+		out.add(new Record("flens.q-in-size", executor.getQueue().size()));
 		for (Output o : outputs) {
-			values.put(String.format("flens.q-%s-size", o.getName()), o
-					.getOutputQueue().size());
+			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o
+					.getOutputQueue().size()));
 		}
-		values.put("flens.exec-threads-active", executor.getActiveCount());
-		values.put("flens.exec-threads-live", executor.getPoolSize());
-		values.put("flens.exec-seen", executor.getCompletedTaskCount());
+		out.add(new Record("flens.exec-threads-active", executor.getActiveCount()));
+		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
+		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
 	}
 
 	public void remove(String name) {

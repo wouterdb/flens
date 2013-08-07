@@ -136,10 +136,7 @@ public class AMQPInput extends AbstractInput implements Consumer {
 		long timel = time==null?System.currentTimeMillis():time.getTime();
 		
 		
-		Record r = new Record(
-				timel,
-				null,
-				fields);
+		Record r = Record.createWithTimeAndValue(timel,fields);
 		dispatch(r);
 			
 	}

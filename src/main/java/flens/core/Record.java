@@ -25,6 +25,58 @@ public class Record {
 		values.put(Constants.SOURCE,  Util.hostName());
 		values.put(Constants.L_MESSAGE, message);
 	}
+	
+	public Record(String metric, Object value) {
+		this.tags = new HashSet<String>();
+		this.values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.METRIC, metric);
+		values.put(Constants.VALUE, value);
+	}
+	
+	
+	public static Record createWithMsgAndValue(String metric, String msg, Object value){
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.METRIC, metric);
+		values.put(Constants.VALUE, value);
+		values.put(Constants.L_MESSAGE, msg);
+		
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithTimeHostAndValue(long timestamp, String host,
+			Map<String, Object> values){
+		
+		values.put(Constants.TIME, timestamp);
+		values.put(Constants.SOURCE,  host);
+		
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithTimeAndValue(long timestamp,
+			Map<String, Object> values) {
+		values.put(Constants.TIME, timestamp);
+		values.put(Constants.SOURCE,  Util.hostName());
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithValues(Map<String, Object> values) {
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE,  Util.hostName());
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithMetricAndMsg(String metric, String msg) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.METRIC, metric);
+		values.put(Constants.L_MESSAGE, msg);
+		return new Record(null, values, new HashSet<String>());
+	}
 
 	public Record() {
 		super();
@@ -34,14 +86,7 @@ public class Record {
 		values.put(Constants.SOURCE,  Util.hostName());
 	}
 
-	public Record(long timestamp, String host,
-			Map<String, Object> values) {
-		super();
-		this.values = values;
-		this.tags = new HashSet<String>();
-		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  host);
-	}
+	
 	
 	/*public Record(String type, long timestamp, String host,
 			Map<String, Object> values,Set<String> tags) {
@@ -53,18 +98,11 @@ public class Record {
 		values.put(Constants.SOURCE,  host);
 	}*/
 
-	public Record(String type, HashMap<String, Object> values,
+	public Record(String type, Map<String, Object> values,
 			Set<String> tags) {
 		this.type = type;
 		this.values = values;
 		this.tags = tags;
-	}
-
-	public Record(long timestamp, Map<String, Object> values) {
-		this.values = values;
-		this.tags = new HashSet<String>();
-		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  Util.hostName());
 	}
 
 	public String getType() {
@@ -149,5 +187,11 @@ public class Record {
 			values.put(name, value);
 		
 	}
+
+	
+
+	
+
+	
 
 }

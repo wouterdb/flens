@@ -87,8 +87,7 @@ public class JMXInput extends AbstractPeriodicInput {
 		private void dispatch(MBeanServerConnection con, ObjectName name)
 				throws IOException {
 			try {
-				Record r = new Record(System.currentTimeMillis(),
-						new HashMap<String, Object>(name.getKeyPropertyList()));
+				Record r = Record.createWithValues(	new HashMap<String, Object>(name.getKeyPropertyList()));
 				MBeanInfo mbi = con.getMBeanInfo(name);
 
 				for (MBeanAttributeInfo mbai : mbi.getAttributes()) {

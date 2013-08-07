@@ -75,7 +75,7 @@ public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
 			tags.put(Constants.METRIC, metricName);
 			tags.put(Constants.VALUE, metric);
 			
-			Record r = new Record(time*1000,host,tags);
+			Record r = Record.createWithTimeHostAndValue(time*1000,host,tags);
 			dispatch(r);
 		} catch (NoSuchElementException e) {
 			warn("line too short", line);

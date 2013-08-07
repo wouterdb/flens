@@ -15,39 +15,23 @@ import flens.input.util.AbstractInput;
 import flens.input.util.StreamPump;
 
 
-public class ProcessPoller extends AbstractInput {
+public class ProcessPoller extends AbstractProcessPoller {
 
-	private String cmd;
-	private Process proc;
 	private StreamPump out;
 	private StreamPump err;
 	private Tagger outT;
 	private Tagger errT;
-	private List args;
-	private Timer t;
-	private long period;
+
 
 	public ProcessPoller(String name, Tagger out,Tagger err, String cmd,List<String> args, long period) {
-		super(name, null);
-		this.cmd=cmd;
-		this.args = args;
+		super(name,null, cmd, args, period);
 		this.outT = out;
 		this.errT = err;
-		this.period=period;
-		args.add(0, cmd);
 	}
 
-	public synchronized void poll() throws InterruptedException {
-		
-		
-		ProcessBuilder pb = new ProcessBuilder(args);
-		try {
-			proc = pb.start();
-		} catch (IOException e) {
-			err("could not start process", e);
-			return;
-		}
-		
+
+	@Override
+	protected void captureStreams() {
 		out = new StreamPump(getName()+".out",outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
 		err = new StreamPump(getName()+".err",errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
 		out.setInputQueue(in);
@@ -55,40 +39,14 @@ public class ProcessPoller extends AbstractInput {
 		out.start();
 		err.start();
 		
-		proc.waitFor();
+	}
+
+	@Override
+	protected void postRun() throws InterruptedException {
 		out.join();
 		err.join();
 		out=null;
 		err=null;
-		notify();
-	}
-
-	public synchronized void stop() {
-		t.cancel();
-		if(proc!=null)
-			proc.destroy();
-	}
-
-	public synchronized void join() throws InterruptedException {
-		if(out!=null)
-			wait();
-			
-	}
-
-	@Override
-	public void start() {
-		t = new Timer(getName());
-		t.schedule(new TimerTask(){
-
-			@Override
-			public void run() {
-				try {
-					poll();
-				} catch (InterruptedException e) {
-					err("failed to poll",e);
-				}
-				
-			}}, 0, period);
 		
 	}
 

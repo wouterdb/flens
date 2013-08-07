@@ -1,6 +1,8 @@
 package flens.input;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 import flens.core.Flengine;
@@ -28,9 +30,11 @@ public class SelfMonitor extends AbstractActiveInput implements Input {
 	public void run() {
 		try {
 			while (running) {
-				Record r = new Record();
-				engine.report(r);
-				dispatch(r);
+				Set<Record> out = new HashSet<>();
+				engine.report(out);
+				for (Record r : out) {
+					dispatch(r);
+				}
 				Thread.sleep(interval);
 
 			}

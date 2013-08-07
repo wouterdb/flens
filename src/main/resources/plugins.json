@@ -25,6 +25,7 @@
  "set":"flens.config.SetFilter",
  "proc":"flens.config.ProcInput",
  "proc-poll":"flens.config.ProcPollerInput",
- "elasticsearch":"flens.config.ElasticSearchOutput"
+ "elasticsearch":"flens.config.ElasticSearchOutput",
+ "nagios":"flens.config.NagiosInput"
 }
  
