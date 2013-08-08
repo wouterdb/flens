@@ -107,7 +107,7 @@
 					<name>flens</name>
 					<packager>WDB</packager>
 					<prefix>/usr/share/java</prefix>
-					<requires><require>java</require></requires>
+					<requires><require>java-1.7.0-devel</require></requires>
 					<mappings>
 						<mapping>
 							<directory>/usr/share/java</directory>
@@ -207,4 +207,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	<packaging>pom</packaging>
 </project>
