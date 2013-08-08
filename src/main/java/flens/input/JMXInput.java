@@ -102,7 +102,7 @@ public class JMXInput extends AbstractPeriodicInput {
 						if(type!=null)
 							metric = type;
 					}
-					r2.setValue(Constants.METRIC,metric);
+					r2.setValue(Constants.TYPE,metric);
 					Object val = con.getAttribute(name, mbai.getName()); 
 					/*if(val instanceof CompositeData)
 						dispatch(r2,(CompositeData)val);
