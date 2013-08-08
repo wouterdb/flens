@@ -14,6 +14,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.internal.StringMap;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -110,12 +111,12 @@ public class Service {
 					if(!(newSub instanceof Map)){
 						System.out.println("type mismatch: discarding " + newSub);
 					}else
-						merge((Map)outSub,(Map)newSub);
+						merge((Map)newSub,(Map)outSub);
 				}else if (outSub instanceof List){
 					if(!(newSub instanceof List)){
 						System.out.println("type mismatch: discarding " + newSub);
 					}else
-						merge((List)outSub,(List)newSub);
+						merge((List)newSub,(List)outSub);
 				}else{
 						if(!newSub.equals(outSub))
 							System.out.println("non mergeable, ignoring " + newSub +" "+ outSub);

@@ -1,0 +1,5 @@
+ {
+    "server" : "127.0.0.1",
+    "name" : "mon-master.dreamaas.cs.kuleuven.be",
+    "tags" : { "tier" : "agent", "type" : "worker", "service" : "master"}
+}

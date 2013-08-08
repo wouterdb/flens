@@ -1,0 +1,32 @@
+{ 
+	"init": {
+		"input" : {
+			"amqp-metric" : { 
+				"type" : "metric-collect",
+				"add-tag" : ["binary","json","collect"],
+    			
+				"exchange":"metrics",
+				"plugin" : "amqp-in"
+			},
+			"amqp-log" : { 
+				"type" : "log-collect",
+				"add-tag" : ["binary","json","collect"],
+    			
+				"exchange":"logs",
+				"plugin" : "amqp-in"
+			}
+		},
+		"filter" : {
+			"decoder" : {
+				"tags" : ["binary","collect"],
+				"remove-tag" : ["binary"],
+				"prio": -10
+			},
+			"json-decoder" : { 
+				"tags" : ["json","collect"],
+				"remove-tag" : ["json"],
+				"prio": -9
+			}
+		}
+	}
+}

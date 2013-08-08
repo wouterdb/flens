@@ -1,0 +1,11 @@
+{
+  "init": {
+    "output" : { 
+        "elasticsearch" : { 
+            "type" : "log-collect",
+	    "host" : "127.0.0.1",
+	    "index" : "logstash-@{(new java.text.SimpleDateFormat('yyyy.MM.dd')).format(new java.util.Date(time))}"
+        }
+    }   
+  }
+}

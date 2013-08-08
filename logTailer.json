@@ -1,10 +1,10 @@
 {
 	"input" : {		
  	"amqp-in" : {
- 			"type" : "metric",
+ 			"type" : "logs",
  			"add-tag" : ["binary","json"],
  			"host": "127.0.0.1",
- 			"exchange":"metrics"
+ 			"exchange":"logs"
  		}
  		
  	},
@@ -29,14 +29,18 @@
  			"fields" : ["time","source","metric","value","type","instance","temporalScope","tenant"] ,
  			"field" : "json"
  		} ,"mvel":{
+ 			"type":"metricx",
+ 			"script":"if(source!='render-1.dnetcloud.dreamaas.cs.kuleuven.be' || metric!='interface')DISCARD=true; return null;"
+ 		}, "mvel-print":{
  			"type":"metric",
- 			"script":"if(metric!='entropy')DISCARD=true; return null;"
+ 			"plugin":"mvel",
+ 			"script":"System.out.println(metric)"
  		}
 	},
  	
  	"output" : {
  		"system-out":{
- 			"type":"metric"
+ 			"type":"logs"
  		}
  		
  	}
