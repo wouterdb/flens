@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import flens.core.Matcher;
 import flens.core.Record;
@@ -21,7 +22,7 @@ public class JsonEncoder extends AbstractFilter {
 
 	public JsonEncoder(String name, Tagger tagger, Matcher matcher,int prio,String field, List<String> fieldToInclude) {
 		super(name, tagger, matcher,prio);
-		decoder = new Gson();
+		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
 		this.field = field;
 		this.fields = fieldToInclude;
 	}
