@@ -32,15 +32,15 @@
  			"type":"metricx",
  			"script":"if(source!='render-1.dnetcloud.dreamaas.cs.kuleuven.be' || metric!='interface')DISCARD=true; return null;"
  		}, "mvel-print":{
- 			"type":"metric",
+ 			"type":"logs",
  			"plugin":"mvel",
- 			"script":"System.out.println(metric)"
+ 			"script":"if(json.contains('NaN')||json.contains('nan') ) System.out.println(message);"
  		}
 	},
  	
  	"output" : {
  		"system-out":{
- 			"type":"logs"
+ 			"type":"logsx"
  		}
  		
  	}

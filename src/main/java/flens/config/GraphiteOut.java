@@ -13,6 +13,8 @@ public class GraphiteOut extends AbstractConfig{
 	
 	
 
+	private static final String DEFAULT_METRIC =  "@{metric}@{(isdef type)?'.'+type:''}.@{reverseHostname(source)}";
+
 	@Override
 	protected boolean isIn() {
 		
@@ -23,7 +25,8 @@ public class GraphiteOut extends AbstractConfig{
 	protected void construct() {
 		String host = get("host", "localhost");
 		int port = getInt("port", 2003);
-		engine.addOutput(new GraphiteOutput(name,matcher,host,port));
+		String template =  get("metric",DEFAULT_METRIC);
+		engine.addOutput(new GraphiteOutput(name,matcher,host,port,template));
 	}
 
 	@Override
@@ -36,6 +39,7 @@ public class GraphiteOut extends AbstractConfig{
 		List<Option>  out = new LinkedList(super.getOptions());
 		out.add(new Option("port", "int", "4242", "port to which to connect"));
 		out.add(new Option("host", "String", "localhost", "host to which to connect"));
+		out.add(new Option("metric", "String", DEFAULT_METRIC, "mvel template to use as metric name for graphite"));
 		return out;
 	}
 	

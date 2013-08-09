@@ -26,11 +26,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.elasticsearch.common.mvel2.ParserContext;
+import org.mvel2.templates.CompiledTemplate;
+import org.mvel2.templates.TemplateCompiler;
+import org.mvel2.templates.TemplateRuntime;
 
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.output.util.AbstractPumpOutput;
+import flens.util.MVELUtil;
 
 public class GraphiteOutput extends AbstractPumpOutput {
 
@@ -63,10 +68,14 @@ public class GraphiteOutput extends AbstractPumpOutput {
 	private int flushOnSize = -1;
 	private Thread errPump;
 	
-	public GraphiteOutput(String name, Matcher matcher,String server, int port) {
+	private CompiledTemplate index;
+	
+	public GraphiteOutput(String name, Matcher matcher,String server, int port,String metric) {
 		super(name,matcher);
 		this.port = port;
 		this.host = server;
+		
+		this.index = MVELUtil.compileTemplateTooled(metric);
 	}
 
 	
@@ -81,7 +90,11 @@ public class GraphiteOutput extends AbstractPumpOutput {
 			hookOnErrpump(s);
 			while(running){
 				r = queue.take();
-				br.write(String.format("%s %s %d\n",r.getValues().get("metric"),r.getValues().get("value"),r.getTimestamp()/1000));
+				
+				String metric = (String) TemplateRuntime.execute(this.index, r.getValues());
+				Object value = r.getValues().get("value");
+				if(value!=null)
+					br.write(String.format("%s %s %d\n",metric,value,r.getTimestamp()/1000));
 				//System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
 				br.flush();
 			}
