@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import flens.util.NamedThreadFactory;
+
 //TODO reconnect!
 //FIXME: cleanup locking
 public class Flengine {
@@ -313,7 +315,7 @@ public class Flengine {
 		// FIXME: make configurable
 		// TODO: is this the best way?
 		executor = new ThreadPoolExecutor(1, 8, 200, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>());
+				new LinkedBlockingQueue<Runnable>(),new NamedThreadFactory("flens-mainloop"));
 
 		for (Input input : inputs) {
 			input.start();
