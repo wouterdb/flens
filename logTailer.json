@@ -1,10 +1,10 @@
 {
 	"input" : {		
  	"amqp-in" : {
- 			"type" : "logs",
+ 			"type" : "alerts",
  			"add-tag" : ["binary","json"],
  			"host": "127.0.0.1",
- 			"exchange":"logs"
+ 			"exchange":"alerts"
  		}
  		
  	},
@@ -32,7 +32,7 @@
  			"type":"metricx",
  			"script":"if(source!='render-1.dnetcloud.dreamaas.cs.kuleuven.be' || metric!='interface')DISCARD=true; return null;"
  		}, "mvel-print":{
- 			"type":"logs",
+ 			"type":"logsx",
  			"plugin":"mvel",
  			"script":"if(json.contains('NaN')||json.contains('nan') ) System.out.println(message);"
  		}
@@ -40,7 +40,7 @@
  	
  	"output" : {
  		"system-out":{
- 			"type":"logsx"
+ 			"type":"alerts"
  		}
  		
  	}

@@ -7,6 +7,10 @@ import java.util.logging.Logger;
 public class Util {
 
 	private static String hostname;
+	
+	public static void overriderHostname(String name){
+		hostname=name;
+	}
 
 	public static String hostName() {
 		if(hostname == null){

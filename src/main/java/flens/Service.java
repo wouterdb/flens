@@ -25,6 +25,7 @@ import dnet.monitor.control.amqp.CommandServer;
 import flens.core.ConfigBuilder;
 import flens.core.ConfigHandler;
 import flens.core.Flengine;
+import flens.core.Util;
 
 public class Service {
 
@@ -42,6 +43,7 @@ public class Service {
 
 		String server = (String) myconfig.get("server");
 		String name = (String) myconfig.get("name");
+		Util.overriderHostname(name);
 		
 		if(server==null || name==null){
 			System.out.println("no config,....");
