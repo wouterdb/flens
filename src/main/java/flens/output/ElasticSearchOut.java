@@ -61,26 +61,26 @@ public class ElasticSearchOut extends AbstractPumpOutput {
 	private String host;
 	private int port;
 	private Set<String> fields;
-	
+
 	private TransportClient client;
 	private CompiledTemplate index;
 	private CompiledTemplate type;
 	private CompiledTemplate id;
-	
+
 	private DateTimeFormatter df = ISODateTimeFormat.dateTimeNoMillis();
 	private ActionListener<IndexResponse> listner = new FailListener();
 
 	public ElasticSearchOut(String name, Matcher matcher, String type,
-			String index, String id,List<String> fields, String host, int port) {
+			String index, String id, List<String> fields, String host, int port) {
 		super(name, matcher);
 		this.fields = new HashSet<>(fields);
-		
+
 		this.index = TemplateCompiler.compileTemplate(index);
 		this.type = TemplateCompiler.compileTemplate(type);
 
 		this.host = host;
 		this.port = port;
-		
+
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ElasticSearchOut extends AbstractPumpOutput {
 		closed = false;
 
 		client = new TransportClient();
-		client.addTransportAddress(new InetSocketTransportAddress(host,port));
+		client.addTransportAddress(new InetSocketTransportAddress(host, port));
 		System.out.println(client.transportAddresses());
 
 		super.start();
@@ -115,48 +115,53 @@ public class ElasticSearchOut extends AbstractPumpOutput {
 		try {
 			while (running) {
 
-				Record r = queue.take();
+				try {
 
-				Map<String,Object> invalues = r.getValues();
-				if(!invalues.containsKey(flens.core.Constants.MESSAGE))
-					continue;
-				
-				String idx = (String) TemplateRuntime.execute(this.index, r.getValues());
-				String type = (String)TemplateRuntime.execute(this.type, r.getValues());
-				
-				Map<String,Object> values =  new HashMap<>();
-				
-				
-				
-				Set<String> keys = new HashSet<>();
-				
-				if(this.fields.isEmpty()){
-					keys.addAll(invalues.keySet());
-				}else{
-					keys = fields;
+					Record r = queue.take();
+
+					Map<String, Object> invalues = r.getValues();
+					if (!invalues.containsKey(flens.core.Constants.MESSAGE))
+						continue;
+
+					String idx = (String) TemplateRuntime.execute(this.index,
+							r.getValues());
+					String type = (String) TemplateRuntime.execute(this.type,
+							r.getValues());
+
+					Map<String, Object> values = new HashMap<>();
+
+					Set<String> keys = new HashSet<>();
+
+					if (this.fields.isEmpty()) {
+						keys.addAll(invalues.keySet());
+					} else {
+						keys = fields;
+					}
+
+					for (String key : keys) {
+						values.put("@" + key, invalues.get(key));
+					}
+
+					values.put("@message",
+							invalues.get(flens.core.Constants.MESSAGE));
+					values.put("@timestamp", df.print(r.getTimestamp()));
+
+					IndexRequestBuilder ir;
+
+					if (this.id != null) {
+						String id = (String) TemplateRuntime.execute(this.id,
+								r.getValues());
+						ir = client.prepareIndex(idx, type, id);
+					} else {
+						ir = client.prepareIndex(idx, type);
+					}
+					ir.setSource(values);
+					ir.execute().addListener(listner);
+				} catch (RuntimeException e) {
+					err("unexpected failure, going into reconnect", e);
+					stop();
+					reconnect();
 				}
-				
-				for (String key : keys) {
-					values.put("@"+key, invalues.get(key));
-				}
-				
-				
-				
-				values.put("@message", invalues.get(flens.core.Constants.MESSAGE));
-				values.put("@timestamp", df.print(r.getTimestamp()));				
-				
-				IndexRequestBuilder ir;
-				
-				
-				if(this.id !=null){
-					String id = (String)TemplateRuntime.execute(this.id, r.getValues());
-					ir = client.prepareIndex(idx, type,id);
-				}else{
-					ir = client.prepareIndex(idx, type);
-				}
-				ir.setSource(values);
-				ir.execute().addListener(listner );
-				
 			}
 
 		} catch (InterruptedException e) {

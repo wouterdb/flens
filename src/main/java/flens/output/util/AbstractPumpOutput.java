@@ -67,6 +67,7 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 			public void run() {
 				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize)
 					getOutputQueue().clear();
+				warn("flushing queue to prevent overflow: " + getName());
 				start();
 			}
 		}, reconnectDelay );
