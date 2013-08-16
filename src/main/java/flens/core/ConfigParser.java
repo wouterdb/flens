@@ -90,6 +90,7 @@ public class ConfigParser {
 	}
 
 	protected void construct(Map config) {
+		load((Map) config.remove("query"));
 		load((Map) config.remove("input"));
 		load((Map) config.remove("output"));
 		load((Map) config.remove("filter"));

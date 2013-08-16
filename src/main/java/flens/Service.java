@@ -21,10 +21,10 @@ import com.rabbitmq.client.ConnectionFactory;
 import dnet.monitor.control.PingHandler;
 import dnet.monitor.control.amqp.CommandHandler;
 import dnet.monitor.control.amqp.CommandServer;
-
 import flens.core.ConfigBuilder;
 import flens.core.ConfigHandler;
 import flens.core.Flengine;
+import flens.core.GenericQueryTerm;
 import flens.core.Util;
 
 public class Service {
@@ -32,7 +32,7 @@ public class Service {
 	public static void main(String[] args) throws IOException {
 
 		ConfigHandler ch = new ConfigHandler();
-
+		GenericQueryTerm qt = new GenericQueryTerm(ch.getEngine());
 		
 
 		Map<String, Object> myconfig = collectConfig(args[0]);
@@ -55,6 +55,7 @@ public class Service {
 		List<CommandHandler> chs = new LinkedList<>();
 		chs.add(new PingHandler());
 		chs.add(ch);
+		chs.add(qt);
 
 		ConnectionFactory c = new ConnectionFactory();
 		c.setHost(server);

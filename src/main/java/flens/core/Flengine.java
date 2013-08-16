@@ -288,7 +288,7 @@ public class Flengine {
 
 					@Override
 					public int compare(Filter o1, Filter o2) {
-						return o1.priority()-o2.priority();
+						return o1.priority() - o2.priority();
 					}
 				});
 			}
@@ -315,9 +315,14 @@ public class Flengine {
 		// FIXME: make configurable
 		// TODO: is this the best way?
 		executor = new ThreadPoolExecutor(1, 8, 200, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(),new NamedThreadFactory("flens-mainloop"));
+				new LinkedBlockingQueue<Runnable>(), new NamedThreadFactory(
+						"flens-mainloop"));
 
 		for (Input input : inputs) {
+			input.start();
+		}
+		
+		for (QueryHandler input : handlers) {
 			input.start();
 		}
 
@@ -364,13 +369,13 @@ public class Flengine {
 
 	public void report(Set<Record> out) {
 
-
 		out.add(new Record("flens.q-in-size", executor.getQueue().size()));
 		for (Output o : outputs) {
 			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o
 					.getOutputQueue().size()));
 		}
-		out.add(new Record("flens.exec-threads-active", executor.getActiveCount()));
+		out.add(new Record("flens.exec-threads-active", executor
+				.getActiveCount()));
 		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
 		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
 	}
@@ -394,6 +399,12 @@ public class Flengine {
 				return;
 			}
 		}
+		for (QueryHandler inp : handlers) {
+			if (inp.getName().equals(name)) {
+				removeHandler(inp);
+				return;
+			}
+		}
 
 	}
 
@@ -403,5 +414,37 @@ public class Flengine {
 
 	public Map<String, String> getTags() {
 		return this.tags;
+	}
+
+	private List<QueryHandler> handlers = new LinkedList<>();
+
+	public void addHandler(QueryHandler qh) {
+		if (count(qh.getName())) {
+			synchronized (handlers) {
+				handlers.add(qh);
+				qh.start();
+			}
+		}
+	}
+
+	protected void removeHandler(QueryHandler inp){
+		if (decount(inp.getName())) {
+			synchronized (handlers) {
+				handlers.remove(inp);
+				inp.stop();
+			}
+		}
+	}
+	
+	public List<QueryHandler> getHandler(Query q){
+		synchronized (handlers) {
+			List<QueryHandler> qhs = new LinkedList<>(); 
+			for (QueryHandler qh : handlers) {
+				if(qh.canHandle(q)){
+					qhs.add(qh);
+				}
+			}
+			return qhs;
+		}
 	}
 }
