@@ -26,6 +26,10 @@
  "proc":"flens.config.ProcInput",
  "proc-poll":"flens.config.ProcPollerInput",
  "elasticsearch":"flens.config.ElasticSearchOutput",
- "nagios":"flens.config.NagiosInput"
+ "nagios":"flens.config.NagiosInput",
+ "query-ping":"flens.config.PingQuery",
+ "query-jmx":"flens.config.JMXQuery",
+ "python":"flens.config.PythonFilter"
 }
+ 
  

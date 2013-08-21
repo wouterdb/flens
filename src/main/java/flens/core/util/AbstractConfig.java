@@ -50,8 +50,13 @@ public abstract class AbstractConfig implements Config {
 
 	protected abstract boolean isIn();
 	protected abstract boolean isOut();
+	
+	protected boolean isQuery(){
+		return false;
+	}
+	
 	protected boolean isFilter() {
-		return !(isIn()||isOut());
+		return !(isIn()||isOut()||isQuery());
 	}
 
 	protected abstract void construct();

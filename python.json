@@ -1,0 +1,23 @@
+{
+	"input" : {		
+ 	"heartbeat":{
+			"type":"metric",
+			"interval":"100"
+		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+ 		"python" :{
+ 			"script":"values['test']='true';print 'foef'"
+		}
+		
+	},
+ 	
+ 	"output" : {
+ 		"system-out" : {
+ 		}
+ 	}
+ 		 
+
+}
