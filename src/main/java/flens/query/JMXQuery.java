@@ -132,9 +132,9 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 			switch(method){
 				case "list-names": list(q); break;
 				case "list": listLong(q);break;
-				case "details": details(q,rest);
-				case "call": call(q,rest);
-				case "get": get(q,rest);
+				case "details": details(q,rest);break;
+				case "call": call(q,rest);break;
+				case "get": get(q,rest);break;
 			}
 			
 			 
