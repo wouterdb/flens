@@ -18,6 +18,7 @@ import com.google.gson.internal.StringMap;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import dnet.monitor.control.FactsHandler;
 import dnet.monitor.control.PingHandler;
 import dnet.monitor.control.amqp.CommandHandler;
 import dnet.monitor.control.amqp.CommandServer;
@@ -54,6 +55,7 @@ public class Service {
 		
 		List<CommandHandler> chs = new LinkedList<>();
 		chs.add(new PingHandler());
+		chs.add(new FactsHandler());
 		chs.add(ch);
 		chs.add(qt);
 
