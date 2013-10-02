@@ -100,4 +100,8 @@ public class ConfigParser {
 		load((Map) config.remove("output"));
 		load((Map) config.remove("filter"));
 	}
+
+	public String help() {
+		return pluginRepo.help();
+	}
 }

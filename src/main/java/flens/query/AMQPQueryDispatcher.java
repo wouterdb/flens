@@ -78,7 +78,7 @@ public class AMQPQueryDispatcher extends AbstractPlugin implements QueryHandler 
 			conn = factory.newConnection();
 			cs = new CommandServer(Util.hostName(),conn ,
 					engine.getTags(), chs);
-
+			cs.enableHelp();
 			cs.start();
 		} catch (IOException e) {
 			err("could not start command server ",e);

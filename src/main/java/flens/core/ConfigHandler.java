@@ -48,4 +48,10 @@ public class ConfigHandler extends ConfigClient {
 		parser.construct(initial);
 	}
 
+	@Override
+	public String getDeepHelp() {
+		return parser.help();
+	}
+
+	
 }

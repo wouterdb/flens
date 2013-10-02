@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dnet.help.HelpBuilder;
 import dnet.monitor.control.Command;
 import dnet.monitor.control.amqp.CommandHandler;
 import dnet.monitor.control.amqp.CommandServer;
@@ -97,7 +98,7 @@ public class GenericQueryTerm implements CommandHandler {
 
 	@Override
 	public String help() {
-		return "generic query terminator";
+		return HelpBuilder.forHandler(this).add("do", "address query plugin").add("help", "get query help").build();
 	}
 
 	

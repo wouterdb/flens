@@ -432,7 +432,8 @@ public class Flengine {
 		if (count(qh.getName())) {
 			synchronized (handlers) {
 				handlers.add(qh);
-				qh.start();
+				if (running)
+					qh.start();
 			}
 		}
 	}

@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
+import flens.core.Config.Option;
+
 public class PluginRepo {
 
 	private Gson gson = new Gson();
@@ -42,5 +44,43 @@ public class PluginRepo {
 		
 		
 	}
+
+	public String help() {
+		StringBuilder help = new StringBuilder();
+		for(String key:raw.keySet()){
+				Config x = get(key);
+				if(x!=null){
+					help.append(makeHelp(key,x));
+				}
+		}
+		return help.toString();
+	}
+
+
+
+
+	private String makeHelp(String key, Config x) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(key);
+		sb.append(" ");
+		sb.append(x.getDescription().replaceAll("\n", " "));
+		sb.append("\n");
+		for(Option opt:x.getOptions()){
+			sb.append("\t");
+			sb.append(opt.getName());
+			sb.append("\t");
+			sb.append(opt.getType());
+			sb.append("\t");
+			sb.append(opt.getDefaultv());
+			sb.append("\t");
+			sb.append(opt.getDescr());
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+
+
+
+
 
 }
