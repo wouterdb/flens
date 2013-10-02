@@ -34,25 +34,26 @@ public class Service {
 
 		ConfigHandler ch = new ConfigHandler();
 		GenericQueryTerm qt = new GenericQueryTerm(ch.getEngine());
-		
 
 		Map<String, Object> myconfig = collectConfig(args[0]);
 
 		Map<String, String> tags = (Map<String, String>) myconfig.get("tags");
-		
-		Map<String, Object> initial = (Map<String, Object>) myconfig.get("init");
+
+		Map<String, Object> initial = (Map<String, Object>) myconfig
+				.get("init");
 
 		String server = (String) myconfig.get("server");
 		String name = (String) myconfig.get("name");
 		Util.overriderHostname(name);
-		
-		if(server==null || name==null){
+
+		if (server == null || name == null) {
 			System.out.println("no config,....");
 			System.exit(-1);
 		}
 
-		System.out.println(String.format("connecting to %s as %s, with tags %s",server,name,tags));
-		
+		System.out.println(String.format(
+				"connecting to %s as %s, with tags %s", server, name, tags));
+
 		List<CommandHandler> chs = new LinkedList<>();
 		chs.add(new PingHandler());
 		chs.add(new FactsHandler());
@@ -72,68 +73,74 @@ public class Service {
 		ch.getEngine().start();
 	}
 
-	private static Map<String, Object> collectConfig(String dir) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	private static Map<String, Object> collectConfig(String dir)
+			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		List<Map<String, Object>> configs = new LinkedList<>();
-		
+
 		Gson g = new Gson();
-		
+
 		File[] files = (new File(dir)).listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith("json");
 			}
 		});
-		
+
 		Arrays.sort(files);
-		
-		for(File f:files){
-			configs.add(g.fromJson(new FileReader(f),
-					HashMap.class));
+
+		for (File f : files) {
+			try {
+				configs.add(g.fromJson(new FileReader(f), HashMap.class));
+			} catch (Exception e) {
+				throw new JsonIOException("in file: " + f.getAbsolutePath(), e);
+			}
 		}
-		
+
 		return merge(new HashMap<String, Object>(), configs);
-		
+
 	}
 
 	private static Map<String, Object> merge(HashMap<String, Object> out,
 			List<Map<String, Object>> configs) {
 		for (Map<String, Object> map : configs) {
-			merge((Map)out,(Map)map);
+			merge((Map) out, (Map) map);
 		}
-		
+
 		return out;
 	}
 
-	private static void merge(Map<Object,Object> out,
-			Map<Object,Object> newMap) {
+	private static void merge(Map<Object, Object> out,
+			Map<Object, Object> newMap) {
 		for (Map.Entry entry : newMap.entrySet()) {
-			if(!out.containsKey(entry.getKey())){
+			if (!out.containsKey(entry.getKey())) {
 				out.put(entry.getKey(), entry.getValue());
-			}else{
+			} else {
 				Object outSub = entry.getValue();
 				Object newSub = out.get(entry.getKey());
-				if(outSub instanceof Map){
-					if(!(newSub instanceof Map)){
-						System.out.println("type mismatch: discarding " + newSub);
-					}else
-						merge((Map)newSub,(Map)outSub);
-				}else if (outSub instanceof List){
-					if(!(newSub instanceof List)){
-						System.out.println("type mismatch: discarding " + newSub);
-					}else
-						merge((List)newSub,(List)outSub);
-				}else{
-						if(!newSub.equals(outSub))
-							System.out.println("non mergeable, ignoring " + newSub +" "+ outSub);
+				if (outSub instanceof Map) {
+					if (!(newSub instanceof Map)) {
+						System.out.println("type mismatch: discarding "
+								+ newSub);
+					} else
+						merge((Map) newSub, (Map) outSub);
+				} else if (outSub instanceof List) {
+					if (!(newSub instanceof List)) {
+						System.out.println("type mismatch: discarding "
+								+ newSub);
+					} else
+						merge((List) newSub, (List) outSub);
+				} else {
+					if (!newSub.equals(outSub))
+						System.out.println("non mergeable, ignoring " + newSub
+								+ " " + outSub);
 				}
 			}
 		}
-		
+
 	}
 
 	private static void merge(List outSub, List newSub) {
 		outSub.addAll(newSub);
 	}
 
-	
 }
