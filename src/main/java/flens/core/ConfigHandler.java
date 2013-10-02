@@ -10,7 +10,15 @@ import dnet.monitor.control.config.ConfigClient;
 
 public class ConfigHandler extends ConfigClient {
 	
-	public ConfigParser parser = new ConfigParser(); 
+	public final ConfigParser parser; 
+
+	public ConfigHandler(){
+		parser = new ConfigParser(); 
+	}
+	
+	public ConfigHandler(Flengine engine) {
+		parser = new ConfigParser(engine);
+	}
 
 	@Override
 	public void configRemoved(UUID id, Map<String, Object> cfg) {

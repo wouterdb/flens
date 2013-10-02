@@ -115,7 +115,7 @@ public class AMQPOut extends AbstractPumpOutput {
 						.contentEncoding("UTF-8").build();
 
 				channel.basicPublish(exchange, key, props, body);
-
+				sent++;
 			}
 
 		} catch (InterruptedException e) {
@@ -123,6 +123,7 @@ public class AMQPOut extends AbstractPumpOutput {
 		} catch (IOException e){
 			err("AMQP pipe broken",e);
 		}
+		lost++;
 
 	}
 

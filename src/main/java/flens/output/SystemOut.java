@@ -22,6 +22,7 @@ public class SystemOut extends AbstractPumpOutput implements Output {
 			while (running) {
 				Record r = queue.take();
 				stream.println(String.format("[%s] %s",getName(),r.toLine()));
+				sent++;
 			}
 		} catch (InterruptedException e) {
 			// break loop

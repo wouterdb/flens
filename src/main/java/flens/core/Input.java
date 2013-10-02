@@ -1,6 +1,5 @@
 package flens.core;
 
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 
 public interface Input {
@@ -16,4 +15,6 @@ public interface Input {
 	 */
 	public void join() throws InterruptedException;
 	
+	
+	public int getRecordsSent();
 }

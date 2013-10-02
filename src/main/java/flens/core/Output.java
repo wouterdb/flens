@@ -13,4 +13,10 @@ public interface Output extends Plugin {
 	public void start();
 	public void stop();
 	
+	
+	//stats, may be an underestimate, due to threading
+	//prefer loss to lock
+	public int getRecordsSent();
+	public int getRecordsLost();
+	
 }

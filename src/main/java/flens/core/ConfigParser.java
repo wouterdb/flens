@@ -21,6 +21,11 @@ public class ConfigParser {
 		loadPlugins();
 	}
 
+	public ConfigParser(Flengine engine) {
+		this.engine = engine;
+		loadPlugins();
+	}
+
 	public Flengine getEngine() {
 		return engine;
 	}

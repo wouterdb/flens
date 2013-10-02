@@ -373,7 +373,17 @@ public class Flengine {
 		for (Output o : outputs) {
 			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o
 					.getOutputQueue().size()));
+			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
+					.getRecordsSent()));
+			out.add(new Record(String.format("flens.q-%s-lost", o.getName()), o
+					.getRecordsLost()));
 		}
+		
+		for (Input o : inputs) {
+			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
+					.getRecordsSent()));
+		}
+		
 		out.add(new Record("flens.exec-threads-active", executor
 				.getActiveCount()));
 		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));

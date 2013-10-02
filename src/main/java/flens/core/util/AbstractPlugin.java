@@ -25,6 +25,6 @@ public abstract class AbstractPlugin {
 		
 	}
 
-	public abstract String getName() ;
+	public abstract String getName();
 
 }

@@ -12,7 +12,7 @@ import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
 //TODO make timer/executor based
-public class SelfMonitor extends AbstractActiveInput implements Input {
+public class SelfMonitor extends AbstractActiveInput {
 	
 	public static final String type = "flens";
 	

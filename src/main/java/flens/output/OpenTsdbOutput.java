@@ -98,12 +98,14 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
 				br.write(String.format("put %s %d %s host=%s%s\n",r.getValues().get("metric"),r.getTimestamp()/1000,r.getValues().get("value"),r.getSource(),suffix));
 				//System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
 				br.flush();
+				sent++;
 			}
 		} catch (UnknownHostException e) {
 			
 			err(getName()+ " host not know",e);
 		} catch (IOException e) {
 			err(getName()+ " pipe broken, going into reconnect",e);
+			lost++;
 			reconnect();
 		} catch (InterruptedException e) {
 			//normal

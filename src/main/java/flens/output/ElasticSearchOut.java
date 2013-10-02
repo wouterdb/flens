@@ -46,11 +46,13 @@ public class ElasticSearchOut extends AbstractPumpOutput {
 
 		@Override
 		public void onResponse(IndexResponse response) {
+			sent++;
 		}
 
 		@Override
 		public void onFailure(Throwable e) {
 			err("elastic search failure", e);
+			lost++;
 			stop();
 			reconnect();
 		}

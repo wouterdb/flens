@@ -12,6 +12,7 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	protected BlockingQueue<Record> in;
 	protected Tagger tagger;
 	private String name;
+	private int sent;
 
 	public AbstractInput(String name,Tagger tagger) {
 		this.name = name;
@@ -27,9 +28,14 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	protected void dispatch(Record r){
 		tagger.adapt(r);
 		in.add(r);
+		sent++;
 	}
 	
 	public void setInputQueue(BlockingQueue<Record> queue) {
 		this.in = queue;
+	}
+	
+	public int getRecordsSent() {
+		return sent;
 	}
 }

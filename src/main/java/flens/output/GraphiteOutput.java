@@ -97,11 +97,13 @@ public class GraphiteOutput extends AbstractPumpOutput {
 					br.write(String.format("%s %s %d\n",metric,value,r.getTimestamp()/1000));
 				//System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
 				br.flush();
+				sent++;
 			}
 		} catch (UnknownHostException e) {
 			
 			err(getName()+ " host not know",e);
 		} catch (IOException e) {
+			lost++;
 			err(getName()+ " pipe broken, going into reconnect",e);
 			reconnect();
 		} catch (InterruptedException e) {

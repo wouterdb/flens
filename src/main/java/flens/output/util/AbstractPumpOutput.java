@@ -29,6 +29,8 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 	
 	protected int reconnectDelay = 10000;
 	protected int flushOnSize = 10000;
+	protected int sent;
+	protected int lost;
 
 	@Override
 	public Matcher getMatcher() {
@@ -65,13 +67,25 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 			
 			@Override
 			public void run() {
-				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize)
+				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize){
+					lost+=getOutputQueue().size();
 					getOutputQueue().clear();
+				}
 				warn("flushing queue to prevent overflow: " + getName());
 				start();
 			}
 		}, reconnectDelay );
 		
 		
+	}
+	
+	@Override
+	public int getRecordsLost() {
+		return lost;
+	}
+	
+	@Override
+	public int getRecordsSent() {
+		return sent;
 	}
 }
