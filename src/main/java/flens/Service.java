@@ -33,8 +33,7 @@ public class Service {
 	public static void main(String[] args) throws IOException {
 
 		ConfigHandler ch = new ConfigHandler();
-		GenericQueryTerm qt = new GenericQueryTerm(ch.getEngine());
-
+		
 		Map<String, Object> myconfig = collectConfig(args[0]);
 
 		Map<String, String> tags = (Map<String, String>) myconfig.get("tags");
@@ -42,32 +41,10 @@ public class Service {
 		Map<String, Object> initial = (Map<String, Object>) myconfig
 				.get("init");
 
-		String server = (String) myconfig.get("server");
 		String name = (String) myconfig.get("name");
-		Util.overriderHostname(name);
+		if(name != null)
+			Util.overriderHostname(name);
 
-		if (server == null || name == null) {
-			System.out.println("no config,....");
-			System.exit(-1);
-		}
-
-		System.out.println(String.format(
-				"connecting to %s as %s, with tags %s", server, name, tags));
-
-		List<CommandHandler> chs = new LinkedList<>();
-		chs.add(new PingHandler());
-		chs.add(new FactsHandler());
-		chs.add(ch);
-		chs.add(qt);
-
-		ConnectionFactory c = new ConnectionFactory();
-		c.setHost(server);
-		c.setUsername("guest");
-		c.setPassword("guest");
-		c.setPort(5672);
-
-		CommandServer cs = new CommandServer(name, c.newConnection(), tags, chs);
-		cs.start();
 		ch.load(initial);
 		ch.getEngine().addTags(tags);
 		ch.getEngine().start();

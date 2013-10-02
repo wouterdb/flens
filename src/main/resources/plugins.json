@@ -29,6 +29,7 @@
  "nagios":"flens.config.NagiosInput",
  "query-ping":"flens.config.PingQuery",
  "query-jmx":"flens.config.JMXQuery",
+ "query-amqp-in":"flens.config.AMQPQuery",
  "python":"flens.config.PythonFilter"
 }
  
