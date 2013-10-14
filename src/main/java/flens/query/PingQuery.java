@@ -14,12 +14,12 @@ public class PingQuery extends AbstractPlugin implements QueryHandler {
 
 	@Override
 	public boolean canHandle(Query q) {
-		return q.getQuery().startsWith("ping://");
+		return q.getQuery().startsWith("ping://") ;
 	}
 
 	@Override
 	public void handle(Query q) {
-		q.respond("pong");
+		q.respond("pong " + System.currentTimeMillis());
 		
 	}
 

@@ -4,7 +4,7 @@
  			"type" : "log",
  			"add-tag" : ["binary","json"],
  			"host": "127.0.0.1",
- 			"exchange":"logs"
+ 			"exchange":"metrics"
  		}
  		
  	},
@@ -20,7 +20,8 @@
  			"remove-tag" : ["json"]
  		},"mvel":{
  			"prio":3,
- 			"script":"System.out.println(source + ':\t' +message);"
+ 			"script":"if(source.startsWith('preprocess'))System.out.println(source + ':\t' +metric);"
+ 			
  		}
 	},
  	
