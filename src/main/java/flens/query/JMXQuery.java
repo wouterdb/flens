@@ -144,6 +144,7 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void call(Query q, String[] rest) throws MalformedObjectNameException, NullPointerException, IOException, InstanceNotFoundException, MBeanException, ReflectionException {
 		String name = rest[0];
 		String oppname = rest[1];
@@ -158,8 +159,8 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 			out.put(objectName.getCanonicalName(), connection.invoke(objectName, oppname,o.toArray(),sig.toArray(new String[sig.size()])));
 		}
 		
-		Gson gson = new Gson();
-		q.respond(gson.toJson(out));
+		
+		q.respond(out);
 		
 	}
 
@@ -169,8 +170,7 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 		for (ObjectName objectName : names) {
 			out.add(objectName.getCanonicalName());
 		}
-		Gson gson = new Gson();
-		q.respond(gson.toJson(out));
+		q.respond(out);
 	}
 
 	private void details(Query q, String[] rest) throws MalformedObjectNameException, NullPointerException, IOException, InstanceNotFoundException, IntrospectionException, ReflectionException {
@@ -184,8 +184,8 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 			out.put(objectName.getCanonicalName(), getDetails(objectName));
 		}
 		
-		Gson gson = new Gson();
-		q.respond(gson.toJson(out));
+		
+		q.respond(out);
 		
 		
 	}
@@ -202,8 +202,7 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 			out.put(objectName.getCanonicalName(), connection.getAttribute(objectName, att));
 		}
 		
-		Gson gson = new Gson();
-		q.respond(gson.toJson(out));
+		q.respond(out);
 		
 		
 	}
@@ -258,6 +257,7 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List getSig(MBeanParameterInfo[] signature) {
 		List outc = new LinkedList<>();
 		

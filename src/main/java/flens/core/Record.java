@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.net.ssl.HostnameVerifier;
 
-
 //time in milis
 public class Record {
 
@@ -17,62 +16,82 @@ public class Record {
 	private Set<String> tags;
 	private Map<String, Object> values;
 
-
 	public Record(String message) {
 		this.tags = new HashSet<String>();
 		this.values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 		values.put(Constants.L_MESSAGE, message);
 	}
-	
+
 	public Record(String metric, Object value) {
 		this.tags = new HashSet<String>();
 		this.values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 		values.put(Constants.METRIC, metric);
 		values.put(Constants.VALUE, value);
 	}
-	
-	
-	public static Record createWithMsgAndValue(String metric, String msg, Object value){
-		Map<String, Object> values = new HashMap<String, Object>();
-		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
-		values.put(Constants.METRIC, metric);
-		values.put(Constants.VALUE, value);
-		values.put(Constants.L_MESSAGE, msg);
-		
-		return new Record(null, values, new HashSet<String>());
-	}
-	
-	public static Record createWithTimeHostAndValue(long timestamp, String host,
-			Map<String, Object> values){
-		
+
+	/*
+	 * public static Record createWithMsgAndValue(String metric, String msg,
+	 * Object value){ Map<String, Object> values = new HashMap<String,
+	 * Object>(); values.put(Constants.TIME, System.currentTimeMillis());
+	 * values.put(Constants.SOURCE, Util.hostName());
+	 * values.put(Constants.METRIC, metric); values.put(Constants.VALUE, value);
+	 * values.put(Constants.L_MESSAGE, msg);
+	 * 
+	 * return new Record(null, values, new HashSet<String>()); }
+	 */
+
+	public static Record createWithTimeHostAndValues(long timestamp,
+			String host, Map<String, Object> values) {
+
 		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  host);
-		
+		values.put(Constants.SOURCE, host);
+
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record createWithTimeAndValue(long timestamp,
 			Map<String, Object> values) {
 		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record createWithValues(Map<String, Object> values) {
 		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 		return new Record(null, values, new HashSet<String>());
 	}
 	
+	public static Record createWithValues(String metric,Map<String, Object> values) {
+		if(!values.containsKey(Constants.TIME))
+			values.put(Constants.TIME, System.currentTimeMillis());
+		if(!values.containsKey(Constants.SOURCE))
+			values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.METRIC, metric);
+		return new Record(null, values, new HashSet<String>());
+	}
+
+	public static Record createWithValue(String metric, byte[] payload) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.BODY, payload);
+		values.put(Constants.METRIC, metric);
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithValue(String metric,String msg) {
+		return createWithMetricAndMsg(metric, msg);
+	}
+
 	public static Record createWithMetricAndMsg(String metric, String msg) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 		values.put(Constants.METRIC, metric);
 		values.put(Constants.L_MESSAGE, msg);
 		return new Record(null, values, new HashSet<String>());
@@ -83,23 +102,17 @@ public class Record {
 		tags = new HashSet<String>();
 		values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE,  Util.hostName());
+		values.put(Constants.SOURCE, Util.hostName());
 	}
 
-	
-	
-	/*public Record(String type, long timestamp, String host,
-			Map<String, Object> values,Set<String> tags) {
-		super();
-		this.type = type;
-		this.values = values;
-		this.tags = tags;
-		values.put(Constants.TIME, timestamp);
-		values.put(Constants.SOURCE,  host);
-	}*/
+	/*
+	 * public Record(String type, long timestamp, String host, Map<String,
+	 * Object> values,Set<String> tags) { super(); this.type = type; this.values
+	 * = values; this.tags = tags; values.put(Constants.TIME, timestamp);
+	 * values.put(Constants.SOURCE, host); }
+	 */
 
-	public Record(String type, Map<String, Object> values,
-			Set<String> tags) {
+	public Record(String type, Map<String, Object> values, Set<String> tags) {
 		this.type = type;
 		this.values = values;
 		this.tags = tags;
@@ -123,19 +136,20 @@ public class Record {
 
 	public long getTimestamp() {
 		Object o = values.get(Constants.TIME);
-		if(o instanceof Number)
-			return ((Number)o).longValue();
-		if(o instanceof Date)
-			return ((Date)o).getTime();
-		if(o instanceof String)
-			return Long.parseLong((String)o);
-		throw new IllegalStateException("timestamp of unexpected form:" + o+o.getClass());
+		if (o instanceof Number)
+			return ((Number) o).longValue();
+		if (o instanceof Date)
+			return ((Date) o).getTime();
+		if (o instanceof String)
+			return Long.parseLong((String) o);
+		throw new IllegalStateException("timestamp of unexpected form:" + o
+				+ o.getClass());
 	}
 
 	/**
 	 * @param timestamp
 	 * 
-	 * milis since epoch
+	 *            milis since epoch
 	 */
 	public void setTimestamp(long timestamp) {
 		values.put(Constants.TIME, timestamp);
@@ -150,7 +164,7 @@ public class Record {
 	}
 
 	public String getSource() {
-		return  (String) values.get(Constants.SOURCE);
+		return (String) values.get(Constants.SOURCE);
 	}
 
 	public void setSource(String source) {
@@ -163,34 +177,32 @@ public class Record {
 	}
 
 	public String toLine() {
-		return "Record [type=" + type + " tags=" + tags + ", values="
-				+ values + "]";
+		return "Record [type=" + type + " tags=" + tags + ", values=" + values
+				+ "]";
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return new Record(type,new HashMap<String, Object>(values),new HashSet<String>(tags)) ;
+		return new Record(type, new HashMap<String, Object>(values),
+				new HashSet<String>(tags));
 	}
-	
+
 	public Record doClone() {
-		return new Record(type,new HashMap<String, Object>(values),new HashSet<String>(tags)) ;
+		return new Record(type, new HashMap<String, Object>(values),
+				new HashSet<String>(tags));
 	}
-	
-	public Record cloneNoValues()  {
-		return new Record(type,null,new HashSet<String>(tags)) ;
+
+	public Record cloneNoValues() {
+		return new Record(type, null, new HashSet<String>(tags));
 	}
 
 	public void setValue(String name, Object value) {
-		if(value==null)
+		if (value == null)
 			values.remove(name);
 		else
 			values.put(name, value);
-		
+
 	}
-
-	
-
-	
 
 	
 
