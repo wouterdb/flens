@@ -27,6 +27,8 @@ public class SpecInput extends AbstractPeriodicInput{
 
 	public SpecInput(String name, Tagger tagger, int interval, List<String> specs) {
 		super(name, tagger, interval);
+		if(interval<1000)
+			throw new IllegalArgumentException("time under 1000ms is too short to run all tests");
 		List<Spec> allspecs = collectAllSpecs();
 		for(Spec s:allspecs){
 			this.allspecs.put(s.getName(),s);
@@ -46,6 +48,7 @@ public class SpecInput extends AbstractPeriodicInput{
 		specs.add(new SpecDiskRead());
 		specs.add(new SpecCPU());
 		specs.add(new SpecExec());
+		specs.add(new SpecSleep());
 		return specs;
 		
 	}
@@ -143,6 +146,31 @@ public class SpecInput extends AbstractPeriodicInput{
 		@Override
 		public String getName() {
 			return "exec";
+		}
+		
+		@Override
+		public String toString() {
+			return getName();
+		}
+	}
+	
+	public class SpecSleep implements Spec{
+
+		private static final int interval = 100;
+		private String metric = SpecInput.this.getName()+"."+getName();
+		
+		@Override
+		public void run() throws IOException, InterruptedException {
+			
+			long now = System.nanoTime();
+			Thread.sleep(interval);
+			long delta = System.nanoTime() - now-(interval*1000000);
+			dispatch(Record.createWithValue(metric, delta));
+		}
+
+		@Override
+		public String getName() {
+			return "sleep";
 		}
 		
 		@Override
