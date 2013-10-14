@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.Severity;
 import flens.input.util.AbstractActiveInput;
 
 /**

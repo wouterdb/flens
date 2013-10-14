@@ -30,7 +30,8 @@
  "query-ping":"flens.config.PingQuery",
  "query-jmx":"flens.config.JMXQuery",
  "query-amqp-in":"flens.config.AMQPQuery",
- "python":"flens.config.PythonFilter"
+ "python":"flens.config.PythonFilter",
+ "spec":"flens.config.SpecInput"
 }
  
  

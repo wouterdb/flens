@@ -12,6 +12,7 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 import flens.input.util.AbstractInput;
+import flens.input.util.AbstractProcessPoller;
 import flens.input.util.StreamPump;
 
 

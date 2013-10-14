@@ -15,6 +15,7 @@ import com.sun.tools.javac.util.Pair;
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.util.AbstractProcessPoller;
 import flens.input.util.StreamPump;
 
 public class NagiosInput extends AbstractProcessPoller {

@@ -53,10 +53,20 @@ public class Record {
 		return new Record(null, values, new HashSet<String>());
 	}
 
-	public static Record createWithTimeAndValue(long timestamp,
+	public static Record createWithTimeAndValues(long timestamp,
 			Map<String, Object> values) {
 		values.put(Constants.TIME, timestamp);
 		values.put(Constants.SOURCE, Util.hostName());
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithTimeAndValue(long timestamp, String metric,
+			long number) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, timestamp);
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.METRIC, metric);
+		values.put(Constants.VALUE, number);
 		return new Record(null, values, new HashSet<String>());
 	}
 
@@ -80,6 +90,15 @@ public class Record {
 		values.put(Constants.TIME, System.currentTimeMillis());
 		values.put(Constants.SOURCE, Util.hostName());
 		values.put(Constants.BODY, payload);
+		values.put(Constants.METRIC, metric);
+		return new Record(null, values, new HashSet<String>());
+	}
+	
+	public static Record createWithValue(String metric, long delta) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.VALUE, delta);
 		values.put(Constants.METRIC, metric);
 		return new Record(null, values, new HashSet<String>());
 	}
@@ -203,6 +222,10 @@ public class Record {
 			values.put(name, value);
 
 	}
+
+
+
+
 
 	
 

@@ -1,4 +1,4 @@
-package flens.input;
+package flens.input.collectd;
 
 
 public enum Severity {

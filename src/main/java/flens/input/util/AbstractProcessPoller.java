@@ -1,4 +1,4 @@
-package flens.input;
+package flens.input.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +11,6 @@ import java.util.TimerTask;
 
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractActiveInput;
-import flens.input.util.AbstractInput;
-import flens.input.util.StreamPump;
 
 
 public abstract class AbstractProcessPoller extends AbstractInput {
