@@ -14,11 +14,14 @@ public class GrepInput extends AbstractActiveInput implements TailerListener{
 
 	private Tailer tailer;
 	private Pattern regex;
+	private boolean tailFromEnd;
+	private long delay = 1000;
 
-	public GrepInput(String name, Tagger tagger, String file, String regex) {
+	public GrepInput(String name, Tagger tagger, String file, String regex,boolean tail) {
 		super(name, tagger);
-		tailer = new Tailer(new File(file), this);
+		tailer = new Tailer(new File(file), this,delay ,tail);
 		this.regex = Pattern.compile(regex); 
+		this.tailFromEnd=tail;
 	}
 
 	@Override

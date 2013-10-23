@@ -155,6 +155,20 @@ public abstract class AbstractConfig implements Config {
 		return res;
 	}
 	
+	
+	protected boolean getBool(String namex, boolean defaultv) {
+		Object res = tree.remove(namex);
+		
+		if(res == null)
+			return defaultv;
+		if(res instanceof Boolean)
+			return ((Boolean)res).booleanValue();
+	
+		
+		return Boolean.parseBoolean((String) res);
+	}
+
+	
 	protected int getInt(String namex, int defaultv) {
 		Object res = tree.remove(namex);
 		
