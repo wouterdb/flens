@@ -19,12 +19,14 @@ public class JsonEncoder extends AbstractFilter {
 	private Gson decoder;
 	private String field;
 	private List<String> fields;
+	private List<String> exfields;
 
-	public JsonEncoder(String name, Tagger tagger, Matcher matcher,int prio,String field, List<String> fieldToInclude) {
+	public JsonEncoder(String name, Tagger tagger, Matcher matcher,int prio,String field, List<String> fieldToInclude,List<String> fieldsToExclude) {
 		super(name, tagger, matcher,prio);
 		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
 		this.field = field;
 		this.fields = fieldToInclude;
+		this.exfields = fieldsToExclude;
 	}
 
 	@Override
@@ -35,6 +37,11 @@ public class JsonEncoder extends AbstractFilter {
 			for(String key:fields){
 				out.put(key, in.getValues().get(key));
 			}
+		}else if(exfields!=null){
+			out = new HashMap<>(out);
+			for(String key:exfields){
+				out.remove(key);
+			}
 		}
 		
 		String json = decoder.toJson(out);
@@ -43,5 +50,4 @@ public class JsonEncoder extends AbstractFilter {
 		tag(in);
 		return Collections.EMPTY_LIST;
 	}
-
 }
