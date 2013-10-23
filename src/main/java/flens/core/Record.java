@@ -115,6 +115,16 @@ public class Record {
 		values.put(Constants.L_MESSAGE, msg);
 		return new Record(null, values, new HashSet<String>());
 	}
+	
+	public static Record forLog(String file, String message) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		Set<String> tags = new HashSet<String>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.L_MESSAGE, message);
+		values.put(Constants.LOG_FILE, file);
+		return new Record(null, values, tags);
+	}
 
 	public Record() {
 		super();
@@ -222,6 +232,8 @@ public class Record {
 			values.put(name, value);
 
 	}
+
+	
 
 
 

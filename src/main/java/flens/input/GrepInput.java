@@ -16,9 +16,11 @@ public class GrepInput extends AbstractActiveInput implements TailerListener{
 	private Pattern regex;
 	private boolean tailFromEnd;
 	private long delay = 1000;
+	private String file;
 
 	public GrepInput(String name, Tagger tagger, String file, String regex,boolean tail) {
 		super(name, tagger);
+		this.file=file;
 		tailer = new Tailer(new File(file), this,delay ,tail);
 		this.regex = Pattern.compile(regex); 
 		this.tailFromEnd=tail;
@@ -53,7 +55,7 @@ public class GrepInput extends AbstractActiveInput implements TailerListener{
 	@Override
 	public void handle(String line) {
 		if(regex.matcher(line).matches())
-			dispatch(new Record(line));
+			dispatch(Record.forLog(file,line));
 		
 	}
 

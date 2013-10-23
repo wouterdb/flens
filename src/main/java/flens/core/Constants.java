@@ -22,13 +22,18 @@ public class Constants {
 	 */
 	public static final String SOURCE = "source";
 	/**
-	 * obligatory field
+	 * obligatory field for metrics
 	 * 
 	 * primary name of the metric
 	 */
 	public static final String METRIC = "metric";
 	
-	
+	/**
+	 * obligatory field for logs
+	 * 
+	 * primary name of the metric
+	 */
+	public static final String LOG_FILE = "file";
 	
 	//primary value fields
 	
@@ -77,6 +82,7 @@ public class Constants {
 	public static final String TAGS = "tags";
 	public static final String UNIT = "unit";
 	public static final String TARGET = "target";
+	
 	
 
 }
