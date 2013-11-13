@@ -13,8 +13,9 @@ import flens.core.Output;
 import flens.core.Record;
 import flens.core.util.AbstractPlugin;
 
-public abstract class AbstractPumpOutput extends AbstractPlugin implements Output, Runnable {
-	
+public abstract class AbstractPumpOutput extends AbstractPlugin implements
+		Output, Runnable {
+
 	public AbstractPumpOutput(String name, Matcher matcher) {
 		super();
 		this.name = name;
@@ -26,7 +27,8 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 	protected BlockingQueue<Record> queue = new LinkedBlockingQueue<>();
 	private Thread thread;
 	protected volatile boolean running;
-	
+	protected volatile boolean reconnecting;
+
 	protected int reconnectDelay = 10000;
 	protected int flushOnSize = 10000;
 	protected int sent;
@@ -44,12 +46,13 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 
 	@Override
 	public Queue<Record> getOutputQueue() {
-		return queue ;
+		return queue;
 	}
 
 	@Override
 	public void start() {
 		thread = new Thread(this);
+		reconnecting = false;
 		running = true;
 		thread.start();
 	}
@@ -60,31 +63,38 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 		thread.interrupt();
 	}
 
-	protected void reconnect(){
-		//FIXME:may lose records
+	protected synchronized void reconnect() {
+		//re-entrant
+		if (reconnecting)
+			return;
+		reconnecting = true;
+		// FIXME:may lose records
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
-			
+
 			@Override
 			public void run() {
-				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize){
-					lost+=getOutputQueue().size();
+				if (flushOnSize > 0 && getOutputQueue().size() > flushOnSize) {
+					lost += getOutputQueue().size();
 					getOutputQueue().clear();
 					warn("flushing queue to prevent overflow: " + getName());
 				}
-				
-				start();
+				try{
+					start();
+				}catch (Exception e) {
+					err("reconnect failed", e);
+					reconnect();
+				}
 			}
-		}, reconnectDelay );
-		
-		
+		}, reconnectDelay);
+
 	}
-	
+
 	@Override
 	public int getRecordsLost() {
 		return lost;
 	}
-	
+
 	@Override
 	public int getRecordsSent() {
 		return sent;

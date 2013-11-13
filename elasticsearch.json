@@ -30,7 +30,7 @@
  	
  	"output" : {
  		"elasticsearch" : {
- 			
+ 			"host":"172.16.4.13",
  			"type" : "log"
  		},"system-out":{}
  		

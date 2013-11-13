@@ -158,7 +158,7 @@ public class ElasticSearchOut extends AbstractPumpOutput {
 						ir = client.prepareIndex(idx, type);
 					}
 					ir.setSource(values);
-					ir.execute().addListener(listner);
+					ir.execute(listner);
 				} catch (RuntimeException e) {
 					err("unexpected failure, going into reconnect", e);
 					stop();

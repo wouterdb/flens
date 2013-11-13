@@ -20,7 +20,7 @@
  			"remove-tag" : ["json"]
  		},"mvel":{
  			"prio":3,
- 			"script":"if(source.startsWith('preprocess'))System.out.println(source + ':\t' +metric);"
+ 			"script":"if(source.startsWith('postprocess'))System.out.println(message);"
  			
  		}
 	},
