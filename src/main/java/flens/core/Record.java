@@ -70,6 +70,19 @@ public class Record {
 		return new Record(null, values, new HashSet<String>());
 	}
 
+	
+
+	public static Record createWithTypeTimeAndValue(long timestamp, String metric,
+			String type, long value) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, timestamp);
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.METRIC, metric);
+		values.put(Constants.TYPE, type);
+		values.put(Constants.VALUE, value);
+		return new Record(null, values, new HashSet<String>());
+	}
+	
 	public static Record createWithValues(Map<String, Object> values) {
 		values.put(Constants.TIME, System.currentTimeMillis());
 		values.put(Constants.SOURCE, Util.hostName());
@@ -232,6 +245,7 @@ public class Record {
 			values.put(name, value);
 
 	}
+
 
 	
 

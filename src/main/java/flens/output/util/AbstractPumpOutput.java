@@ -1,5 +1,6 @@
 package flens.output.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Queue;
 import java.util.Timer;
@@ -64,7 +65,7 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements
 	}
 
 	protected synchronized void reconnect() {
-		//re-entrant
+		// re-entrant
 		if (reconnecting)
 			return;
 		reconnecting = true;
@@ -79,9 +80,9 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements
 					getOutputQueue().clear();
 					warn("flushing queue to prevent overflow: " + getName());
 				}
-				try{
+				try {
 					start();
-				}catch (Exception e) {
+				} catch (Exception e) {
 					err("reconnect failed", e);
 					reconnect();
 				}
@@ -98,5 +99,29 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements
 	@Override
 	public int getRecordsSent() {
 		return sent;
+	}
+
+	protected byte[] getBytes(Object raw) {
+		byte[] body;
+
+		if (raw instanceof byte[]) {
+			body = (byte[]) raw;
+		} else if (raw instanceof String) {
+			try {
+				body = ((String) raw).getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				err("could not use utf-8!", e);
+				body = ((String) raw).getBytes();
+			}
+		} else {
+			try {
+				body = raw.toString().getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				err("could not use utf-8!", e);
+				body = raw.toString().getBytes();
+			}
+		}
+
+		return body;
 	}
 }

@@ -1,0 +1,20 @@
+{
+	"input":{
+		"socket-in":{
+			"add-tag":["binary","json"]
+		}
+		
+	},
+	"filter":{
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		}
+	},
+	"output":{
+		"system-out":{}
+	}
+}

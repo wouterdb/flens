@@ -1,0 +1,25 @@
+{
+	"input":{
+		"self-test":{
+			"plugin":"spec",
+			"type":"metric"
+		},
+		"system-in":{
+			"type":"log"
+		}
+		
+	},
+	"filter":{
+		"json-encoder" : {
+ 			"add-tag" : ["json"],
+ 			"field" : "json",
+ 			"fields" : ["time","source","metric","value","type","instance","temporalScope","message","tags","tenant"] 
+ 		} 
+	},
+	"output":{
+		"socket-out":{
+		 	"tags":["json"],
+			"field" : "json"
+		}
+	}
+}
