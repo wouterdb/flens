@@ -102,12 +102,26 @@ public class SpecInput extends AbstractPeriodicInput{
 	public class SpecDiskRead implements Spec{
 
 		private static final int DISK_BYTES = 1000;
-		private String metric = SpecInput.this.getName()+"."+getName();
+		private final String metric = SpecInput.this.getName()+"."+getName();
+		private final String file; 
+		
+		public SpecDiskRead() {
+			String[] files = System.getProperty("sun.boot.class.path").split(":");
+			int i = 0;
+			for(;i<files.length;i++){
+				File f = new File(files[i]);
+				if(f.canRead())
+					break;
+			}
+			this.file=files[i];
+				
+		}
+				
 		
 		@Override
 		public void run() throws IOException {
 			long now = System.nanoTime();
-			File f = new File("/usr/bin/bash");
+			File f = new File(file);
 			InputStream in = new FileInputStream(f);
 			byte[] bytes = new byte[DISK_BYTES];
 			IOUtils.read(in, bytes);
