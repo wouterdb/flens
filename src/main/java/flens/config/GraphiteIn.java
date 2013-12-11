@@ -11,7 +11,7 @@ public class GraphiteIn extends AbstractConfig {
 
 	@Override
 	protected void construct() {
-		int port = getInt("port",4242);
+		int port = getInt("port",2003);
 		engine.addInput(new GraphiteInput(name,tagger,port));
 	}
 
