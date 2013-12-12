@@ -1,0 +1,32 @@
+{
+	"input":{
+		"socket-in":{
+			"type":"metric",
+			"add-tag":["binary","json"]
+		}
+		
+	},
+	"filter":{
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tag" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tag" : ["json"]
+ 		},"json-encoder" : {
+ 			"add-tag" : ["json"],
+ 			"field" : "json",
+ 			"exclude-fields" : ["json","body"] 
+ 		} 
+	},
+	"output":{
+		"system-out":{},
+		"amqp-out":{
+			"type":"metric",		
+			"exchange":"metrics",
+            "tags":["json"],
+			"host":"172.16.4.8",
+			"field" : "json"
+		}
+	}
+}

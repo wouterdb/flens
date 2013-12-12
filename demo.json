@@ -1,0 +1,21 @@
+{
+	"input":{
+		"self-test":{
+			"plugin":"spec",
+			"type":"metric"
+		},
+		"system-in":{
+			"type":"log"
+		}
+		
+	},
+	"filter":{
+		"set":{
+			"fields":["owner"],
+			"values":["wouter"]
+		}
+	},
+	"output":{
+		"system-out":{}
+	}
+}

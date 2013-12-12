@@ -1,0 +1,14 @@
+{
+	"server":"127.0.0.1",
+	"name" : "testx1",
+	"tags" : { "tier" : "test"},
+	"init":{
+	  "query":{
+	  	"query-amqp-in":{},
+		"query-ping":{},
+		"query-jmx":{}
+	  }
+ 	}
+ 		 
+
+}

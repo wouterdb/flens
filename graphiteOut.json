@@ -1,0 +1,31 @@
+{
+	"input" : {		
+ 		"amqp-in" : {
+ 			"type" : "metric",
+ 			"add-tag" : ["binary","json"],
+ 			"host": "127.0.0.1",
+ 			"exchange":"metrics"
+ 		}
+ 	},
+ 	"filter":{
+ 			"decoder" : {
+				"tags" : ["binary"],
+				"remove-tag" : ["binary"],
+				"prio": -10
+			},
+			"json-decoder" : { 
+				"tags" : ["json"],
+				"remove-tag" : ["json"],
+				"prio": -9
+			}
+ 	},	
+ 	"output" : {
+ 		
+		"graphite-out":{
+			 "metric":"@{reverseHostname(source).replaceAll('[.]','_')}.@{metric.replaceAll('[.]','_')}@{(isdef type)?'.'+type:''}@{(isdef instance)?'.'+instance:''}"
+		}
+ 		
+ 	}
+ 		 
+
+}
