@@ -138,14 +138,13 @@ public class AMQPOut extends AbstractPumpOutput {
 			}
 
 		} catch (InterruptedException e) {
-			// normal
+			// normal for stop
+			stop();
 		} catch (IOException e){
 			err("AMQP pipe broken",e);
-			
-			reconnect();
-		}finally{
 			stop();
 			lost++;
+			reconnect();
 		}
 		
 
