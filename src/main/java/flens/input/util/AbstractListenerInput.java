@@ -130,7 +130,7 @@ public abstract class AbstractListenerInput<T> extends AbstractActiveInput {
 					readAndProcess(in);
 				}
 			} catch (IOException e) {
-				Logger.getLogger(getClass().getName()).log(Level.INFO,
+				Logger.getLogger(getClass().getName()).log(Level.FINE,
 						"socket broken", e);
 			} finally {
 				try {
