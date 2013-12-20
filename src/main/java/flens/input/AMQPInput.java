@@ -48,8 +48,8 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	private Connection connection;
 	private Channel channel;
 	private boolean closed;
-	private boolean reconnecting;
-	private Date reconnectDelay;
+	private boolean reconnecting = false;
+	private int reconnectDelay = 10000;
 
 	public AMQPInput(String name, Tagger tagger, String host, int port,
 			String vhost, String user, String pass, String exchange,
