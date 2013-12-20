@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -46,6 +48,8 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	private Connection connection;
 	private Channel channel;
 	private boolean closed;
+	private boolean reconnecting;
+	private Date reconnectDelay;
 
 	public AMQPInput(String name, Tagger tagger, String host, int port,
 			String vhost, String user, String pass, String exchange,
@@ -66,8 +70,9 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	}
 
 	@Override
-	public void start() {
+	public synchronized void start() {
 		closed = false;
+		reconnecting=false;
 		try {
 			connection = factory.newConnection();
 
@@ -102,6 +107,7 @@ public class AMQPInput extends AbstractInput implements Consumer {
 
 		} catch (IOException e) {
 			err("could not connect to amqp", e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -164,9 +170,30 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	public void handleShutdownSignal(String consumerTag,
 			ShutdownSignalException sig) {
 		stop();
-
+		reconnect();
 	}
 
+	protected synchronized void reconnect() {
+		// re-entrant
+		if (reconnecting)
+			return;
+		reconnecting = true;
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				try {
+					start();
+				} catch (Exception e) {
+					err("reconnect failed", e);
+					reconnect();
+				}
+			}
+		}, reconnectDelay);
+
+	}
+	
 	@Override
 	public void handleRecoverOk(String consumerTag) {
 		// TODO Auto-generated method stub

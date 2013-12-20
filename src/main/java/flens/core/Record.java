@@ -78,7 +78,7 @@ public class Record {
 		values.put(Constants.SOURCE, Util.hostName());
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record createWithTimeAndValue(long timestamp, String metric,
 			long number) {
 		Map<String, Object> values = new HashMap<String, Object>();
@@ -89,10 +89,8 @@ public class Record {
 		return new Record(null, values, new HashSet<String>());
 	}
 
-	
-
-	public static Record createWithTypeTimeAndValue(long timestamp, String metric,
-			String type, long value) {
+	public static Record createWithTypeTimeAndValue(long timestamp,
+			String metric, String type, long value) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put(Constants.TIME, timestamp);
 		values.put(Constants.SOURCE, Util.hostName());
@@ -101,17 +99,20 @@ public class Record {
 		values.put(Constants.VALUE, value);
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record createWithValues(Map<String, Object> values) {
-		values.put(Constants.TIME, System.currentTimeMillis());
-		values.put(Constants.SOURCE, Util.hostName());
+		if (!values.containsKey(Constants.TIME))
+			values.put(Constants.TIME, System.currentTimeMillis());
+		if (!values.containsKey(Constants.SOURCE))
+			values.put(Constants.SOURCE, Util.hostName());
 		return new Record(null, values, new HashSet<String>());
 	}
-	
-	public static Record createWithValues(String metric,Map<String, Object> values) {
-		if(!values.containsKey(Constants.TIME))
+
+	public static Record createWithValues(String metric,
+			Map<String, Object> values) {
+		if (!values.containsKey(Constants.TIME))
 			values.put(Constants.TIME, System.currentTimeMillis());
-		if(!values.containsKey(Constants.SOURCE))
+		if (!values.containsKey(Constants.SOURCE))
 			values.put(Constants.SOURCE, Util.hostName());
 		values.put(Constants.METRIC, metric);
 		return new Record(null, values, new HashSet<String>());
@@ -125,7 +126,7 @@ public class Record {
 		values.put(Constants.METRIC, metric);
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record createWithValue(String metric, long delta) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put(Constants.TIME, System.currentTimeMillis());
@@ -134,8 +135,8 @@ public class Record {
 		values.put(Constants.METRIC, metric);
 		return new Record(null, values, new HashSet<String>());
 	}
-	
-	public static Record createWithValue(String metric,String msg) {
+
+	public static Record createWithValue(String metric, String msg) {
 		return createWithMetricAndMsg(metric, msg);
 	}
 
@@ -147,7 +148,7 @@ public class Record {
 		values.put(Constants.L_MESSAGE, msg);
 		return new Record(null, values, new HashSet<String>());
 	}
-	
+
 	public static Record forLog(String file, String message) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		Set<String> tags = new HashSet<String>();
@@ -264,14 +265,5 @@ public class Record {
 			values.put(name, value);
 
 	}
-
-
-	
-
-
-
-
-
-	
 
 }

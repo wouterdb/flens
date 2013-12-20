@@ -44,6 +44,10 @@ public class EmbededFlens {
 		this.engine=cb.getEngine();
 	}
 
+	public EmbededFlens(Flengine engine) {
+		this.engine=engine;
+	}
+
 	private Reader getConfig() {
 		String prop = System.getProperty("flens.config");
 		if(prop==null)
@@ -75,6 +79,10 @@ public class EmbededFlens {
 				instance.engine.start();
 		}
 		return instance;
+	}
+
+	public static void setInstance(Flengine engine) {
+		instance = new EmbededFlens(engine);
 	}
 
 }

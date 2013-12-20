@@ -3,7 +3,7 @@
 		"socket-in":{
 			"type":"metric",
 			"add-tag":["binary","json"]
-		}
+		},"heartbeat":{"type":"metric"}
 		
 	},
 	"filter":{

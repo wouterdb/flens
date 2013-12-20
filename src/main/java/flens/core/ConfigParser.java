@@ -113,7 +113,7 @@ public class ConfigParser {
 				"/plugins.json"));
 	}
 
-	protected void construct(Map config) {
+	public void construct(Map config) {
 		load((Map) config.remove("query"));
 		load((Map) config.remove("input"));
 		load((Map) config.remove("output"));
