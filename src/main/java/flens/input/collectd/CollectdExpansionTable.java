@@ -89,9 +89,8 @@ public class CollectdExpansionTable extends ExpansionTable {
 			names[i]=parts[i].trim().split(":")[0];
 		}
 		add(null,type,names);
-		System.out.println(type + 	Arrays.deepToString(names));
+		//System.out.println(type + 	Arrays.deepToString(names));
 	}
 
-	
 
 }
