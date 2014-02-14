@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,6 +72,18 @@ public class Record {
 
 		return new Record(null, values, new HashSet<String>());
 	}
+	
+
+	public static Record createWithHostAndMessage(String host, String msg) {
+		
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, host);
+		values.put(Constants.MESSAGE, msg);
+
+		return new Record(null, values, new HashSet<String>());
+	}
+
 
 	public static Record createWithTimeAndValues(long timestamp,
 			Map<String, Object> values) {
@@ -159,6 +172,17 @@ public class Record {
 		return new Record(null, values, tags);
 	}
 
+	
+	public static Record pack(List<Record> collector) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		Set<String> tags = new HashSet<String>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.SUBRECORDS, collector);
+		return new Record(null, values, tags);
+	}
+	
+	
 	public Record() {
 		super();
 		tags = new HashSet<String>();
@@ -265,5 +289,7 @@ public class Record {
 			values.put(name, value);
 
 	}
+
+
 
 }

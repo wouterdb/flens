@@ -48,7 +48,7 @@ public class Constants {
 	public static final String METRIC = "metric";
 	
 	/**
-	 * obligatory field for logs
+	 * field for logs
 	 * 
 	 * primary name of the metric
 	 */
@@ -102,6 +102,8 @@ public class Constants {
 	public static final String UNIT = "unit";
 	public static final String TARGET = "target";
 	
-	
+
+	public static final String SUBRECORDS = "subrecords";
+
 
 }

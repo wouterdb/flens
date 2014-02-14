@@ -7,6 +7,8 @@
  "graphite-in" : "flens.config.GraphiteIn",
  "graphite-out" : "flens.config.GraphiteOut",
  "unpacker" : "flens.config.ValuesUnpacker",
+ "batcher" : "flens.config.Batcher",
+ "unbatcher" : "flens.config.UnBatcher",
  "mvel" : "flens.config.MvelFilter",
  "grok" : "flens.config.GrokFilter",
  "template" : "flens.config.MvelTemplate",
@@ -33,7 +35,8 @@
  "python":"flens.config.PythonFilter",
  "spec":"flens.config.SpecInput",
  "socket-out":"flens.config.SocketOutput",
- "socket-in":"flens.config.SocketInput"
+ "socket-in":"flens.config.SocketInput",
+ "socket-line-in":"flens.config.SocketLineIn"
 }
  
  

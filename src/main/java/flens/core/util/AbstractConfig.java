@@ -51,10 +51,10 @@ public abstract class AbstractConfig implements Config {
 		
 		logger.info("starting: "+name);
 		
-		if(!isIn())
+		if(isOut()||isFilter())
 			matcher = readMatcher();
 		
-		if(!isOut())
+		if(isIn()||isFilter())
 			tagger = readTagger();
 
 		if(isFilter()){
@@ -113,7 +113,7 @@ public abstract class AbstractConfig implements Config {
 	
 	}
 	
-	private Matcher readMatcher() {
+	protected Matcher readMatcher() {
 		tags = getArray("tags",Collections.EMPTY_LIST);
 		String type = get("type",null);
 		
@@ -208,6 +208,9 @@ public abstract class AbstractConfig implements Config {
 	@Override
 	public List<Option> getOptions() {
 		
+		if(isIn() && isOut())
+			return loopopts;
+		
 		if(isIn())
 			return inopts;
 		
@@ -220,6 +223,8 @@ public abstract class AbstractConfig implements Config {
 	private static List<Option> inopts; 
 	private static List<Option> outopts;
 	private static List<Option> filteropts;
+	private static List<Option> loopopts;
+
 	
 	static{
 		Option name =new Option("name", "String", "plugin name" ,"name of the filter, for reporting and monitoring purposes"); 
@@ -253,6 +258,13 @@ public abstract class AbstractConfig implements Config {
 		inopts = Collections.unmodifiableList(inopts);
 		filteropts = Collections.unmodifiableList(filteropts);
 		outopts = Collections.unmodifiableList(outopts);
+		
+		loopopts = new LinkedList<>();
+		loopopts.add(name);
+		loopopts.add(new Option("type", "String", "name" ,"type to apply to the records"));
+		loopopts.addAll(taggerOpts);
+		loopopts.addAll(matcherOpts);
+
 		
 	}
 }
