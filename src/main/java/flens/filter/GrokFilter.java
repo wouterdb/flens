@@ -19,6 +19,7 @@
  */
 package flens.filter;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,12 +38,14 @@ public class GrokFilter extends AbstractFilter {
 	private String script;
 	private Grok compiled;
 	private String field;
+	private String dir;
 
 	public GrokFilter(String name, Tagger tagger, Matcher matcher,int prio,
-			String script, String inField) {
+			String script, String inField, String dir) {
 		super(name, tagger, matcher,prio);
 		this.script = script;
 		this.field = inField;
+		this.dir=dir;
 		start();
 	}
 
@@ -58,9 +61,28 @@ public class GrokFilter extends AbstractFilter {
 		} catch (Throwable e) {
 			throw new IllegalArgumentException("could not load aux patterns", e);
 		}
+		if(dir!=null && !dir.isEmpty()){
+			File d = new File(dir);
+			if(!d.isDirectory())
+				warn("dir is not a directory" + dir);
+				for(String f:d.list()){
+					
+					try {
+						compiled.addPatternFromFile(f);
+					} catch (Throwable e) {
+						err("can not read file" + f,e);
+					}
+					
+				}
+		}
+			
+		
+		
 		int re = compiled.compile(script);
 		if (re != GrokError.GROK_OK)
 			throw new IllegalArgumentException("bad grok pattern");
+		
+		
 	}
 
 	@Override
