@@ -12,6 +12,7 @@ public class CollectdExpansionTableTest {
 		
 		assertArrayEquals(new String[]{"in", "out"},ct.resolve("interface","a"));
 		assertArrayEquals(new String[]{"used", "free"},ct.resolve("df","df"));
+		
 	}
 
 }

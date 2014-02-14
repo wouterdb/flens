@@ -25,13 +25,14 @@ import java.util.List;
 import flens.core.util.AbstractConfig;
 import flens.input.GraphiteInput;
 import flens.input.OpenTsdbInput;
+import flens.input.SocketLineInput;
 
 public class SocketLineIn extends AbstractConfig {
 
 	@Override
 	protected void construct() {
 		int port = getInt("port",0);
-		engine.addInput(new GraphiteInput(name,tagger,port));
+		engine.addInput(new SocketLineInput(name,tagger,port));
 	}
 
 	
