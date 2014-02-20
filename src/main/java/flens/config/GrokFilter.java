@@ -36,7 +36,10 @@ public class GrokFilter extends AbstractConfig{
 	protected void construct() {
 		String s = get("script", "");
 		String inf = get("infield", "");
-		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf));
+		String dir = get("dir", "");
+		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf,dir));
+		
+
 	}
 
 	
@@ -56,6 +59,7 @@ public class GrokFilter extends AbstractConfig{
 		List<Option>  out = new LinkedList(super.getOptions());
 		out.add(new Option("script", "String", "", "script to execute"));
 		out.add(new Option("infield", "String", "", "field to match"));
+		out.add(new Option("dir", "String", "", "directory for aux definitions"));
 		return out;
 	}
 }
