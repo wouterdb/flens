@@ -1,0 +1,18 @@
+{
+	"input" : {	
+		"cookbook":{
+			"template":"proc.tmpl",
+			"type":"outx"
+		}
+ 		
+ 	},"output" : {
+ 		
+		"system-out" : {
+ 			"type":"outx"	
+ 			
+ 		}
+ 		
+ 	}
+ 		 
+
+}

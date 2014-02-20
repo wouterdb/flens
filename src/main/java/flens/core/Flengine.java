@@ -213,7 +213,19 @@ public class Flengine {
 	private final BlockingQueue<Record> inqueue = new QueueWrapper();
 	private boolean running;
 	private ThreadPoolExecutor executor;
+	
+	private PluginRepo pr;
+	
+	
+	public Flengine(PluginRepo pr){
+		this.pr=pr;
+	}
 
+	
+	public PluginRepo getPluginRepo(){
+		return pr;
+	}
+	
 	private final Map<String, String> tags = new HashMap<String, String>();
 
 	protected boolean count(String name) {
