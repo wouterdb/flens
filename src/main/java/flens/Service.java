@@ -24,7 +24,6 @@ import static flens.core.util.ConfigUtil.collectConfig;
 import java.io.IOException;
 import java.util.Map;
 
-import flens.core.ConfigHandler;
 import flens.core.ConfigParser;
 import flens.core.Util;
 
