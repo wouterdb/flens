@@ -3,5 +3,5 @@
 .settings
 target
 *~
-/target
-/.hg.bak
+*/target
+

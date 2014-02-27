@@ -43,14 +43,9 @@
 		<dependency>
 			<groupId>com.nflabs</groupId>
 			<artifactId>Grok</artifactId>
-			<version>0.0.3.1-SNAPSHOT</version>
+			<version>0.0.4</version>
 		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>0.90.2</version>
-
-		</dependency>
+		
 		<dependency>
 			<groupId>org.python</groupId>
 			<artifactId>jython</artifactId>
@@ -147,7 +142,7 @@
 					<group>misc</group>
 					<name>flens</name>
 					<packager>WDB</packager>
-					<prefix>/usr/share/java</prefix>
+					<prefix>/usr/share/flens</prefix>
 					<requires>
 					</requires>
                     <mappings>
@@ -188,29 +183,6 @@
 								</source>
 							</sources>
 						</mapping>
-						<mapping>
-							<directoryIncluded>False</directoryIncluded>
-							<directory>/usr/bin/</directory>
-							<filemode>644</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<sources>
-								<source>
-									<location>src/main/rpm/flens-tailer.sh</location>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/usr/share/flens</directory>
-							<filemode>644</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<sources>
-								<source>
-									<location>src/main/rpm/Tailer.json</location>
-								</source>
-							</sources>
-                        </mapping>
                         <mapping>
                             <directory>/etc/rc.d/init.d/</directory>
                             <filemode>755</filemode>

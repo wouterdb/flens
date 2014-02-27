@@ -23,8 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 
-import org.elasticsearch.common.mvel2.ast.Instance;
-
 import flens.core.ConfigBuilder;
 import flens.core.Flengine;
 
