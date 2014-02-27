@@ -110,8 +110,9 @@ public class ConfigParser {
 	}
 
 	private void loadPlugins() {
-		this.pluginRepo = new PluginRepo(getClass().getResourceAsStream(
-				"/plugins.json"));
+		
+		
+		this.pluginRepo = new PluginRepo();
 	}
 
 	public void construct(Map config) {

@@ -19,9 +19,15 @@
  */
 package flens.core;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,17 +39,33 @@ import flens.core.Config.Option;
 public class PluginRepo {
 
 	private Gson gson = new Gson();
-	private Map<String,String> raw ;
+	private Map<String,String> raw = new HashMap<>();
 	private Map<String,Config> processed = new HashMap<String, Config>() ;
 	
-	public PluginRepo(InputStream in) {
-		this.raw = gson.fromJson(new InputStreamReader(in), HashMap.class);
+	public PluginRepo() {
+		List<URL> configs;
+		try {
+			configs = Collections.list(getClass().getClassLoader().getResources("plugins.json"));
+			for(URL url:configs){
+				load(url.openStream());
+			}
+		} catch (IOException e) {
+			throw new Error("IOEXception via classloader, this should NOT occur",e);
+		}
 	
 	}
 
 	
 
 	
+	@SuppressWarnings("unchecked")
+	private void load(InputStream in) {
+		this.raw.putAll(gson.fromJson(new InputStreamReader(in), HashMap.class));
+	}
+
+
+
+
 	public Config get(String key) {
 		if(processed.containsKey(key)){
 			return processed.get(key);
