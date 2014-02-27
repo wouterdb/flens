@@ -36,7 +36,8 @@
  "spec":"flens.config.SpecInput",
  "socket-out":"flens.config.SocketOutput",
  "socket-in":"flens.config.SocketInput",
- "socket-line-in":"flens.config.SocketLineIn"
+ "socket-line-in":"flens.config.SocketLineIn",
+ "cookbook":"flens.config.CookbookConfig"
 }
  
  

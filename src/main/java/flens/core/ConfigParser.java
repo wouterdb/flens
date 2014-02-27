@@ -36,8 +36,9 @@ public class ConfigParser {
 	private PluginRepo pluginRepo;
 
 	public ConfigParser() {
-		this.engine = new Flengine();
+		
 		loadPlugins();
+		this.engine = new Flengine(pluginRepo);
 	}
 
 	public ConfigParser(Flengine engine) {

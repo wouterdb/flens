@@ -37,7 +37,8 @@ public class PluginRepo {
 	private Map<String,Config> processed = new HashMap<String, Config>() ;
 	
 	public PluginRepo(InputStream in) {
-		this.raw   = gson.fromJson(new InputStreamReader(in), HashMap.class);
+		this.raw = gson.fromJson(new InputStreamReader(in), HashMap.class);
+	
 	}
 
 	

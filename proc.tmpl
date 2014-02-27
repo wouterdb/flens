@@ -1,0 +1,19 @@
+{
+	"input" : {		
+ 		"proc" : {
+ 			"cmd" : "systemctl",
+ 			"args": ["list-units", "--full", "--no-pager","--all", "--no-legend"],
+ 			"type" : "@{type}",
+ 			"err-type" : "log"
+ 		}
+ 	},
+ 	
+ 	"filter" : {
+ 		"grok": {
+ 			"type":"jsonLog",
+ 			"infield":"message",
+ 			"script" : "%{[NAME:service} %{NOTSPACE:loaded} %{NOTSPACE:active} %{NOTSPACE:sub} %{DATA:message}"
+ 		}
+		
+	}
+}

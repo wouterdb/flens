@@ -19,6 +19,7 @@
  */
 package flens.util;
 
+import java.io.InputStream;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -53,6 +54,10 @@ public class MVELUtil {
 	}
 	
 	public static CompiledTemplate compileTemplateTooled(String source){
+		return TemplateCompiler.compileTemplate(source,getTooledContext());
+	}
+	
+	public static CompiledTemplate compileTemplateTooled(InputStream source){
 		return TemplateCompiler.compileTemplate(source,getTooledContext());
 	}
 }

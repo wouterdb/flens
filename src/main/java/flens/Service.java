@@ -45,8 +45,12 @@ public class Service {
 		if(name != null)
 			Util.overriderHostname(name);
 
-		ch.construct(initial);
-		ch.getEngine().addTags(tags);
+		if(initial!=null)
+			ch.construct(initial);
+		
+		if(tags!=null)
+			ch.getEngine().addTags(tags);
+		
 		ch.getEngine().start();
 		
 	}

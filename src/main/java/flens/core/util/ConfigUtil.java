@@ -29,6 +29,11 @@ public class ConfigUtil {
 			}
 		});
 
+		if(files==null||files.length==0){
+			System.out.println("no config found");
+			return new HashMap();
+		}
+		
 		Arrays.sort(files);
 
 		for (File f : files) {
