@@ -46,8 +46,8 @@ public class SocketInput extends
 
 	private int port;
 
-	public SocketInput(String name, Tagger tagger, int port) {
-		super(name, tagger);
+	public SocketInput(String name,String plugin, Tagger tagger, int port) {
+		super(name, plugin, tagger);
 		this.port = port;
 	}
 

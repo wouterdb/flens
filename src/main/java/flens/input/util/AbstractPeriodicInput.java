@@ -29,8 +29,8 @@ public abstract class AbstractPeriodicInput extends AbstractInput {
 	protected Timer t;
 	protected int interval;
 
-	public AbstractPeriodicInput(String name, Tagger tagger,int interval) {
-		super(name, tagger);
+	public AbstractPeriodicInput(String name, String plugin,Tagger tagger,int interval) {
+		super(name,plugin, tagger);
 		this.interval = interval;
 	}
 

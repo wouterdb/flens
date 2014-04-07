@@ -14,8 +14,8 @@ import org.mvel2.templates.TemplateRuntime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import flens.config.util.AbstractConfig;
 import flens.core.ConfigParser;
-import flens.core.util.AbstractConfig;
 import flens.util.FileUtil;
 import flens.util.MVELUtil;
 

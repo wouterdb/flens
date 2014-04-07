@@ -21,7 +21,7 @@ package flens.config;
 
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 
 
@@ -40,7 +40,7 @@ public class Unpacker extends AbstractConfig{
 	@Override
 	protected void construct() {
 		requiresLoopFree();
-		engine.addFilter(new flens.filter.Unpacker(name,tagger,matcher,prio));
+		engine.addFilter(new flens.filter.Unpacker(name,plugin,tagger,matcher,prio));
 	}
 
 	

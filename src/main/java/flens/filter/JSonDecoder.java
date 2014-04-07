@@ -36,8 +36,8 @@ public class JSonDecoder extends AbstractFilter {
 
 	private Gson decoder;
 
-	public JSonDecoder(String name, Tagger tagger, Matcher matcher,int prio) {
-		super(name, tagger, matcher,prio);
+	public JSonDecoder(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
+		super(name, plugin,tagger, matcher,prio);
 		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
 	}
 

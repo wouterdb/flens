@@ -38,8 +38,8 @@ public class MVELFilter extends AbstractFilter{
 	private Serializable compiled;
 
 
-	public MVELFilter(String name, Tagger tagger, Matcher matcher,int prio,String script) {
-		super(name, tagger, matcher,prio);
+	public MVELFilter(String name,String plugin, Tagger tagger, Matcher matcher,int prio,String script) {
+		super(name, plugin, tagger, matcher,prio);
 		this.script = script;
 		start();
 	}

@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class SpecInput extends AbstractConfig {

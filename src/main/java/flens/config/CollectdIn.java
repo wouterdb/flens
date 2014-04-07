@@ -22,7 +22,7 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 import flens.input.collectd.CollectdInput;
 
@@ -32,7 +32,7 @@ public class CollectdIn extends AbstractConfig {
 	protected void construct() {
 		int port = getInt("port",25826);
 		//todo more config and docs
-		engine.addInput(new CollectdInput(name,tagger,port,null,null));
+		engine.addInput(new CollectdInput(name,plugin,tagger,port,null,null));
 	}
 
 	

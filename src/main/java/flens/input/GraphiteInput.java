@@ -44,8 +44,8 @@ public class GraphiteInput extends AbstractListenerInput<Pair<String,BufferedRea
 	private int port = 2003;
 	
 	
-	public GraphiteInput(String name, Tagger tagger, int port) {
-		super(name,tagger);
+	public GraphiteInput(String name,String plugin, Tagger tagger, int port) {
+		super(name,plugin,tagger);
 		this.port = port;
 	}
 

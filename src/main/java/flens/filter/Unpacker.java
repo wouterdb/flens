@@ -32,8 +32,8 @@ import flens.filter.util.AbstractFilter;
 
 public class Unpacker extends AbstractFilter implements Filter{
 
-	public Unpacker(String name, Tagger tagger, Matcher matcher,int prio) {
-		super(name, tagger, matcher,prio);
+	public Unpacker(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
+		super(name, plugin, tagger, matcher,prio);
 	}
 
 	@Override

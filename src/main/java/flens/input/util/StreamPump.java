@@ -34,8 +34,8 @@ public class StreamPump extends AbstractActiveInput implements Runnable {
 
 	private BufferedReader reader;
 
-	public StreamPump(String name, Tagger tagger, BufferedReader s) {
-		super(name, tagger);
+	public StreamPump(String name, String plugin, Tagger tagger, BufferedReader s) {
+		super(name,plugin, tagger);
 		this.reader = s;
 	}
 

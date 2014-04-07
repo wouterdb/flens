@@ -40,8 +40,8 @@ public class JsonEncoder extends AbstractFilter {
 	private List<String> fields;
 	private List<String> exfields;
 
-	public JsonEncoder(String name, Tagger tagger, Matcher matcher,int prio,String field, List<String> fieldToInclude,List<String> fieldsToExclude) {
-		super(name, tagger, matcher,prio);
+	public JsonEncoder(String name, String plugin, Tagger tagger, Matcher matcher,int prio,String field, List<String> fieldToInclude,List<String> fieldsToExclude) {
+		super(name, plugin, tagger, matcher,prio);
 		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
 		this.field = field;
 		this.fields = fieldToInclude;

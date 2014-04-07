@@ -29,8 +29,8 @@ import flens.filter.util.AbstractFilter;
 
 public class CharacterDecoder extends AbstractFilter {
 
-	public CharacterDecoder(String name, Tagger tagger, Matcher matcher,int prio) {
-		super(name, tagger, matcher,prio);
+	public CharacterDecoder(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
+		super(name,plugin, tagger, matcher,prio);
 	}
 
 	@Override

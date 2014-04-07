@@ -19,15 +19,20 @@
  */
 package flens.core.util;
 
+import java.util.Map;
+
 import flens.core.Record;
 import flens.core.Tagger;
 
 public class TypeTagger implements Tagger {
 
-	private String type;
+	private final String type;
+	
+	private final String configprefix; 
 
-	public TypeTagger(String stype) {
+	public TypeTagger(String prefix, String stype) {
 		this.type=stype;
+		this.configprefix = prefix;
 	}
 
 	@Override
@@ -35,4 +40,8 @@ public class TypeTagger implements Tagger {
 		r.setType(type);
 	}
 
+	@Override
+	public void outputConfig(Map<String, Object> tree) {
+		tree.put(configprefix+"type", type);
+	}
 }

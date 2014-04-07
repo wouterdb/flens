@@ -70,7 +70,7 @@ public class NagiosInput extends AbstractProcessPoller {
 		private String values;
 
 		public NagiosCapture(String name, BufferedReader s) {
-			super(name, null, s);
+			super(name,null, null, s);
 		}
 
 		@Override

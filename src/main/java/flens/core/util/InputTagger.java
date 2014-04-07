@@ -20,6 +20,7 @@
 package flens.core.util;
 
 import java.util.List;
+import java.util.Map;
 
 import flens.core.Record;
 import flens.core.Tagger;
@@ -28,18 +29,27 @@ public class InputTagger implements Tagger {
 
 	private String type;
 	private List<String> tags;
+	private final String configprefix; 
 
-	public InputTagger(String type, List<String> tags) {
+	public InputTagger(String prefix, String type, List<String> tags) {
 		if(type == null)
 			throw new IllegalArgumentException("no type given");
 		this.type = type;
 		this.tags = tags;
+		this.configprefix = prefix;
 	}
-
+	
 	@Override
 	public void adapt(Record r) {
 		r.getTags().addAll(tags);
 		r.setType(type);
+	}
+
+	@Override
+	public void outputConfig(Map<String, Object> tree) {
+		tree.put(configprefix+"add-tag", tags);
+		tree.put(configprefix+"type", type);
+		
 	}
 
 }

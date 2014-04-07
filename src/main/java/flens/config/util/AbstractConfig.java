@@ -17,7 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core.util;
+package flens.config.util;
 
 import java.io.ObjectInputStream.GetField;
 import java.util.Collections;
@@ -32,12 +32,18 @@ import flens.core.Config;
 import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Tagger;
+import flens.core.util.AllMatcher;
+import flens.core.util.InputTagger;
+import flens.core.util.StandardMatcher;
+import flens.core.util.StandardTagger;
+import flens.core.util.TypeTagger;
 
 public abstract class AbstractConfig implements Config {
 
 	protected Map<String, Object> tree;
 	protected Flengine engine;
 	protected String name;
+	protected String plugin;
 	protected Matcher matcher;
 	protected Tagger tagger;
 	protected Logger logger = Logger.getLogger(getClass().getName());
@@ -48,6 +54,7 @@ public abstract class AbstractConfig implements Config {
 		this.tree = tree;
 		this.engine = engine;
 		this.name = name;
+		this.plugin = get("plugin", name);
 		
 		logger.info("starting: "+name);
 		
@@ -95,7 +102,7 @@ public abstract class AbstractConfig implements Config {
 		String stype = null;
 		if(isIn()){
 			String type = get(prefix+"type",name);
-			return new InputTagger(type,tags);
+			return new InputTagger(prefix,type,tags);
 		}else{
 			stype = get(prefix+"set-type",null);
 		}
@@ -106,10 +113,10 @@ public abstract class AbstractConfig implements Config {
 			if(stype == null)
 				return Tagger.empty;
 			else
-				return new TypeTagger(stype);
+				return new TypeTagger(prefix, stype);
 		}
 			
-		return new StandardTagger(stype,tags,rtags);
+		return new StandardTagger(prefix,stype,tags,rtags);
 	
 	}
 	
@@ -227,7 +234,7 @@ public abstract class AbstractConfig implements Config {
 
 	
 	static{
-		Option name =new Option("name", "String", "plugin name" ,"name of the filter, for reporting and monitoring purposes"); 
+		Option name =new Option("plugin", "String", "plugin name" ,"name of the plugin used"); 
 		
 		List<Option> matcherOpts = new LinkedList<Config.Option>();
 		matcherOpts.add(new Option("type", "String","name", "only apply to records having this type"));

@@ -19,6 +19,7 @@
  */
 package flens.core;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Plugin {
@@ -30,4 +31,5 @@ public interface Plugin {
 	public String getName();
 	
 
+	public void writeConfig(Flengine engine, Map<String,Object> tree);
 }

@@ -35,8 +35,8 @@ public class Splitter extends AbstractFilter implements Filter{
 	
 	List<String> keys = new LinkedList<>();
 
-	public Splitter(String name, Tagger tagger, Matcher matcher,int prio, List<String> keys) {
-		super(name, tagger, matcher,prio);
+	public Splitter(String name, String plugin,Tagger tagger, Matcher matcher,int prio, List<String> keys) {
+		super(name, plugin, tagger, matcher,prio);
 		this.keys = keys;
 	}
 

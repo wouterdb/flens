@@ -31,11 +31,13 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	protected BlockingQueue<Record> in;
 	protected Tagger tagger;
 	private String name;
+	private String plugin;
 	private int sent;
 
-	public AbstractInput(String name,Tagger tagger) {
+	public AbstractInput(String name,String plugin,Tagger tagger) {
 		this.name = name;
 		this.tagger = tagger;
+		this.plugin = plugin;
 	}
 
 	
@@ -43,6 +45,12 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String getPlugin() {
+		return plugin;
+	}
+	
 	
 	protected void dispatch(Record r){
 		tagger.adapt(r);

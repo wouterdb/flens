@@ -42,8 +42,8 @@ public class OpenTsdbInput extends AbstractListenerInput<BufferedReader> {
 	private int port = 4242;
 	
 	
-	public OpenTsdbInput(String name, Tagger tagger, int port) {
-		super(name,tagger);
+	public OpenTsdbInput(String name,String plugin, Tagger tagger, int port) {
+		super(name,plugin,tagger);
 		this.port = port;
 	}
 

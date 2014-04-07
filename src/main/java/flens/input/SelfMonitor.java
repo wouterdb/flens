@@ -39,8 +39,8 @@ public class SelfMonitor extends AbstractActiveInput {
 
 	private long interval;
 
-	public SelfMonitor(String name, Tagger tagger, Flengine e, int interval) {
-		super(name,tagger);
+	public SelfMonitor(String name,String plugin, Tagger tagger, Flengine e, int interval) {
+		super(name,plugin, tagger);
 		this.engine = e;
 		this.interval = interval;
 	}

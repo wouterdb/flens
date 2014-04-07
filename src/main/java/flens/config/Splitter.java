@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class Splitter extends AbstractConfig{
 	
@@ -36,7 +36,7 @@ public class Splitter extends AbstractConfig{
 	@Override
 	protected void construct() {
 		List<String> temp = getArray("fields",Collections.EMPTY_LIST);
-		engine.addFilter(new flens.filter.Splitter(name,tagger,matcher,prio,temp));
+		engine.addFilter(new flens.filter.Splitter(name,plugin,tagger,matcher,prio,temp));
 	}
 
 	

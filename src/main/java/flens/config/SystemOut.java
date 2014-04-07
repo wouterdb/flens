@@ -19,7 +19,7 @@
  */
 package flens.config;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 public class SystemOut extends AbstractConfig{
 

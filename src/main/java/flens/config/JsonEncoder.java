@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class JsonEncoder extends AbstractConfig{
 
@@ -39,7 +39,7 @@ public class JsonEncoder extends AbstractConfig{
 		List<String> fields = getArray("fields", null);
 		List<String> exfields = getArray("exclude-fields", null);
 		
-		engine.addFilter(new flens.filter.JsonEncoder(name,tagger,matcher,prio,field,fields,exfields));
+		engine.addFilter(new flens.filter.JsonEncoder(name,plugin,tagger,matcher,prio,field,fields,exfields));
 	}
 
 	@Override

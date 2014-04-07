@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.SelfMonitor;
 
 public class Self extends AbstractConfig{
@@ -31,7 +31,7 @@ public class Self extends AbstractConfig{
 	@Override
 	protected void construct() {
 		int interval = getInt("interval", 60000);
-		engine.addInput(new SelfMonitor(name,tagger,engine,interval));
+		engine.addInput(new SelfMonitor(name,plugin,tagger,engine,interval));
 		
 	}
 

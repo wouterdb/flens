@@ -22,6 +22,7 @@ package flens.core.util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import flens.core.Matcher;
@@ -43,6 +44,12 @@ public class StandardMatcher implements Matcher {
 			return false;
 		return r.getTags().containsAll(tags);
 			
+	}
+
+	@Override
+	public void outputConfig(Map<String, Object> tree) {
+		tree.put("type", type);
+		tree.put("tags", tags);
 	}
 
 }

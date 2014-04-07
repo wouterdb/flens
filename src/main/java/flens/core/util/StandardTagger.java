@@ -20,6 +20,7 @@
 package flens.core.util;
 
 import java.util.List;
+import java.util.Map;
 
 import flens.core.Record;
 import flens.core.Tagger;
@@ -29,20 +30,30 @@ public class StandardTagger implements Tagger {
 	private List rtags;
 	private String type;
 
-	public StandardTagger(String type,List<String> tags, List rtags) {
+	private final String configprefix;
+
+	public StandardTagger(String prefix, String type, List<String> tags,
+			List rtags) {
 		this.tags = tags;
 		this.rtags = rtags;
-		this.type=type;
+		this.type = type;
+
+		this.configprefix = prefix;
 	}
-
-
 
 	@Override
 	public void adapt(Record r) {
 		r.getTags().addAll(tags);
 		r.getTags().removeAll(rtags);
-		if(type!=null)
+		if (type != null)
 			r.setType(type);
+	}
+
+	@Override
+	public void outputConfig(Map<String, Object> tree) {
+		tree.put(configprefix + "add-tag", tags);
+		tree.put(configprefix + "type", type);	
+		tree.put(configprefix+"remove-tag",rtags);
 	}
 
 }

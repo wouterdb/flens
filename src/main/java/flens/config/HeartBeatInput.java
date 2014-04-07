@@ -22,7 +22,7 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class HeartBeatInput extends AbstractConfig {
@@ -32,7 +32,7 @@ public class HeartBeatInput extends AbstractConfig {
 
 		int interval = getInt("interval",10000);
 		
-		engine.addInput(new flens.input.HeartBeat(name,tagger,interval));
+		engine.addInput(new flens.input.HeartBeat(name,plugin,tagger,interval));
 	}
 
 	

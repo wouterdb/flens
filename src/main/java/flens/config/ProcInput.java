@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class ProcInput extends AbstractConfig {

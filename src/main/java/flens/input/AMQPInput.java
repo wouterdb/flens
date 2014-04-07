@@ -200,4 +200,5 @@ public class AMQPInput extends AbstractInput implements Consumer {
 
 	}
 
+
 }

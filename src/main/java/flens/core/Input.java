@@ -19,6 +19,7 @@
  */
 package flens.core;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public interface Input {
@@ -36,4 +37,6 @@ public interface Input {
 	
 	
 	public int getRecordsSent();
+	
+	public void writeConfig(Flengine engine, Map<String,Object> tree);
 }

@@ -42,8 +42,8 @@ public class HeartBeat extends AbstractPeriodicInput {
 	}
 
 
-	public HeartBeat(String name, Tagger tagger,int interval) {
-		super(name, tagger,interval);
+	public HeartBeat(String name,String plugin, Tagger tagger,int interval) {
+		super(name, plugin, tagger,interval);
 	}
 
 

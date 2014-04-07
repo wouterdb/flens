@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class MvelTemplate extends AbstractConfig{
 	
@@ -36,7 +36,7 @@ public class MvelTemplate extends AbstractConfig{
 	protected void construct() {
 		String temp = get("template", null);
 		String field = get("field", null);
-		engine.addFilter(new flens.filter.MVELTemplate(name,tagger,matcher,prio,field,temp));
+		engine.addFilter(new flens.filter.MVELTemplate(name,plugin,tagger,matcher,prio,field,temp));
 	}
 
 	

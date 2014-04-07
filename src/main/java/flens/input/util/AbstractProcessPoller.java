@@ -41,8 +41,8 @@ public abstract class AbstractProcessPoller extends AbstractInput {
 	private long period;
 	private boolean running;
 
-	public AbstractProcessPoller(String name, Tagger t,String cmd,List<String> args, long period) {
-		super(name, t);
+	public AbstractProcessPoller(String name, String plugin,Tagger t,String cmd,List<String> args, long period) {
+		super(name,plugin, t);
 		this.cmd=cmd;
 		this.args = new LinkedList<>(args);
 		this.period=period;

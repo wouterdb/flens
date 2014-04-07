@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.output.OpenTsdbOutput;
 
 public class OpenTsdbOut extends AbstractConfig{
