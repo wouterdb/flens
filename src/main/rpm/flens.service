@@ -6,7 +6,7 @@ After=syslog.target
 User=root
 Group=root
 Type=simple
-ExecStart=/usr/bin/java -cp /usr/share/java/*:/usr/lib/jvm/java-1.7.0/lib/tools.jar flens.Service /etc/flens.d
+ExecStart=/usr/bin/java -cp /usr/share/java/flens/*:/usr/lib/jvm/java-1.7.0/lib/tools.jar flens.Service /etc/flens.d
 
 [Install]
 WantedBy=multi-user.target
