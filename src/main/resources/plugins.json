@@ -35,7 +35,8 @@
  "socket-out":"flens.config.SocketOutput",
  "socket-in":"flens.config.SocketInput",
  "socket-line-in":"flens.config.SocketLineIn",
- "cookbook":"flens.config.CookbookConfig"
+ "cookbook":"flens.config.CookbookConfig",
+ "esper":"dnet.monitor.cep.flens.EsperMasterPlugin"
 }
  
  

@@ -21,6 +21,7 @@ package flens;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import flens.core.ConfigBuilder;
@@ -46,19 +47,23 @@ public class EmbededFlens {
 		this.engine=engine;
 	}
 
-	private Reader getConfig() {
+	protected Reader getConfig() {
 		String prop = System.getProperty("flens.config");
 		if(prop==null)
-			return null;
+			return getHardConfig();
 		try {
 			return new FileReader(prop);
 		} catch (FileNotFoundException e) {
 			//fixme: log decently
 			e.printStackTrace();
-			return null;
+			return getHardConfig();
 		}
 	}
 	
+	protected Reader getHardConfig() {
+		return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("flens.json"));
+	}
+
 	public Flengine getEngine() {
 		return engine;
 	}

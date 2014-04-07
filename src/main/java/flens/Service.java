@@ -51,6 +51,7 @@ public class Service {
 			ch.getEngine().addTags(tags);
 		
 		ch.getEngine().start();
+		EmbededFlens.setInstance(ch.getEngine());
 		
 	}
 

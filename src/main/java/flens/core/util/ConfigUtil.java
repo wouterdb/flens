@@ -40,7 +40,8 @@ public class ConfigUtil {
 			try {
 				configs.add(g.fromJson(new FileReader(f), HashMap.class));
 			} catch (Exception e) {
-				throw new JsonIOException("in file: " + f.getAbsolutePath(), e);
+				System.err.println("ignoring file: "+ f.getAbsolutePath());
+				e.printStackTrace();
 			}
 		}
 

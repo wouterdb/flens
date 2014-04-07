@@ -217,7 +217,10 @@ public abstract class AbstractConfig implements Config {
 		if(isOut())
 			return outopts;
 		
-		return filteropts;
+		if(isFilter())
+			return filteropts;
+		
+		return new LinkedList<>();
 	}
 	
 	private static List<Option> inopts; 
