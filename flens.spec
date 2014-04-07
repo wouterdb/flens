@@ -1,6 +1,6 @@
 Name:           flens
 Version:        0.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Flens monitoring framework 
 
 License:        Apache 2.0 
