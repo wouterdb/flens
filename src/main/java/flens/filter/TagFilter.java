@@ -21,6 +21,7 @@ package flens.filter;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,17 +33,22 @@ import flens.filter.util.AbstractFilter;
 
 public class TagFilter extends AbstractFilter {
 
-	private Map<String,String> tags;
+	private Map<String, String> tags;
 
-	public TagFilter(String name, Tagger tagger, Matcher matcher,int prio,
-			Map<String,String> tags) {
-		super(name, tagger, matcher,prio);
+	public TagFilter(String name, Tagger tagger, Matcher matcher, int prio,
+			Map<String, String> tags) {
+		super(name, tagger, matcher, prio);
 		this.tags = tags;
 	}
 
 	@Override
 	public Collection<Record> process(Record in) {
-		in.setValue(Constants.TAGS, tags);
+		if (in.getValues().containsKey(Constants.TAGS)) {
+			//nothing to do
+			//todo make configurable
+		} else {
+			in.setValue(Constants.TAGS, tags);
+		}
 		return Collections.EMPTY_LIST;
 	}
 

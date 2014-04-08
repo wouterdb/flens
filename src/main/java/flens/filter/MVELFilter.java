@@ -31,6 +31,7 @@ import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
+import flens.util.MVELUtil;
 
 public class MVELFilter extends AbstractFilter{
 
@@ -48,7 +49,7 @@ public class MVELFilter extends AbstractFilter{
 
 	private void start() {
 		 // Compile the expression.
-		compiled = MVEL.compileExpression(script);
+		compiled = MVEL.compileExpression(script,MVELUtil.getTooledContext());
 	}
 
 
