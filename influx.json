@@ -1,0 +1,34 @@
+{
+	
+		"input" : {
+                "amqp-metric" : { 
+                	"type" : "metric-collect",
+                	"add-tag" : ["binary","json","collect"],
+                	"host" : "172.16.4.20",
+                	"exchange" : "metrics",
+                	"plugin" : "amqp-in"
+        		}
+         },"filter" : {
+                "decoder" : {
+                   	"tags" : ["binary","collect"],
+                   	"remove-tag" : ["binary"],
+                   	"prio": -10
+				},"json-decoder" : { 
+                  	"tags" : ["json","collect"],
+                    "remove-tag" : ["json"],
+                    "prio": -9
+                }
+         },
+		
+
+	"output":{
+		"influx-out":{
+		 	"host":"172.16.4.2",
+		 	"db":"test",
+		 	"user":"root",
+		 	"pass":"root",
+		 	"fieldnames":["time","source","value","type","workerType","instance"],
+		 	"fieldTemplates":["@{time}","@{source}","@{(isdef value)?value:''}","@{(isdef type)?type:''}","@{(isdef tags)?tags['workerType']:''}","@{(isdef instance)?instance:''}"]
+		},"system-out":{}
+	}
+}

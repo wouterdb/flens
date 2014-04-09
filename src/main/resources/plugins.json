@@ -6,6 +6,7 @@
  "tsdb-out" : "flens.config.OpenTsdbOut",
  "graphite-in" : "flens.config.GraphiteIn",
  "graphite-out" : "flens.config.GraphiteOut",
+ "influx-out" : "flens.config.InfluxDBOutput",
  "unpacker" : "flens.config.ValuesUnpacker",
  "batcher" : "flens.config.Batcher",
  "unbatcher" : "flens.config.UnBatcher",
