@@ -118,6 +118,12 @@ public class Record {
 			values.put(Constants.TIME, System.currentTimeMillis());
 		if (!values.containsKey(Constants.SOURCE))
 			values.put(Constants.SOURCE, Util.hostName());
+		
+		for (Map.Entry<String, Object> entries : new HashSet<>(values.entrySet())) {
+			if(entries.getValue()==null)
+				values.remove(entries.getKey());
+		}
+		
 		return new Record(null, values, new HashSet<String>());
 	}
 

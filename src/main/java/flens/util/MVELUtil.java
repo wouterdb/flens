@@ -41,6 +41,7 @@ public class MVELUtil {
 		ctx = new ParserContext();
 		try {
 		    ctx.addImport("reverseHostname", MVELUtil.class.getMethod("reverseHostname",String.class)); 
+		    ctx.addImport("debug", MVELUtil.class.getMethod("debug"));
 		}
 		catch (NoSuchMethodException e) {
 		    // handle exception here.
@@ -51,6 +52,10 @@ public class MVELUtil {
 		String[] parts = hostname.split("[.]");
 		ArrayUtils.reverse(parts);
 		return StringUtils.join(parts,".");
+	}
+	
+	public static void debug(){
+		System.out.println("debug");
 	}
 	
 	public static CompiledTemplate compileTemplateTooled(String source){
