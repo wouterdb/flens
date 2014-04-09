@@ -29,6 +29,6 @@
 		 	"pass":"root",
 		 	"fieldnames":["time","source","value","type","workerType","instance"],
 		 	"fieldTemplates":["@{time}","@{source}","@{(isdef value)?value:''}","@{(isdef type)?type:''}","@{(isdef tags)?tags['workerType']:''}","@{(isdef instance)?instance:''}"]
-		},"system-out":{}
+		}
 	}
 }
