@@ -168,6 +168,14 @@ public class Record {
 		values.put(Constants.L_MESSAGE, msg);
 		return new Record(null, values, new HashSet<String>());
 	}
+	
+	public static Record createWithMessage(String msg) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.L_MESSAGE, msg);
+		return new Record(null, values, new HashSet<String>());
+	}
 
 	public static Record forLog(String file, String message) {
 		Map<String, Object> values = new HashMap<String, Object>();

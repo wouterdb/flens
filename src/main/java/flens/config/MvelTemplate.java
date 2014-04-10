@@ -34,8 +34,8 @@ public class MvelTemplate extends AbstractConfig{
 	
 	@Override
 	protected void construct() {
-		String temp = get("template", null);
-		String field = get("field", null);
+		List<String> temp = getArray("template", null);
+		List<String> field = getArray("field", null);
 		engine.addFilter(new flens.filter.MVELTemplate(name,tagger,matcher,prio,field,temp));
 	}
 

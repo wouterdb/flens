@@ -22,6 +22,7 @@ package flens.filter;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,62 +37,61 @@ import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
+import flens.util.MVELUtil;
 
-public class MVELTemplate extends AbstractFilter{
+public class MVELTemplate extends AbstractFilter {
 
-	private static final Logger log = Logger.getLogger(MVELTemplate.class.getName()); 
-	
-	private String script;
-	private CompiledTemplate compiled;
-	private String field;
+	private static final Logger log = Logger.getLogger(MVELTemplate.class
+			.getName());
 
+	private String[] collumnNames;
+	private CompiledTemplate[] collumnTemplates;
 
-	public MVELTemplate(String name, Tagger tagger, Matcher matcher,int prio,String field,String script) {
-		super(name, tagger, matcher,prio);
-		this.field = field;
-		this.script = script;
-		start();
+	public MVELTemplate(String name, Tagger tagger, Matcher matcher, int prio,
+			List<String> field, List<String> collumnTemplates) {
+		super(name, tagger, matcher, prio);
+		this.collumnNames = field.toArray(new String[0]);
+		this.collumnTemplates = new CompiledTemplate[collumnTemplates.size()];
+		for (int i = 0; i < collumnTemplates.size(); i++) {
+			this.collumnTemplates[i] = MVELUtil
+					.compileTemplateTooled(collumnTemplates.get(i));
+		}
 	}
-	
-	
-
-	private void start() {
-		 // Compile the expression.
-		compiled = TemplateCompiler.compileTemplate(script);
-	}
-
-
 
 	@Override
 	public Collection<Record> process(Record in) {
-		try{
-		
-		String out = (String) TemplateRuntime.execute(compiled, in.getValues());
-		in.getValues().put(field,out);
-		tag(in);
-		}catch(CompileException|UnresolveablePropertyException e){
+
+		try {
+			Object[] out = new Object[this.collumnTemplates.length];
+			for (int i = 0; i < this.collumnTemplates.length; i++) {
+				out[i] = TemplateRuntime.execute(this.collumnTemplates[i],
+						in.getValues());
+			}
+
+			for (int i = 0; i < out.length; i++) {
+				in.getValues().put(collumnNames[i], out[i]);
+			}
+
+			tag(in);
+		} catch (CompileException | UnresolveablePropertyException e) {
 			log.log(Level.SEVERE, "MVEL failed, context: " + in.getValues(), e);
 		}
 		return Collections.EMPTY_LIST;
-		
-		/*if(records == null)
-			return Collections.EMPTY_LIST;
-		if(records instanceof Record)
-			return Collections.singletonList((Record)records);
-		if(records instanceof Collection){
-			Collection c = (Collection)records;
-			if(c.isEmpty())
-				return Collections.EMPTY_LIST;
-			Object f = c.iterator().next();
-			if(!(f instanceof Record)){
-				warn("mvel returned wrong type in list "+f.getClass().getName() + " should be list of records or record");
-				return Collections.EMPTY_LIST;
-			}
-			return c;
-		}
-		
-		warn("mvel returned wrong type "+records.getClass().getName() + " should be list of records or record");
-		return Collections.EMPTY_LIST;*/
+
+		/*
+		 * if(records == null) return Collections.EMPTY_LIST; if(records
+		 * instanceof Record) return Collections.singletonList((Record)records);
+		 * if(records instanceof Collection){ Collection c =
+		 * (Collection)records; if(c.isEmpty()) return Collections.EMPTY_LIST;
+		 * Object f = c.iterator().next(); if(!(f instanceof Record)){
+		 * warn("mvel returned wrong type in list "+f.getClass().getName() +
+		 * " should be list of records or record"); return
+		 * Collections.EMPTY_LIST; } return c; }
+		 * 
+		 * warn("mvel returned wrong type "+records.getClass().getName() +
+		 * " should be list of records or record"); return
+		 * Collections.EMPTY_LIST;
+		 */
 	}
 
 }

@@ -31,31 +31,41 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
 
-public class Splitter extends AbstractFilter implements Filter{
-	
-	List<String> keys = new LinkedList<>();
+public class Splitter extends AbstractFilter implements Filter {
 
-	public Splitter(String name, Tagger tagger, Matcher matcher,int prio, List<String> keys) {
-		super(name, tagger, matcher,prio);
+	List<String> keys = new LinkedList<>();
+	private boolean keeprest;
+
+	public Splitter(String name, Tagger tagger, Matcher matcher, int prio,
+			List<String> keys, boolean keeprest) {
+		super(name, tagger, matcher, prio);
 		this.keys = keys;
+		this.keeprest = keeprest;
 	}
 
 	@Override
 	public Collection<Record> process(Record in) {
 		List<Record> outs = new LinkedList<Record>();
-		
-		Map<String,Object> pairs = new HashMap<>();
-		
-		
-		for(String name:keys){
-			pairs.put(name,in.getValues().remove(name));
+
+		Map<String, Object> pairs = new HashMap<>();
+
+		for (String name : keys) {
+			Object x = in.getValues().remove(name);
+			if(x instanceof Map){
+				Map<String,Object> m = (Map<String,Object>)x;
+				for(Map.Entry<String,Object> entr:m.entrySet()){
+					pairs.put(entr.getKey(),entr.getValue());
+				}
+			}else
+				pairs.put(name, x);
 		}
-		
-		for(Map.Entry<String, Object> entries:pairs.entrySet()){
+
+		for (Map.Entry<String, Object> entries : pairs.entrySet()) {
 			outs.add(makeRecord(in, entries.getKey(), entries.getValue()));
 		}
-		//kill record
-		in.setType(null);
+		if (!keeprest)
+			// kill record
+			in.setType(null);
 		return outs;
 	}
 

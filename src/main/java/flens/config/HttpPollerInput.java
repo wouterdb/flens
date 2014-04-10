@@ -19,43 +19,54 @@
  */
 package flens.config;
 
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.core.Tagger;
 import flens.core.Config.Option;
 import flens.core.util.AbstractConfig;
+import flens.input.OpenTsdbInput;
 
-public class Splitter extends AbstractConfig{
+public class HttpPollerInput extends AbstractConfig {
+
+	@Override
+	protected void construct() {
+	
+		int interv = getInt("interval", 10000);
+		String url = get("url","");
+		try {
+			engine.addInput(new flens.input.HttpPullInput(name, tagger, interv, url));
+		} catch (MalformedURLException e) {
+			warn("plugin failed, bad url");
+			e.printStackTrace();
+		}
+	}
+
 	
 	@Override
 	protected boolean isIn() {
-		return false;
+		return true;
 	}
-	
-	@Override
-	protected void construct() {
-		List<String> temp = getArray("fields",Collections.EMPTY_LIST);
-		boolean keep = getBool("keep", false);
-		engine.addFilter(new flens.filter.Splitter(name,tagger,matcher,prio,temp,keep));
-	}
-
-	
 
 	@Override
 	protected boolean isOut() {
 		return false;
 	}
-
-	@Override
-	public String getDescription() {
-		return "split of certain k-v pairs as new records, retaining all other fields";
-	}
-
+	
 	@Override
 	public List<Option> getOptions() {
 		List<Option>  out = new LinkedList(super.getOptions());
-		out.add(new Option("fiels", "String", "[]", "fields to become new metrics"));
+		out.add(new Option("interval", "int", "10000", "interval between subsequent reports in ms"));
+		out.add(new Option("url", "String", "" ,"the url"));
 		return out;
 	}
+
+
+	@Override
+	public String getDescription() {
+		return "poll http, via get request";
+	}
+
 }

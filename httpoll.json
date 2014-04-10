@@ -1,0 +1,46 @@
+{
+	"input":{
+		"http-poll":{
+			"url":"http://127.0.0.1:8123/livestats",
+			"type":"httpin",
+			"add-tag":["json","packed"]
+		}
+	},"filter":{
+		"http-json-decoder":{
+			"plugin":"json-decoder",
+			"tags" : ["json"],
+ 			"remove-tag" : ["json"],
+ 			"prio":1,
+ 			"type":"httpin"
+ 			
+		},"http-tp":{
+			"plugin":"template",
+		    "prio":2,
+			"type":"httpin",
+			"field":["metric","value","message"],
+			"template":["jobs","@{jobs}","@{null}"]
+		},"http-split":{
+			"plugin":"splitter",
+			"fields":["stats"],
+			"tags" : ["packed"],
+ 			"remove-tag" : ["packed"],
+ 			"add-tag": ["http-new"],
+			"prio":3,
+			"keep":true,
+			"type":"httpin",
+			"set-type":"metric"	
+		},"http-tp2":{
+			"plugin":"template",
+			"tags":"http-new",
+		    "prio":4,
+			"field":["metric","workerType"],
+			"template":["queue-size","@{metric}"]
+			
+		}
+	},"output":{
+		"system-out":{
+		}
+	}
+}
+
+	
