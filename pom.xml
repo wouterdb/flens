@@ -47,8 +47,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.nflabs</groupId>
-			<artifactId>Grok</artifactId>
-			<version>0.0.4</version>
+			<artifactId>grok</artifactId>
+			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 
 
