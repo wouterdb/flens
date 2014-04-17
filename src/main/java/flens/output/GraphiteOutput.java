@@ -30,6 +30,7 @@ import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.mvel2.UnresolveablePropertyException;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateRuntime;
 
@@ -51,12 +52,12 @@ public class GraphiteOutput extends AbstractPumpOutput {
 		@Override
 		public void run() {
 			try {
-				while(running){
+				while (running) {
 					warn("got: " + reader.readLine());
 				}
-					
-			}catch (Exception e) {
-				err("error punp broke",e);
+
+			} catch (Exception e) {
+				err("error punp broke", e);
 			}
 
 		}
@@ -68,18 +69,17 @@ public class GraphiteOutput extends AbstractPumpOutput {
 	private int reconnectDelay = 10000;
 	private int flushOnSize = -1;
 	private Thread errPump;
-	
+
 	private CompiledTemplate index;
-	
-	public GraphiteOutput(String name, Matcher matcher,String server, int port,String metric) {
-		super(name,matcher);
+
+	public GraphiteOutput(String name, Matcher matcher, String server, int port, String metric) {
+		super(name, matcher);
 		this.port = port;
 		this.host = server;
-		
+
 		this.index = MVELUtil.compileTemplateTooled(metric);
 	}
 
-	
 	@Override
 	public void run() {
 		Socket s = null;
@@ -89,69 +89,80 @@ public class GraphiteOutput extends AbstractPumpOutput {
 			s.setTcpNoDelay(true);
 			BufferedWriter br = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			hookOnErrpump(s);
-			while(running){
+			while (running) {
 				r = queue.take();
-				
-				String metric = (String) TemplateRuntime.execute(this.index, r.getValues());
-				Object value = r.getValues().get("value");
-				if(value!=null)
-					br.write(String.format("%s %s %d\n",metric,value,r.getTimestamp()/1000));
-				//System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
-				br.flush();
-				sent++;
+
+				try {
+
+					String metric = (String) TemplateRuntime.execute(this.index, r.getValues());
+					Object value = r.getValues().get("value");
+					if (value != null)
+						br.write(String.format("%s %s %d\n", metric, value, r.getTimestamp() / 1000));
+					// System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
+					br.flush();
+					sent++;
+
+				} catch (UnresolveablePropertyException e) {
+					lost++;
+					err(getName() + " bad mvel template, dropping record: " + r.toLine(), e);
+				}
+
 			}
+
 		} catch (UnknownHostException e) {
-			
-			err(getName()+ " host not know",e);
+			lost++;
+			err(getName() + " host not known, going into reconnect", e);
+			reconnect();
 		} catch (IOException e) {
 			lost++;
-			err(getName()+ " pipe broken, going into reconnect",e);
+			err(getName() + " pipe broken, going into reconnect", e);
 			reconnect();
 		} catch (InterruptedException e) {
-			//normal
-		}finally{
-			if(s!=null)
+			// normal
+		} catch (Exception e) {
+			lost++;
+			err(getName() + "unexcpected exception, going into reconnect", e);
+			reconnect();
+		} finally {
+			if (s != null)
 				try {
 					s.close();
 				} catch (IOException e) {
-					warn(getName()+ "could not close socket",e);
+					warn(getName() + "could not close socket", e);
 				}
 		}
-		
-		
+
 	}
-	
 
 	private void hookOnErrpump(Socket s) {
 		try {
 			errPump = new Thread(new ErrPump(s.getInputStream()));
 		} catch (IOException e) {
-			err(" err pipe setup failed",e);
+			err(" err pipe setup failed", e);
 		}
-		
+
 	}
 
-	protected void reconnect(){
-		//FIXME:may lose records
+	protected void reconnect() {
+		// FIXME:may lose records
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
-			
+
 			@Override
 			public void run() {
-				if(flushOnSize>0 && getOutputQueue().size()>flushOnSize)
+				if (flushOnSize > 0 && getOutputQueue().size() > flushOnSize)
 					getOutputQueue().clear();
 				start();
 			}
-		}, reconnectDelay );
-		
-		
+		}, reconnectDelay);
+
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		if(errPump!=null)
+		if (errPump != null)
 			errPump.interrupt();
 	}
-	
+
 }
