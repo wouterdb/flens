@@ -4,6 +4,15 @@
 	<groupId>dnet.monitor.flens</groupId>
 	<artifactId>core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<distributionManagement>
+		<repository>
+			<id>dnetfs</id>
+			<name>Dreamaas Internal Repository</name>
+			<url>scp://dnetfs.cs.kuleuven.be/cw/dnetw3/software/DREAMaaS/maven</url>
+		</repository>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -30,7 +39,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -41,8 +50,8 @@
 			<artifactId>Grok</artifactId>
 			<version>0.0.4</version>
 		</dependency>
-		
-	
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -74,7 +83,7 @@
 						<exclude>localRepo/**</exclude>
 					</excludes>
 				</configuration>
-				<!-- <executions> <execution> <goals> <goal>check</goal> </goals> </execution>
+				<!-- <executions> <execution> <goals> <goal>check</goal> </goals> </execution> 
 					</executions> -->
 			</plugin>
 
@@ -99,24 +108,24 @@
 						</goals>
 					</execution>
 				</executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                        <!-- configure the plugin here -->
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<!-- configure the plugin here -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>rpm-maven-plugin</artifactId>
@@ -135,58 +144,58 @@
 					<name>flens</name>
 					<packager>WDB</packager>
 					<prefix>/usr/share/flens</prefix>
-                    <requires>
-                        <require>java-1.7.0-openjdk</require>
-                        <require>java-1.7.0-openjdk-devel</require>
+					<requires>
+						<require>java-1.7.0-openjdk</require>
+						<require>java-1.7.0-openjdk-devel</require>
 					</requires>
-                    <mappings>
-                        <mapping>
-                            <directory>/etc/flens.d</directory>
-                            <configuration>noreplace</configuration>
-                            <filemode>755</filemode>
-                            <username>root</username>
-                            <groupname>root</groupname>
-                        </mapping>
+					<mappings>
 						<mapping>
-                            <directory>/usr/share/java/flens</directory>
+							<directory>/etc/flens.d</directory>
+							<configuration>noreplace</configuration>
 							<filemode>755</filemode>
 							<username>root</username>
-                            <groupname>root</groupname>
-                            <sources>
-                                <source>
-                                    <location>target/dependency/</location>
-                                    <includes>
-                                        <include>*</include>
-                                    </includes>
-                                </source>
-                                <source>
-                                    <location>${project.build.directory}/</location>
-                                    <includes>
-                                        <include>${project.build.finalName}.jar</include>
-                                    </includes>
-                                </source>
-                            </sources>
+							<groupname>root</groupname>
+						</mapping>
+						<mapping>
+							<directory>/usr/share/java/flens</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>target/dependency/</location>
+									<includes>
+										<include>*</include>
+									</includes>
+								</source>
+								<source>
+									<location>${project.build.directory}/</location>
+									<includes>
+										<include>${project.build.finalName}.jar</include>
+									</includes>
+								</source>
+							</sources>
 						</mapping>
 						<mapping>
 							<directory>/lib/systemd/system</directory>
-                            <filemode>755</filemode>
-                            <configuration>true</configuration>
+							<filemode>755</filemode>
+							<configuration>true</configuration>
 							<sources>
 								<source>
 									<location>src/main/rpm/flens.service</location>
 								</source>
 							</sources>
 						</mapping>
-                        <mapping>
-                            <directory>/etc/rc.d/init.d/</directory>
-                            <filemode>755</filemode>
-                            <configuration>true</configuration>
-                            <sources>
-                                <source>
-                                    <location>src/main/rpm/init.d/flens</location>
-                                </source>
-                            </sources>
-                        </mapping>
+						<mapping>
+							<directory>/etc/rc.d/init.d/</directory>
+							<filemode>755</filemode>
+							<configuration>true</configuration>
+							<sources>
+								<source>
+									<location>src/main/rpm/init.d/flens</location>
+								</source>
+							</sources>
+						</mapping>
 					</mappings>
 
 				</configuration>
@@ -200,7 +209,8 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -235,6 +245,19 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<profiles>

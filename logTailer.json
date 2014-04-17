@@ -1,10 +1,10 @@
 {
 	"input" : {		
  	"amqp-in" : {
- 			"type" : "alerts",
+ 			"type" : "metric",
  			"add-tag" : ["binary","json"],
- 			"host": "127.0.0.1",
- 			"exchange":"alerts"
+ 			"host": "172.16.4.20",
+ 			"exchange":"metrics"
  		}
  		
  	},
@@ -16,31 +16,15 @@
  		},"json-decoder" : {
  			"tags" : ["json"],
  			"remove-tag" : ["json"]
- 		},"grok" : {
- 			"type":"log",
- 			"infield":"message",
- 			"add-tag" : ["newmetric","jobtiming"],
- 			"set-type":"metric",
- 			"script" : "INFO: workflow %{UUID:temporalScope} took: %{INT:value} for %{USERNAME:tenant}"
- 		},
- 		"json-encoder" : {
- 			"add-tag" : ["json"],
- 			"field" : "json",
- 			"fields" : ["time","source","metric","value","type","instance","temporalScope","tenant"] ,
- 			"field" : "json"
- 		} ,"mvel":{
- 			"type":"metricx",
- 			"script":"if(source!='render-1.dnetcloud.dreamaas.cs.kuleuven.be' || metric!='interface')DISCARD=true; return null;"
- 		}, "mvel-print":{
- 			"type":"logsx",
- 			"plugin":"mvel",
- 			"script":"if(json.contains('NaN')||json.contains('nan') ) System.out.println(message);"
+ 		},"mvel":{
+ 			"type":"metric",
+ 			"script":"if(! isdef metric) System.out.println(source);"
  		}
 	},
  	
  	"output" : {
  		"system-out":{
- 			"type":"alerts"
+ 			"type":"metric-"
  		}
  		
  	}
