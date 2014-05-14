@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+import javax.naming.OperationNotSupportedException;
+
+import flens.config.util.Reflectable;
 import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
@@ -31,7 +34,7 @@ import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
 //TODO make timer/executor based
-public class SelfMonitor extends AbstractActiveInput {
+public class SelfMonitor extends AbstractActiveInput implements Reflectable{
 	
 	public static final String type = "flens";
 	
@@ -61,6 +64,29 @@ public class SelfMonitor extends AbstractActiveInput {
 			// normal
 		}
 
+	}
+
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+		
+	}
+
+	
+	//reflection only
+	public SelfMonitor(){
+		super(null,"self",null);
+	}
+	
+	@Override
+	public void init(Flengine engine, String name) {
+		this.engine=engine;
+		this.name=name;
 	}
 
 

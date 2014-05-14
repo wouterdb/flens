@@ -30,7 +30,7 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 
 	protected BlockingQueue<Record> in;
 	protected Tagger tagger;
-	private String name;
+	protected String name;
 	private String plugin;
 	private int sent;
 

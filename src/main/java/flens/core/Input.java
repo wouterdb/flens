@@ -22,21 +22,20 @@ package flens.core;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
-public interface Input {
+public interface Input extends Plugin {
 
-	public String getName();
-	
 	public void setInputQueue(BlockingQueue<Record> queue);
+
 	public void start();
 	public void stop();
+
 	/**
 	 * await stop
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	public void join() throws InterruptedException;
-	
-	
+
 	public int getRecordsSent();
-	
-	public void writeConfig(Flengine engine, Map<String,Object> tree);
+
 }
