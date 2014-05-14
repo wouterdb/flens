@@ -90,7 +90,7 @@ public class AMQPOut extends AbstractPumpOutput {
 		try {
 			channel.close();
 			connection.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			err("could not close amqp", e);
 		}
 		closed = true;
