@@ -107,7 +107,7 @@ public class AMQPInput extends AbstractInput implements Consumer {
 
 		} catch (IOException e) {
 			err("could not connect to amqp", e);
-			throw new RuntimeException(e);
+			reconnect();
 		}
 
 	}

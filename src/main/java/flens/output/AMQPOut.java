@@ -80,6 +80,7 @@ public class AMQPOut extends AbstractPumpOutput {
 
 		} catch (IOException e) {
 			err("could not connect to amqp", e);
+			reconnect();
 		}
 
 	}
