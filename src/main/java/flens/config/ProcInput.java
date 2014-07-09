@@ -39,7 +39,7 @@ public class ProcInput extends AbstractConfig {
 			err = null;
 		String cmd = get("cmd", "");
 		List args = getArray("args", Collections.EMPTY_LIST);
-		engine.addInput(new flens.input.ProcessTailer(name, tagger, err, cmd,args));
+		engine.addInput(new flens.input.ProcessTailer(name, plugin,tagger, err, cmd,args));
 	}
 
 	

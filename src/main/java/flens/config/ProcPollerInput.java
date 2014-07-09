@@ -41,7 +41,7 @@ public class ProcPollerInput extends AbstractConfig {
 		List args = getArray("args", Collections.EMPTY_LIST);
 		int interv = getInt("interval", 10000);
 				
-		engine.addInput(new flens.input.ProcessPoller(name, tagger, err, cmd,args,interv));
+		engine.addInput(new flens.input.ProcessPoller(name, plugin, tagger, err, cmd,args,interv));
 	}
 
 	

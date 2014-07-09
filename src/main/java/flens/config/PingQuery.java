@@ -30,7 +30,7 @@ public class PingQuery extends AbstractConfig{
 
 	@Override
 	protected void construct() {
-		engine.addHandler(new flens.query.PingQuery(name));	
+		engine.addHandler(new flens.query.PingQuery(name,plugin));	
 	}
 
 	@Override

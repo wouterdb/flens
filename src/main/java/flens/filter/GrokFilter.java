@@ -66,7 +66,7 @@ public class GrokFilter extends AbstractFilter {
 			File d = new File(dir);
 			if (!d.isDirectory())
 				warn("dir is not a directory" + dir);
-			for (String f : d.list()) {
+			else for (String f : d.list()) {
 
 				try {
 					compiled.addPatternFromFile(f);

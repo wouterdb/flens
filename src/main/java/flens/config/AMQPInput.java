@@ -38,7 +38,7 @@ public class AMQPInput extends AbstractConfig {
 		String queue = get("queue",null);
 		String key = get("routingKey","*");
 		
-		engine.addInput(new flens.input.AMQPInput(name,tagger,host,port,vhost,user,pass,exchange,queue,key));
+		engine.addInput(new flens.input.AMQPInput(name,plugin, tagger,host,port,vhost,user,pass,exchange,queue,key));
 	}
 
 	

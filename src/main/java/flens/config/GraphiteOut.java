@@ -45,7 +45,7 @@ public class GraphiteOut extends AbstractConfig{
 		String host = get("host", "localhost");
 		int port = getInt("port", 2003);
 		String template =  get("metric",DEFAULT_METRIC);
-		engine.addOutput(new GraphiteOutput(name,matcher,host,port,template));
+		engine.addOutput(new GraphiteOutput(name,plugin,matcher,host,port,template));
 	}
 
 	@Override

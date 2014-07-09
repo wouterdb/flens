@@ -19,8 +19,10 @@
  */
 package flens.input.util;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
+import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -65,4 +67,15 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	public int getRecordsSent() {
 		return sent;
 	}
+	
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

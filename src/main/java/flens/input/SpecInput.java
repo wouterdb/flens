@@ -35,26 +35,26 @@ import java.util.TimerTask;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractPeriodicInput;
 
-public class SpecInput extends AbstractPeriodicInput{
-	
-	private Map<String,Spec> allspecs = new HashMap<>();
+public class SpecInput extends AbstractPeriodicInput {
+
+	private Map<String, Spec> allspecs = new HashMap<>();
 	private List<Spec> specs;
 
-	public SpecInput(String name, Tagger tagger, int interval, List<String> specs) {
-		super(name, tagger, interval);
-		if(interval<1000)
+	public SpecInput(String name, String plugin, Tagger tagger, int interval, List<String> specs) {
+		super(name, plugin, tagger, interval);
+		if (interval < 1000)
 			throw new IllegalArgumentException("time under 1000ms is too short to run all tests");
 		List<Spec> allspecs = collectAllSpecs();
-		for(Spec s:allspecs){
-			this.allspecs.put(s.getName(),s);
+		for (Spec s : allspecs) {
+			this.allspecs.put(s.getName(), s);
 		}
 		activate(specs);
 	}
-
 
 	/**
 	 * extend here!
@@ -69,15 +69,15 @@ public class SpecInput extends AbstractPeriodicInput{
 		specs.add(new SpecExec());
 		specs.add(new SpecSleep());
 		return specs;
-		
+
 	}
 
 	private void activate(List<String> specs) {
 		this.specs = new LinkedList<Spec>();
 		for (String name : specs) {
 			Spec s = this.allspecs.get(name);
-			if(s==null)
-				warn(String.format("spec %s not found, options are %s",name,allspecs.keySet().toString()));
+			if (s == null)
+				warn(String.format("spec %s not found, options are %s", name, allspecs.keySet().toString()));
 			else
 				this.specs.add(s);
 		}
@@ -85,20 +85,21 @@ public class SpecInput extends AbstractPeriodicInput{
 
 	public interface Spec {
 		public void run() throws Exception;
+
 		public String getName();
 	}
-	
-	public class SpecDisk implements Spec{
+
+	public class SpecDisk implements Spec {
 
 		private static final int DISK_BYTES = 1000;
-		private String metric = SpecInput.this.getName()+"."+getName();
-		
+		private String metric = SpecInput.this.getName() + "." + getName();
+
 		@Override
 		public void run() throws IOException {
 			long now = System.nanoTime();
 			File f = File.createTempFile("flens-spec", "test");
 			OutputStream out = new FileOutputStream(f);
-			for(int i =0; i<DISK_BYTES;i++)
+			for (int i = 0; i < DISK_BYTES; i++)
 				out.write(i);
 			out.flush();
 			out.close();
@@ -111,32 +112,31 @@ public class SpecInput extends AbstractPeriodicInput{
 		public String getName() {
 			return "write";
 		}
-		
+
 		@Override
 		public String toString() {
 			return getName();
 		}
 	}
-	
-	public class SpecDiskRead implements Spec{
+
+	public class SpecDiskRead implements Spec {
 
 		private static final int DISK_BYTES = 1000;
-		private final String metric = SpecInput.this.getName()+"."+getName();
-		private final String file; 
-		
+		private final String metric = SpecInput.this.getName() + "." + getName();
+		private final String file;
+
 		public SpecDiskRead() {
 			String[] files = System.getProperty("sun.boot.class.path").split(":");
 			int i = 0;
-			for(;i<files.length;i++){
+			for (; i < files.length; i++) {
 				File f = new File(files[i]);
-				if(f.canRead())
+				if (f.canRead())
 					break;
 			}
-			this.file=files[i];
-				
+			this.file = files[i];
+
 		}
-				
-		
+
 		@Override
 		public void run() throws IOException {
 			long now = System.nanoTime();
@@ -153,18 +153,18 @@ public class SpecInput extends AbstractPeriodicInput{
 		public String getName() {
 			return "read";
 		}
-		
+
 		@Override
 		public String toString() {
 			return getName();
 		}
 	}
-	
-	public class SpecExec implements Spec{
+
+	public class SpecExec implements Spec {
 
 		private static final String CMD = "/usr/bin/true";
-		private String metric = SpecInput.this.getName()+"."+getName();
-		
+		private String metric = SpecInput.this.getName() + "." + getName();
+
 		@Override
 		public void run() throws IOException, InterruptedException {
 			ProcessBuilder pb = new ProcessBuilder(CMD);
@@ -180,24 +180,24 @@ public class SpecInput extends AbstractPeriodicInput{
 		public String getName() {
 			return "exec";
 		}
-		
+
 		@Override
 		public String toString() {
 			return getName();
 		}
 	}
-	
-	public class SpecSleep implements Spec{
+
+	public class SpecSleep implements Spec {
 
 		private static final int interval = 100;
-		private String metric = SpecInput.this.getName()+"."+getName();
-		
+		private String metric = SpecInput.this.getName() + "." + getName();
+
 		@Override
 		public void run() throws IOException, InterruptedException {
-			
+
 			long now = System.nanoTime();
 			Thread.sleep(interval);
-			long delta = System.nanoTime() - now-(interval*1000000);
+			long delta = System.nanoTime() - now - (interval * 1000000);
 			dispatch(Record.createWithValue(metric, delta));
 		}
 
@@ -205,24 +205,24 @@ public class SpecInput extends AbstractPeriodicInput{
 		public String getName() {
 			return "sleep";
 		}
-		
+
 		@Override
 		public String toString() {
 			return getName();
 		}
 	}
-	
-	public class SpecCPU implements Spec{
+
+	public class SpecCPU implements Spec {
 
 		private static final int CPU_NUMBER = 66667;
-		private String metric = SpecInput.this.getName()+"."+getName();
-		
+		private String metric = SpecInput.this.getName() + "." + getName();
+
 		@Override
 		public void run() throws IOException {
 			long now = System.nanoTime();
 			long x = factor(CPU_NUMBER);
 			long delta = System.nanoTime() - now;
-			
+
 			dispatch(Record.createWithValue(metric, delta));
 		}
 
@@ -230,49 +230,63 @@ public class SpecInput extends AbstractPeriodicInput{
 		public String getName() {
 			return "cpu";
 		}
-		
+
 		@Override
 		public String toString() {
 			return getName();
 		}
-		
-		public long factor(long n) { 
-	    	long out = 0;
-	        
-	        // for each potential factor i
-	        for (long i = 2; i <= n / i; i++) {
 
-	            // if i is a factor of N, repeatedly divide it out
-	            while (n % i == 0) {
-	            	out+=i;
-	                n = n / i;
-	            }
-	        }
+		public long factor(long n) {
+			long out = 0;
 
-	        // if biggest factor occurs only once, n > 1
-	        if (n > 1) out+=n;
-	        
-	        return out;
-	    }
+			// for each potential factor i
+			for (long i = 2; i <= n / i; i++) {
+
+				// if i is a factor of N, repeatedly divide it out
+				while (n % i == 0) {
+					out += i;
+					n = n / i;
+				}
+			}
+
+			// if biggest factor occurs only once, n > 1
+			if (n > 1)
+				out += n;
+
+			return out;
+		}
 
 	}
 
 	@Override
 	protected TimerTask getWorker() {
 		return new TimerTask() {
-			
+
 			@Override
 			public void run() {
 				for (Spec spec : specs) {
-					try{
+					try {
 						spec.run();
-					}catch(Exception e){
+					} catch (Exception e) {
 						err("spec test failed ", e);
 					}
 				}
-				
+
 			}
 		};
+	}
+	
+	@Override
+	public void writeConfig(Flengine engine, Map<String, Object> tree) {
+		Map<String,Object> subtree = new HashMap<String, Object>();
+		tree.put(getName(),subtree);
+		subtree.put("interval", interval);
+		tagger.outputConfig(subtree);
+		List<String> currentspecs = new LinkedList<>();
+		for(Spec spec:specs){
+			currentspecs.add(spec.getName());
+		}
+		subtree.put("tests", currentspecs);
 	}
 
 }

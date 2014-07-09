@@ -35,7 +35,7 @@ public class SpecInput extends AbstractConfig {
 		int interval = getInt("interval",10000);
 		List<String> specs = getArray("tests", Arrays.asList("write","read","cpu","exec","sleep"));
 		
-		engine.addInput(new flens.input.SpecInput(name,tagger,interval,specs));
+		engine.addInput(new flens.input.SpecInput(name, plugin, tagger,interval,specs));
 	}
 
 	

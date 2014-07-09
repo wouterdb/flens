@@ -37,7 +37,7 @@ public class AMQPOutput extends AbstractConfig {
 		String pass = get("pass","guest");
 		String exchange = get("exchange","metrics");
 		String key = get("routingKey","fles");
-		engine.addOutput(new flens.output.AMQPOut(name,matcher,field,host,port,vhost,user,pass,exchange,key));
+		engine.addOutput(new flens.output.AMQPOut(name,plugin,matcher,field,host,port,vhost,user,pass,exchange,key));
 	}
 
 	

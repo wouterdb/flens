@@ -26,8 +26,8 @@ import java.util.logging.LogManager;
 
 import com.rabbitmq.tools.Tracer.Logger;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.FlensLogHandler;
 import flens.input.util.InputQueueExposer;
 
@@ -43,7 +43,7 @@ public class LogIn extends AbstractConfig{
 		String level = get("level", Level.INFO.toString());
 		//String filter = get("filter",".*");
 		
-		InputQueueExposer exp = new InputQueueExposer(name, tagger);
+		InputQueueExposer exp = new InputQueueExposer(name, plugin,tagger);
 		FlensLogHandler lh = new flens.input.FlensLogHandler(exp);
 		
 		lh.setLevel(Level.parse(level));

@@ -73,7 +73,7 @@ public class CookbookConfig extends AbstractConfig {
 	@Override
 	public List<Option> getOptions() {
 		
-		List<Option> opts = super.getOptions();
+		List<Option> opts = new LinkedList(super.getOptions());
 		opts.add(new Option("template", "String", "", "template file to use, file searchpath is " + Arrays.deepToString(COOKBOOK)));
 		opts.add(new Option("DEBUG", "boolean", "false", "print out expanded config"));
 		

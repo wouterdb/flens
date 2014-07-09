@@ -61,9 +61,9 @@ public class SocketOutput extends AbstractPumpOutput {
 	private Thread errPump;
 	private String field;
 
-	public SocketOutput(String name, Matcher matcher, String server, int port,
+	public SocketOutput(String name,String plugin, Matcher matcher, String server, int port,
 			String field) {
-		super(name, matcher);
+		super(name,plugin, matcher);
 		this.port = port;
 		this.host = server;
 		this.field = field;

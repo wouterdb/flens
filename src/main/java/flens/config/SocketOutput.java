@@ -33,7 +33,7 @@ public class SocketOutput extends AbstractConfig {
 		int port = getInt("port",19850);
 		String host = get("host", "localhost");
 		String field = get("field", "body");
-		engine.addOutput(new flens.output.SocketOutput(name,matcher,host,port,field));
+		engine.addOutput(new flens.output.SocketOutput(name, plugin, matcher,host,port,field));
 	}
 
 	

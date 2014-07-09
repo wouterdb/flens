@@ -56,8 +56,8 @@ public class NagiosInput extends AbstractProcessPoller {
 	 * = new String[]{"UP","UP-DOWN","DOWN","DOWN"};
 	 */
 
-	public NagiosInput(String name,Tagger tagger,Tagger errt, String nagiosdir, String metric, String target,List<String> args, long period) {
-		super(name, tagger, nagiosdir+"/check_"+metric, args, period);
+	public NagiosInput(String name,String plugin, Tagger tagger,Tagger errt, String nagiosdir, String metric, String target,List<String> args, long period) {
+		super(name,plugin, tagger, nagiosdir+"/check_"+metric, args, period);
 		this.errT = errt;
 		this.metric = metric;
 		this.target=target;
@@ -95,7 +95,7 @@ public class NagiosInput extends AbstractProcessPoller {
 	protected void captureStreams() {
 		out = new NagiosCapture(getName() + ".out", new BufferedReader(
 				new InputStreamReader(proc.getInputStream())));
-		err = new StreamPump(getName() + ".err", errT, new BufferedReader(
+		err = new StreamPump(getName() + ".err", getPlugin(),errT, new BufferedReader(
 				new InputStreamReader(proc.getErrorStream())));
 		err.setInputQueue(in);
 		out.start();

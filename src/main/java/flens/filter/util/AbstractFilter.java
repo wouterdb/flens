@@ -19,7 +19,10 @@
  */
 package flens.filter.util;
 
+import java.util.Map;
+
 import flens.core.Filter;
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -64,6 +67,17 @@ public abstract class AbstractFilter extends AbstractPlugin implements Filter {
 	@Override
 	public int priority() {
 		return prio;
+	}
+	
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+		
 	}
 
 }

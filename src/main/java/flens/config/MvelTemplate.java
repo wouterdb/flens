@@ -54,7 +54,7 @@ public class MvelTemplate extends AbstractConfig{
 	@Override
 	public List<Option> getOptions() {
 		List<Option>  out = new LinkedList(super.getOptions());
-		out.add(new Option("template", "String", " ", "template to execute"));
+		out.add(new Option("template", "String", null, "template to execute"));
 		out.add(new Option("field", "String", null, "field to place result in"));
 		return out;
 	}

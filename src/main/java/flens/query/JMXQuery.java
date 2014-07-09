@@ -67,6 +67,7 @@ import com.google.gson.Gson;
 import com.sun.tools.classfile.Dependency.Finder;
 
 import flens.core.Constants;
+import flens.core.Flengine;
 import flens.core.Query;
 import flens.core.QueryHandler;
 import flens.core.Record;
@@ -97,11 +98,13 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 	}
 
 	private String name;
+	private String plugin;
 
-	public JMXQuery(String name, String host, int port) {
+	public JMXQuery(String name,String plugin, String host, int port) {
 		this.host = host;
 		this.port = port;
 		this.name = name;
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -302,6 +305,23 @@ public class JMXQuery extends AbstractPlugin implements QueryHandler {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getPlugin() {
+		return plugin;
+	}
+
+	@Override
+	public boolean canUpdateConfig() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

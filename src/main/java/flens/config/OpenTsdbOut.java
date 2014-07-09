@@ -42,7 +42,7 @@ public class OpenTsdbOut extends AbstractConfig{
 		String host = get("host", "localhost");
 		int port = getInt("port", 4242);
 		List<String> stags = getArray("send-tags",new LinkedList<String>());
-		engine.addOutput(new OpenTsdbOutput(name,matcher,host,port,(stags)));
+		engine.addOutput(new OpenTsdbOutput(name,plugin,matcher,host,port,(stags)));
 	}
 
 	@Override

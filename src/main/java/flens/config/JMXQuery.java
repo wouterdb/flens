@@ -32,7 +32,7 @@ public class JMXQuery extends AbstractConfig{
 	protected void construct() {
 		String host = get("host", "localhost");
 		int port = getInt("port",9999);
-		engine.addHandler(new flens.query.JMXQuery(name,host,port));	
+		engine.addHandler(new flens.query.JMXQuery(name,plugin,host,port));	
 	}
 
 	@Override

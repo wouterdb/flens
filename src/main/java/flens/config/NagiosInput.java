@@ -43,7 +43,7 @@ public class NagiosInput extends AbstractConfig {
 		List args = getArray("args", Collections.singletonList("8.8.8.8"));
 		int interv = getInt("interval", 10000);
 			
-		engine.addInput(new flens.input.NagiosInput(name, tagger, err, dir,metric,target,args,interv));
+		engine.addInput(new flens.input.NagiosInput(name,plugin, tagger, err, dir,metric,target,args,interv));
 	}
 
 	

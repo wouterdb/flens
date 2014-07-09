@@ -10,8 +10,8 @@ public class InputQueueExposer extends AbstractInput {
 
 	private boolean stopped;
 
-	public InputQueueExposer(String name, Tagger tagger) {
-		super(name, tagger);
+	public InputQueueExposer(String name,String plugin, Tagger tagger) {
+		super(name,plugin, tagger);
 	}
 
 	public void send(Record r) {

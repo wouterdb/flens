@@ -32,6 +32,7 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -45,6 +46,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -68,7 +70,7 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
 				}
 					
 			}catch (Exception e) {
-				err("error punp broke",e);
+				err("error pump broke",e);
 			}
 
 		}
@@ -81,14 +83,14 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
     private Set<Pair<String, String>> sendTags = new HashSet<>();
 	private Thread errPump;
 	
-	public OpenTsdbOutput(String name, Matcher matcher,String server, int port) {
-		super(name,matcher);
+	public OpenTsdbOutput(String name,String plugin, Matcher matcher,String server, int port) {
+		super(name,plugin,matcher);
 		this.port = port;
 		this.host = server;
 	}
 
-	public OpenTsdbOutput(String name, Matcher matcher,String server, int port,List<String> sendTags) {
-		super(name,matcher);
+	public OpenTsdbOutput(String name, String plugin,Matcher matcher,String server, int port,List<String> sendTags) {
+		super(name,plugin,matcher);
 		this.port = port;
 		this.host = server;
 		for(String s:sendTags){
@@ -100,6 +102,24 @@ public class OpenTsdbOutput extends AbstractPumpOutput {
 		}
 	}
 
+	@Override
+	public void writeConfig(Flengine engine, Map<String, Object> tree) {
+		Map<String,Object> subtree = new HashMap<String, Object>();
+		tree.put(getName(),subtree);
+		subtree.put("plugin", getPlugin());
+		
+		subtree.put("host", host);
+		subtree.put("port", port);
+		getMatcher().outputConfig(subtree);
+		
+		List<String> sendTags = new LinkedList<>();
+		
+		for(Pair<String, String> tag:this.sendTags){
+			sendTags.add(tag.getKey()+":"+tag.getValue());
+		}
+		subtree.put("send-tags",sendTags);
+		
+	}
 	
 	@Override
 	public void run() {

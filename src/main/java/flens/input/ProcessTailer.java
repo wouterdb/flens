@@ -42,8 +42,8 @@ public class ProcessTailer extends AbstractInput {
 	private Tagger errT;
 	private List args;
 
-	public ProcessTailer(String name, Tagger out,Tagger err, String cmd,List<String> args) {
-		super(name, null);
+	public ProcessTailer(String name,String plugin, Tagger out,Tagger err, String cmd,List<String> args) {
+		super(name,plugin, null);
 		this.cmd=cmd;
 		this.args = args;
 		this.outT = out;
@@ -76,8 +76,8 @@ public class ProcessTailer extends AbstractInput {
 			}
 		}).start();*/
 		
-		out = new StreamPump(getName()+".out",outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
-		err = new StreamPump(getName()+".err",errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
+		out = new StreamPump(getName()+".out",getPlugin(),outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
+		err = new StreamPump(getName()+".err",getPlugin(),errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
 		out.setInputQueue(in);
 		err.setInputQueue(in);
 		out.start();

@@ -21,6 +21,7 @@ package flens.output.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,21 +29,23 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
 import flens.core.util.AbstractPlugin;
 
-public abstract class AbstractPumpOutput extends AbstractPlugin implements
-		Output, Runnable {
+public abstract class AbstractPumpOutput extends AbstractPlugin implements Output, Runnable {
 
-	public AbstractPumpOutput(String name, Matcher matcher) {
+	public AbstractPumpOutput(String name, String plugin, Matcher matcher) {
 		super();
 		this.name = name;
+		this.plugin = plugin;
 		this.matcher = matcher;
 	}
 
 	private String name;
+	private String plugin;
 	private Matcher matcher;
 	protected BlockingQueue<Record> queue = new LinkedBlockingQueue<>();
 	private Thread thread;
@@ -62,6 +65,11 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getPlugin() {
+		return plugin;
 	}
 
 	@Override
@@ -142,5 +150,16 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements
 		}
 
 		return body;
+	}
+
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+
 	}
 }

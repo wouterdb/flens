@@ -34,6 +34,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
 
+import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
@@ -51,10 +52,10 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	private boolean reconnecting = false;
 	private int reconnectDelay = 10000;
 
-	public AMQPInput(String name, Tagger tagger, String host, int port,
+	public AMQPInput( String name,String plugin, Tagger tagger, String host, int port,
 			String vhost, String user, String pass, String exchange,
 			String queue, String routingkey) {
-		super(name, tagger);
+		super(name, plugin, tagger);
 
 		factory = new ConnectionFactory();
 		factory.setHost(host);
@@ -199,6 +200,8 @@ public class AMQPInput extends AbstractInput implements Consumer {
 		// TODO Auto-generated method stub
 
 	}
+
+	
 
 
 }

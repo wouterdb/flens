@@ -30,7 +30,7 @@ public class OpenTsdbIn extends AbstractConfig {
 	@Override
 	protected void construct() {
 		int port = getInt("port",4242);
-		engine.addInput(new OpenTsdbInput(name,tagger,port));
+		engine.addInput(new OpenTsdbInput(name,plugin,tagger,port));
 	}
 
 	
