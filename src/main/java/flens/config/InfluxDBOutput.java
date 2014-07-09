@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class InfluxDBOutput extends AbstractConfig {
@@ -42,7 +42,7 @@ public class InfluxDBOutput extends AbstractConfig {
 		String[] colltemplate = {"@{time}","@{source}"};
 		List<String> collnames = getArray("fieldnames",Arrays.asList(collname));
 		List<String> colltemplates = getArray("fieldTemplates",Arrays.asList(colltemplate));
-		engine.addOutput(new flens.output.InFluxOutput(name,matcher,host,port,db,user,pass,metricname,collnames,colltemplates));
+		engine.addOutput(new flens.output.InFluxOutput(name,plugin,matcher,host,port,db,user,pass,metricname,collnames,colltemplates));
 	}
 
 	

@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class GrepIn extends AbstractConfig{
 
@@ -37,7 +37,7 @@ public class GrepIn extends AbstractConfig{
 		String file = get("file", null);
 		String regex = get("regex",".*");
 		boolean tail = getBool("tail", true);
-		engine.addInput(new flens.input.GrepInput(name,tagger,file,regex,tail));
+		engine.addInput(new flens.input.GrepInput(name,plugin,tagger,file,regex,tail));
 	}
 
 	@Override

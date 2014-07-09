@@ -19,6 +19,9 @@
  */
 package flens.query;
 
+import java.util.Map;
+
+import flens.core.Flengine;
 import flens.core.Query;
 import flens.core.QueryHandler;
 import flens.core.util.AbstractPlugin;
@@ -26,38 +29,40 @@ import flens.core.util.AbstractPlugin;
 public class PingQuery extends AbstractPlugin implements QueryHandler {
 
 	private String name;
-	
-	public PingQuery(String name) {
+	private String plugin;
+
+	public PingQuery(String name, String plugin) {
 		this.name = name;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean canHandle(Query q) {
-		return q.getQuery().startsWith("ping://") ;
+		return q.getQuery().startsWith("ping://");
 	}
 
 	@Override
 	public void handle(Query q) {
 		q.respond("pong " + System.currentTimeMillis());
-		
+
 	}
 
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void join() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -65,6 +70,21 @@ public class PingQuery extends AbstractPlugin implements QueryHandler {
 		return name;
 	}
 
-	
+	@Override
+	public String getPlugin() {
+		return plugin;
+	}
+
+	@Override
+	public boolean canUpdateConfig() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

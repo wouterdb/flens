@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+import javax.naming.OperationNotSupportedException;
+
 import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
@@ -31,7 +33,7 @@ import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
 //TODO make timer/executor based
-public class SelfMonitor extends AbstractActiveInput {
+public class SelfMonitor extends AbstractActiveInput{
 	
 	public static final String type = "flens";
 	
@@ -39,8 +41,8 @@ public class SelfMonitor extends AbstractActiveInput {
 
 	private long interval;
 
-	public SelfMonitor(String name, Tagger tagger, Flengine e, int interval) {
-		super(name,tagger);
+	public SelfMonitor(String name,String plugin, Tagger tagger, Flengine e, int interval) {
+		super(name,plugin, tagger);
 		this.engine = e;
 		this.interval = interval;
 	}
@@ -63,6 +65,15 @@ public class SelfMonitor extends AbstractActiveInput {
 
 	}
 
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
 
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+		
+	}
 
 }

@@ -44,8 +44,8 @@ public class SocketLineInput extends AbstractListenerInput<Pair<String,BufferedR
 	private int port;
 	
 	
-	public SocketLineInput(String name, Tagger tagger, int port) {
-		super(name,tagger);
+	public SocketLineInput(String name,String plugin, Tagger tagger, int port) {
+		super(name,plugin,tagger);
 		this.port = port;
 	}
 

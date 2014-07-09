@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class GrokFilter extends AbstractConfig{
 	
@@ -37,9 +37,9 @@ public class GrokFilter extends AbstractConfig{
 		String s = get("script", "");
 		String inf = get("infield", "");
 		String dir = get("dir", "");
+
 		boolean discard=getBool("discard", false);
-		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf,dir,discard));
-		
+		engine.addFilter(new flens.filter.GrokFilter(name,plugin,tagger,matcher,prio,s,inf,dir,discard));
 
 	}
 

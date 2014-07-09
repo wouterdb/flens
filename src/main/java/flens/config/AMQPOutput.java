@@ -22,7 +22,7 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class AMQPOutput extends AbstractConfig {
@@ -37,7 +37,7 @@ public class AMQPOutput extends AbstractConfig {
 		String pass = get("pass","guest");
 		String exchange = get("exchange","metrics");
 		String key = get("routingKey","fles");
-		engine.addOutput(new flens.output.AMQPOut(name,matcher,field,host,port,vhost,user,pass,exchange,key));
+		engine.addOutput(new flens.output.AMQPOut(name,plugin,matcher,field,host,port,vhost,user,pass,exchange,key));
 	}
 
 	

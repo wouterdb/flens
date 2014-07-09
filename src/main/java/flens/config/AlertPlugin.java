@@ -5,6 +5,7 @@ import java.util.List;
 
 import flens.config.util.ActiveFilter;
 import flens.config.util.AlertOutput;
+import flens.core.Plugin;
 import flens.core.Config.Option;
 import flens.input.util.InputQueueExposer;
 
@@ -21,10 +22,10 @@ public class AlertPlugin extends ActiveFilter{
 		String script = get("script","return true;") ;
 		String msg = get("msg","shots fired") ;
 	
-		InputQueueExposer inpex = new InputQueueExposer(name+"_in", tagger);
+		InputQueueExposer inpex = new InputQueueExposer(name+"_in",plugin, tagger);
 		engine.addInput(inpex);
 		
-		engine.addOutput(new AlertOutput(name,matcher,interval, script,msg,inpex));
+		engine.addOutput(new AlertOutput(name,plugin,matcher,interval, script,msg,inpex));
 		
 	}
 	

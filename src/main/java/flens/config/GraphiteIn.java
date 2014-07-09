@@ -22,7 +22,7 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.GraphiteInput;
 import flens.input.OpenTsdbInput;
 
@@ -31,7 +31,7 @@ public class GraphiteIn extends AbstractConfig {
 	@Override
 	protected void construct() {
 		int port = getInt("port",2003);
-		engine.addInput(new GraphiteInput(name,tagger,port));
+		engine.addInput(new GraphiteInput(name,plugin,tagger,port));
 	}
 
 	

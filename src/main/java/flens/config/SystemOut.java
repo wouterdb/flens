@@ -19,7 +19,7 @@
  */
 package flens.config;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 public class SystemOut extends AbstractConfig{
 
@@ -31,7 +31,7 @@ public class SystemOut extends AbstractConfig{
 	
 	@Override
 	protected void construct() {
-		engine.addOutput(new flens.output.SystemOut(name,matcher));
+		engine.addOutput(new flens.output.SystemOut(name,plugin,matcher));
 	}
 
 	@Override

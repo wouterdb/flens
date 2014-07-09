@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.output.GraphiteOutput;
 import flens.output.OpenTsdbOutput;
 
@@ -45,7 +45,7 @@ public class GraphiteOut extends AbstractConfig{
 		String host = get("host", "localhost");
 		int port = getInt("port", 2003);
 		String template =  get("metric",DEFAULT_METRIC);
-		engine.addOutput(new GraphiteOutput(name,matcher,host,port,template));
+		engine.addOutput(new GraphiteOutput(name,plugin,matcher,host,port,template));
 	}
 
 	@Override

@@ -19,7 +19,11 @@
  */
 package flens.core;
 
-public interface Tagger {
+import java.util.Map;
+
+import flens.config.util.ConfigWriteable;
+
+public interface Tagger extends ConfigWriteable{
 	
 
 	Tagger empty = new Tagger() {
@@ -27,6 +31,13 @@ public interface Tagger {
 		@Override
 		public void adapt(Record r) {
 		}
+
+		@Override
+		public void outputConfig(Map<String, Object> tree) {
+			//defaults,...
+		}
+		
+		
 	};
 
 	public void adapt(Record r);

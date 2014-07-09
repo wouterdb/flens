@@ -81,7 +81,7 @@ public class ConfigParser {
 			for (String entry : xentry) {
 				Map<String, Object> child = (Map<String, Object>) map
 						.get(entry);
-				String plugin = (String) child.remove("plugin");
+				String plugin = (String) child.get("plugin");
 				if (plugin == null)
 					plugin = (String) entry;
 

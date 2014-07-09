@@ -19,12 +19,10 @@
  */
 package flens.filter.util;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 
 import flens.core.Filter;
-import flens.core.Input;
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -35,18 +33,25 @@ public abstract class AbstractFilter extends AbstractPlugin implements Filter {
 	private Tagger tagger;
 	private Matcher matcher;
 	private String name;
+	private String plugin;
 	private int prio;
 
-	public AbstractFilter(String name, Tagger tagger, Matcher matcher, int prio) {
+	public AbstractFilter(String name, String plugin,Tagger tagger, Matcher matcher, int prio) {
 		this.name = name;
 		this.tagger = tagger;
 		this.matcher = matcher;
 		this.prio = prio;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String getPlugin() {
+		return plugin;
 	}
 
 	protected Record tag(Record r) {
@@ -62,6 +67,17 @@ public abstract class AbstractFilter extends AbstractPlugin implements Filter {
 	@Override
 	public int priority() {
 		return prio;
+	}
+	
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+		
 	}
 
 }

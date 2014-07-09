@@ -38,8 +38,8 @@ public class AlertOutput extends AbstractPumpOutput implements Output {
 	private AlertTimer tt;
 	private String msg;
 
-	public AlertOutput(String name, Matcher matcher, int interval, String script, String msg, InputQueueExposer inpex) {
-		super(name, matcher);
+	public AlertOutput(String name,String plugin, Matcher matcher, int interval, String script, String msg, InputQueueExposer inpex) {
+		super(name,plugin, matcher);
 		this.interval = interval;
 		this.script = script;
 		this.in = inpex;

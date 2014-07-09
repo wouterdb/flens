@@ -39,6 +39,11 @@ public interface Filter extends Plugin {
 	 */
 	public Collection<Record> process(Record in);
 	
+	/**
+	 * idempotent, fast
+	 */
+	public Matcher getMatcher();
+	
 	public int priority();
 
 }

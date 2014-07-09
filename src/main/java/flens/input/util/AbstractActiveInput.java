@@ -28,12 +28,14 @@ import flens.core.util.AbstractPlugin;
 
 public abstract class AbstractActiveInput extends AbstractInput implements Runnable {
 
+	public AbstractActiveInput(String name, String plugin, Tagger tagger) {
+		super(name, plugin, tagger);
+	}
+
 	protected Thread runner = new Thread(this);
 	protected volatile boolean running;
 
-	public AbstractActiveInput(String name,Tagger tagger) {
-		super(name, tagger);
-	}
+	
 
 	public void start() {
 		running = true;

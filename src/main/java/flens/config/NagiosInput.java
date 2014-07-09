@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class NagiosInput extends AbstractConfig {
@@ -43,7 +43,7 @@ public class NagiosInput extends AbstractConfig {
 		List args = getArray("args", Collections.singletonList("8.8.8.8"));
 		int interv = getInt("interval", 10000);
 			
-		engine.addInput(new flens.input.NagiosInput(name, tagger, err, dir,metric,target,args,interv));
+		engine.addInput(new flens.input.NagiosInput(name,plugin, tagger, err, dir,metric,target,args,interv));
 	}
 
 	

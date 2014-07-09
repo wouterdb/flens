@@ -21,7 +21,9 @@ package flens.filter;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -29,8 +31,8 @@ import flens.filter.util.AbstractFilter;
 
 public class CharacterDecoder extends AbstractFilter {
 
-	public CharacterDecoder(String name, Tagger tagger, Matcher matcher,int prio) {
-		super(name, tagger, matcher,prio);
+	public CharacterDecoder(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
+		super(name,plugin, tagger, matcher,prio);
 	}
 
 	@Override
@@ -43,5 +45,7 @@ public class CharacterDecoder extends AbstractFilter {
 		tag(in);
 		return Collections.EMPTY_LIST;
 	}
+
+	
 
 }

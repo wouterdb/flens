@@ -37,8 +37,8 @@ import flens.input.util.AbstractPeriodicInput;
 
 public class QueryPoller extends AbstractPeriodicInput {
 
-	public QueryPoller(Flengine engine, String name, Tagger tagger, int interval,String query, String metric) {
-		super(name, tagger, interval);
+	public QueryPoller(Flengine engine, String name, String plugin, Tagger tagger, int interval,String query, String metric) {
+		super(name,plugin, tagger, interval);
 		this.engine = engine;
 		this.metric = metric;
 		this.myquery = new QueryToRecordPump(query, Collections.EMPTY_MAP);

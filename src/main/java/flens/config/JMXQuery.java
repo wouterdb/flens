@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.SelfMonitor;
 
 public class JMXQuery extends AbstractConfig{
@@ -32,7 +32,7 @@ public class JMXQuery extends AbstractConfig{
 	protected void construct() {
 		String host = get("host", "localhost");
 		int port = getInt("port",9999);
-		engine.addHandler(new flens.query.JMXQuery(name,host,port));	
+		engine.addHandler(new flens.query.JMXQuery(name,plugin,host,port));	
 	}
 
 	@Override

@@ -34,12 +34,13 @@ import flens.core.Tagger;
 
 public abstract class AbstractListenerInput<T> extends AbstractActiveInput {
 
+	public AbstractListenerInput(String name, String plugin, Tagger tagger) {
+		super(name, plugin, tagger);
+	}
+
 	private ServerSocket listener;
 	private List<Handler> handlers = new LinkedList<Handler>();
 
-	public AbstractListenerInput(String name,Tagger tagger) {
-		super(name,tagger);
-	}
 
 	@Override
 	public void start() {

@@ -19,8 +19,13 @@
  */
 package flens.core.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import flens.config.util.Reflector;
+import flens.core.Flengine;
 
 public abstract class AbstractPlugin {
 	
@@ -45,5 +50,15 @@ public abstract class AbstractPlugin {
 	}
 
 	public abstract String getName();
+	public abstract String getPlugin();
+	
+	public void writeConfig(Flengine engine, Map<String,Object> tree){
+		Map<String,Object> subtree = new HashMap<String, Object>();
+		tree.put(getName(),subtree);
+		
+		Reflector.store(this, engine.getPluginRepo().get(getPlugin()));
+	}
+	
+	
 
 }

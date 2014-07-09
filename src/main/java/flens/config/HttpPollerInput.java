@@ -20,14 +20,10 @@
 package flens.config;
 
 import java.net.MalformedURLException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.Tagger;
-import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
-import flens.input.OpenTsdbInput;
+import flens.config.util.AbstractConfig;
 
 public class HttpPollerInput extends AbstractConfig {
 
@@ -37,7 +33,7 @@ public class HttpPollerInput extends AbstractConfig {
 		int interv = getInt("interval", 10000);
 		String url = get("url","");
 		try {
-			engine.addInput(new flens.input.HttpPullInput(name, tagger, interv, url));
+			engine.addInput(new flens.input.HttpPullInput(name,plugin, tagger, interv, url));
 		} catch (MalformedURLException e) {
 			warn("plugin failed, bad url");
 			e.printStackTrace();

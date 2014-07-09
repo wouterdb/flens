@@ -57,7 +57,7 @@ public interface Config {
 		
 	}
 
-	public void readConfigPart(String name, Map<String, Object> tree,
+	public void readConfigPart(String plugin, Map<String, Object> tree,
 			Flengine engine);
 
 	public List<Option> getOptions();

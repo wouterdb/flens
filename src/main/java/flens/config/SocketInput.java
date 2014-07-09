@@ -22,7 +22,7 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class SocketInput extends AbstractConfig {
@@ -30,7 +30,7 @@ public class SocketInput extends AbstractConfig {
 	@Override
 	protected void construct() {
 		int port = getInt("port",19850);
-		engine.addInput(new flens.input.SocketInput(name,tagger,port));
+		engine.addInput(new flens.input.SocketInput(name,plugin,tagger,port));
 	}
 
 	

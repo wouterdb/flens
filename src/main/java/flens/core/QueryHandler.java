@@ -19,7 +19,7 @@
  */
 package flens.core;
 
-public interface QueryHandler {
+public interface QueryHandler extends Plugin{
 	
 	public boolean canHandle(Query q);
 	public void handle(Query q);

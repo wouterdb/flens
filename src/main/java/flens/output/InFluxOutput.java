@@ -57,8 +57,8 @@ public class InFluxOutput extends AbstractPumpOutput {
 	private Influxdb db;
 
 	
-	public InFluxOutput(String name, Matcher matcher,String server, int port,String database,String user, String password, String nameTemplate,List<String> collumnNames, List<String> collumnTemplates) {
-		super(name,matcher);
+	public InFluxOutput(String name, String plugin, Matcher matcher,String server, int port,String database,String user, String password, String nameTemplate,List<String> collumnNames, List<String> collumnTemplates) {
+		super(name,plugin,matcher);
 		this.port = port;
 		this.host = server;
 		

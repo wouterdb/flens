@@ -56,9 +56,9 @@ public class HttpPullInput extends AbstractPeriodicInput {
 	private String[] collumnNames;
 	private CompiledTemplate[] collumnTemplates;
 
-	public HttpPullInput(String name, Tagger tagger, int interval, String url)
+	public HttpPullInput(String name,String plugin, Tagger tagger, int interval, String url)
 			throws MalformedURLException {
-		super(name, tagger, interval);
+		super(name,plugin, tagger, interval);
 		this.url = new URL(url);
 	}
 

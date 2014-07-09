@@ -53,9 +53,9 @@ public class HttpPostOutput extends AbstractPumpOutput {
 	private String[] collumnNames;
 	private CompiledTemplate[] collumnTemplates;
 
-	public HttpPostOutput(String name, Matcher matcher, String url,
+	public HttpPostOutput(String name, String plugin, Matcher matcher, String url,
 			List<String> collumnNames, List<String> collumnTemplates) throws MalformedURLException {
-		super(name, matcher);
+		super(name,plugin, matcher);
 		this.url = new URL(url);
 
 		this.collumnNames = collumnNames.toArray(new String[0]);

@@ -19,7 +19,7 @@
  */
 package flens.config;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 public class JSonDecoder extends AbstractConfig{
 
@@ -30,7 +30,7 @@ public class JSonDecoder extends AbstractConfig{
 
 	@Override
 	protected void construct() {
-		engine.addFilter(new flens.filter.JSonDecoder(name,tagger,matcher,prio));
+		engine.addFilter(new flens.filter.JSonDecoder(name,plugin,tagger,matcher,prio));
 	}
 
 	@Override

@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class MvelFilter extends AbstractConfig{
 	
@@ -35,7 +35,7 @@ public class MvelFilter extends AbstractConfig{
 	@Override
 	protected void construct() {
 		String s = get("script", "");
-		engine.addFilter(new flens.filter.MVELFilter(name,tagger,matcher,prio,s));
+		engine.addFilter(new flens.filter.MVELFilter(name,plugin,tagger,matcher,prio,s));
 	}
 
 	

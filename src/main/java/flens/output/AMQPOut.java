@@ -22,12 +22,14 @@ package flens.output;
 import java.io.IOException;
 import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;
@@ -41,13 +43,24 @@ public class AMQPOut extends AbstractPumpOutput {
 	private Connection connection;
 	private Channel channel;
 	private boolean closed;
+	protected String host;
+	protected int port;
+	protected String user;
+	protected String pass;
+	protected String vhost;
 
-	public AMQPOut(String name, Matcher matcher, String field, String host,
+	public AMQPOut(String name, String plugin, Matcher matcher, String field, String host,
 			int port, String vhost, String user, String pass, String exchange,
 			String routingkey) {
-		super(name, matcher);
+		super(name,plugin, matcher);
 		this.field = field;
 
+		this.host=host;
+		this.port=port;
+		this.user=user;
+		this.pass=pass;
+		this.vhost=vhost;
+		
 		factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);
@@ -149,6 +162,14 @@ public class AMQPOut extends AbstractPumpOutput {
 		}
 		
 
+	}
+
+	
+
+	@Override
+	public String getPlugin() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -19,10 +19,11 @@
  */
 package flens.config;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config;
 import flens.core.Config.Option;
 import flens.core.Flengine;
-import flens.core.util.AbstractConfig;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class SetFilter extends AbstractConfig
     if (f.size() != t.size()) {
       throw new IllegalArgumentException("to and from must be same size");
     }
-    this.engine.addFilter(new flens.filter.SetFilter(this.name, this.tagger, this.matcher,prio, f, t));
+    this.engine.addFilter(new flens.filter.SetFilter(this.name, plugin, this.tagger, this.matcher,prio, f, t));
   }
 
   protected boolean isOut()

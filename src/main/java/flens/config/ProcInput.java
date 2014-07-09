@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class ProcInput extends AbstractConfig {
@@ -39,7 +39,7 @@ public class ProcInput extends AbstractConfig {
 			err = null;
 		String cmd = get("cmd", "");
 		List args = getArray("args", Collections.EMPTY_LIST);
-		engine.addInput(new flens.input.ProcessTailer(name, tagger, err, cmd,args));
+		engine.addInput(new flens.input.ProcessTailer(name, plugin,tagger, err, cmd,args));
 	}
 
 	

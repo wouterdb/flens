@@ -43,8 +43,8 @@ public class ProcessPoller extends AbstractProcessPoller {
 	private Tagger errT;
 
 
-	public ProcessPoller(String name, Tagger out,Tagger err, String cmd,List<String> args, long period) {
-		super(name,null, cmd, args, period);
+	public ProcessPoller(String name,String plugin, Tagger out,Tagger err, String cmd,List<String> args, long period) {
+		super(name,plugin,null, cmd, args, period);
 		this.outT = out;
 		this.errT = err;
 	}
@@ -52,8 +52,8 @@ public class ProcessPoller extends AbstractProcessPoller {
 
 	@Override
 	protected void captureStreams() {
-		out = new StreamPump(getName()+".out",outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
-		err = new StreamPump(getName()+".err",errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
+		out = new StreamPump(getName()+".out",getPlugin(),outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
+		err = new StreamPump(getName()+".err",getPlugin(),errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
 		out.setInputQueue(in);
 		err.setInputQueue(in);
 		out.start();

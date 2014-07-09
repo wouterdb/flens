@@ -19,6 +19,8 @@
  */
 package flens.core.util;
 
+import java.util.Map;
+
 import flens.core.Matcher;
 import flens.core.Record;
 
@@ -26,6 +28,12 @@ public class AllMatcher implements Matcher {
 
 	public boolean matches(Record r) {
 		return true;
+	}
+
+	@Override
+	public void outputConfig(Map<String, Object> tree) {
+		//defaults
+		
 	}
 
 }

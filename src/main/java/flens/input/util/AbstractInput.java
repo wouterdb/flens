@@ -19,8 +19,10 @@
  */
 package flens.input.util;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
+import flens.core.Flengine;
 import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -30,12 +32,14 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 
 	protected BlockingQueue<Record> in;
 	protected Tagger tagger;
-	private String name;
+	protected String name;
+	private String plugin;
 	private int sent;
 
-	public AbstractInput(String name,Tagger tagger) {
+	public AbstractInput(String name,String plugin,Tagger tagger) {
 		this.name = name;
 		this.tagger = tagger;
+		this.plugin = plugin;
 	}
 
 	
@@ -43,6 +47,12 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String getPlugin() {
+		return plugin;
+	}
+	
 	
 	protected void dispatch(Record r){
 		tagger.adapt(r);
@@ -57,4 +67,15 @@ public abstract class AbstractInput extends AbstractPlugin implements Input{
 	public int getRecordsSent() {
 		return sent;
 	}
+	
+	@Override
+	public boolean canUpdateConfig() {
+		return false;
+	}
+
+	@Override
+	public void updateConfig(Flengine engine, Map<String, Object> tree) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

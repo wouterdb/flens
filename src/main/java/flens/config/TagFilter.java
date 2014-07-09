@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class TagFilter extends AbstractConfig{
 	
@@ -34,7 +34,7 @@ public class TagFilter extends AbstractConfig{
 	
 	@Override
 	protected void construct() {
-		engine.addFilter(new flens.filter.TagFilter(name,tagger,matcher,prio,engine.getTags()));
+		engine.addFilter(new flens.filter.TagFilter(name,plugin,tagger,matcher,prio,engine.getTags()));
 	}
 
 	

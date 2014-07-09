@@ -19,15 +19,15 @@
  */
 package flens.core;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Plugin {
 	
-	/**
-	 * idempotent, fast
-	 */
-	public Matcher getMatcher();
+	
 	public String getName();
 	
-
+	public boolean canUpdateConfig();
+	public void updateConfig(Flengine engine, Map<String,Object> tree);
+	public void writeConfig(Flengine engine, Map<String,Object> tree);
 }

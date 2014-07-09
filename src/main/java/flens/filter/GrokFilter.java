@@ -42,9 +42,10 @@ public class GrokFilter extends AbstractFilter {
 	private String dir;
 	private boolean discard;
 
-	public GrokFilter(String name, Tagger tagger, Matcher matcher, int prio,
+
+	public GrokFilter(String name,String plugin, Tagger tagger, Matcher matcher, int prio,
 			String script, String inField, String dir, boolean discardNonMatches) {
-		super(name, tagger, matcher, prio);
+		super(name,plugin, tagger, matcher, prio);
 		this.script = script;
 		this.field = inField;
 		this.dir = dir;
@@ -68,7 +69,7 @@ public class GrokFilter extends AbstractFilter {
 			File d = new File(dir);
 			if (!d.isDirectory())
 				warn("dir is not a directory" + dir);
-			for (String f : d.list()) {
+			else for (String f : d.list()) {
 
 				try {
 					compiled.addPatternFromFile(f);

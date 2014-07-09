@@ -14,8 +14,8 @@ import org.mvel2.templates.TemplateRuntime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import flens.config.util.AbstractConfig;
 import flens.core.ConfigParser;
-import flens.core.util.AbstractConfig;
 import flens.util.FileUtil;
 import flens.util.MVELUtil;
 
@@ -73,7 +73,7 @@ public class CookbookConfig extends AbstractConfig {
 	@Override
 	public List<Option> getOptions() {
 		
-		List<Option> opts = super.getOptions();
+		List<Option> opts = new LinkedList(super.getOptions());
 		opts.add(new Option("template", "String", "", "template file to use, file searchpath is " + Arrays.deepToString(COOKBOOK)));
 		opts.add(new Option("DEBUG", "boolean", "false", "print out expanded config"));
 		

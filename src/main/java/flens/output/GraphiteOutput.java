@@ -71,11 +71,15 @@ public class GraphiteOutput extends AbstractPumpOutput {
 	private Thread errPump;
 
 	private CompiledTemplate index;
+	private String metric;
 
-	public GraphiteOutput(String name, Matcher matcher, String server, int port, String metric) {
-		super(name, matcher);
+	public GraphiteOutput(String name,String plugin, Matcher matcher, String server, int port, String metric) {
+		super(name,plugin, matcher);
+	
 		this.port = port;
 		this.host = server;
+
+		this.metric=metric;
 
 		this.index = MVELUtil.compileTemplateTooled(metric);
 	}

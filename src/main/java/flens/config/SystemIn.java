@@ -19,7 +19,7 @@
  */
 package flens.config;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 public class SystemIn extends AbstractConfig{
 
@@ -30,7 +30,7 @@ public class SystemIn extends AbstractConfig{
 
 	@Override
 	protected void construct() {
-		engine.addInput(new flens.input.SystemIn(name,tagger));
+		engine.addInput(new flens.input.SystemIn(name,plugin,tagger));
 	}
 
 	@Override

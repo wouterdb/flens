@@ -19,7 +19,7 @@
  */
 package flens.config;
 
-import flens.core.util.AbstractConfig;
+import flens.config.util.AbstractConfig;
 
 public class CharacterDecoder extends AbstractConfig{
 
@@ -30,7 +30,7 @@ public class CharacterDecoder extends AbstractConfig{
 
 	@Override
 	protected void construct() {
-		engine.addFilter(new flens.filter.CharacterDecoder(name,tagger,matcher,prio));
+		engine.addFilter(new flens.filter.CharacterDecoder(name,plugin,tagger,matcher,prio));
 	}
 
 	@Override

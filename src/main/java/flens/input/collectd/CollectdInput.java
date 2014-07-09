@@ -44,12 +44,12 @@ import flens.input.util.AbstractActiveInput;
  */
 public class CollectdInput extends AbstractActiveInput {
 
-	public CollectdInput(String name, Tagger tagger, int port,
+	public CollectdInput(String name,String plugin, Tagger tagger, int port,
 			String bindAddress, String _ifAddress) {
-		super(name, tagger);
-		this._port = port;
-		this._bindAddress = bindAddress;
-		this._ifAddress = _ifAddress;
+		super(name, plugin, tagger);
+		this.port = port;
+		this.bindAddress = bindAddress;
+		this.ifAddress = _ifAddress;
 	}
 
 	private static final Logger _log = Logger.getLogger(CollectdInput.class
@@ -63,49 +63,37 @@ public class CollectdInput extends AbstractActiveInput {
 	public static final int HEADER_LEN = UINT16_LEN * 2;
 
 	private DatagramSocket _socket;
-	private int _port;
-	private String _bindAddress;
-	private String _ifAddress;
+	private int port;
+	private String bindAddress;
+	private String ifAddress;
 
 	protected int getPort() {
-		return _port;
-	}
-
-	public void setPort(int port) {
-		_port = port;
+		return port;
 	}
 
 	public String getListenAddress() {
-		return _bindAddress;
-	}
-
-	public void setListenAddress(String address) {
-		_bindAddress = address;
+		return bindAddress;
 	}
 
 	public String getInterfaceAddress() {
-		return _ifAddress;
-	}
-
-	public void setInterfaceAddress(String address) {
-		_ifAddress = address;
+		return ifAddress;
 	}
 
 	public DatagramSocket getSocket() throws IOException {
 		if (_socket == null) {
-			if (_bindAddress == null) {
-				_socket = new DatagramSocket(_port);
+			if (bindAddress == null) {
+				_socket = new DatagramSocket(port);
 			} else {
-				InetAddress addr = InetAddress.getByName(_bindAddress);
+				InetAddress addr = InetAddress.getByName(bindAddress);
 				if (addr.isMulticastAddress()) {
-					MulticastSocket mcast = new MulticastSocket(_port);
-					if (_ifAddress != null) {
-						mcast.setInterface(InetAddress.getByName(_ifAddress));
+					MulticastSocket mcast = new MulticastSocket(port);
+					if (ifAddress != null) {
+						mcast.setInterface(InetAddress.getByName(ifAddress));
 					}
 					mcast.joinGroup(addr);
 					_socket = mcast;
 				} else {
-					_socket = new DatagramSocket(_port, addr);
+					_socket = new DatagramSocket(port, addr);
 				}
 			}
 		}

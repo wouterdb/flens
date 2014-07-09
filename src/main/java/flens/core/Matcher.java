@@ -19,7 +19,9 @@
  */
 package flens.core;
 
-public interface Matcher {
+import flens.config.util.ConfigWriteable;
+
+public interface Matcher extends ConfigWriteable{
 	
 	public boolean matches(Record r);
 

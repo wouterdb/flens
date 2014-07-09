@@ -24,6 +24,11 @@ import java.util.Queue;
 public interface Output extends Plugin {
 
 	/**
+	 * idempotent, fast
+	 */
+	public Matcher getMatcher();
+	
+	/**
 	 * @return the output queue
 	 * 
 	 * method is idempotent

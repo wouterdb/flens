@@ -35,8 +35,8 @@ public class SystemIn extends AbstractActiveInput {
 
 	private BufferedReader inr;
 
-	public SystemIn(String name,Tagger tagger) {
-		super(name,tagger);
+	public SystemIn(String name,String plugin,Tagger tagger) {
+		super(name, plugin,tagger);
 	}
 
 	public void start() {

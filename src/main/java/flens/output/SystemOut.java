@@ -30,8 +30,8 @@ public class SystemOut extends AbstractPumpOutput implements Output {
 
 	private PrintStream stream;
 	
-	public SystemOut(String name, Matcher matcher) {
-		super(name, matcher);
+	public SystemOut(String name,String plugin, Matcher matcher) {
+		super(name,plugin, matcher);
 		stream = System.out;
 	}
 

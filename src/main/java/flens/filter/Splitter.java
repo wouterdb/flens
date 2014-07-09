@@ -33,12 +33,13 @@ import flens.filter.util.AbstractFilter;
 
 public class Splitter extends AbstractFilter implements Filter {
 
+
 	List<String> keys = new LinkedList<>();
 	private boolean keeprest;
 
-	public Splitter(String name, Tagger tagger, Matcher matcher, int prio,
+	public Splitter(String name, String plugin,Tagger tagger, Matcher matcher, int prio,
 			List<String> keys, boolean keeprest) {
-		super(name, tagger, matcher, prio);
+		super(name,plugin, tagger, matcher, prio);
 		this.keys = keys;
 		this.keeprest = keeprest;
 	}

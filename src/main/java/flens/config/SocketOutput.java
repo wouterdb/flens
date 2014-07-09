@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 import flens.input.OpenTsdbInput;
 
 public class SocketOutput extends AbstractConfig {
@@ -33,7 +33,7 @@ public class SocketOutput extends AbstractConfig {
 		int port = getInt("port",19850);
 		String host = get("host", "localhost");
 		String field = get("field", "body");
-		engine.addOutput(new flens.output.SocketOutput(name,matcher,host,port,field));
+		engine.addOutput(new flens.output.SocketOutput(name, plugin, matcher,host,port,field));
 	}
 
 	

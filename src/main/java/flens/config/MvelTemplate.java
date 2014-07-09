@@ -22,8 +22,8 @@ package flens.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import flens.config.util.AbstractConfig;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public class MvelTemplate extends AbstractConfig{
 	
@@ -36,7 +36,8 @@ public class MvelTemplate extends AbstractConfig{
 	protected void construct() {
 		List<String> temp = getArray("template", null);
 		List<String> field = getArray("field", null);
-		engine.addFilter(new flens.filter.MVELTemplate(name,tagger,matcher,prio,field,temp));
+		engine.addFilter(new flens.filter.MVELTemplate(name,plugin,tagger,matcher,prio,field,temp));
+
 	}
 
 	
@@ -54,7 +55,7 @@ public class MvelTemplate extends AbstractConfig{
 	@Override
 	public List<Option> getOptions() {
 		List<Option>  out = new LinkedList(super.getOptions());
-		out.add(new Option("template", "String", " ", "template to execute"));
+		out.add(new Option("template", "String", null, "template to execute"));
 		out.add(new Option("field", "String", null, "field to place result in"));
 		return out;
 	}

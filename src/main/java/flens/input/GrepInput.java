@@ -32,17 +32,19 @@ import flens.input.util.AbstractActiveInput;
 public class GrepInput extends AbstractActiveInput implements TailerListener{
 
 	private Tailer tailer;
-	private Pattern regex;
-	private boolean tailFromEnd;
+	private Pattern cregex;
+	private boolean tail;
 	private long delay = 1000;
 	private String file;
+	private String regex;
 
-	public GrepInput(String name, Tagger tagger, String file, String regex,boolean tail) {
-		super(name, tagger);
+	public GrepInput(String name,String plugin, Tagger tagger, String file, String regex,boolean tail) {
+		super(name,plugin,tagger);
 		this.file=file;
 		tailer = new Tailer(new File(file), this,delay ,tail);
-		this.regex = Pattern.compile(regex); 
-		this.tailFromEnd=tail;
+		this.regex = regex;
+		this.cregex = Pattern.compile(regex); 
+		this.tail=tail;
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class GrepInput extends AbstractActiveInput implements TailerListener{
 
 	@Override
 	public void handle(String line) {
-		if(regex.matcher(line).matches())
+		if(cregex.matcher(line).matches())
 			dispatch(Record.forLog(file,line));
 		
 	}

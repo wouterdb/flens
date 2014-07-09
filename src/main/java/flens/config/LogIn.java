@@ -19,51 +19,56 @@
  */
 package flens.config;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
-import flens.core.util.AbstractConfig;
-import flens.input.OpenTsdbInput;
+import com.rabbitmq.tools.Tracer.Logger;
 
-public class JMXInput extends AbstractConfig {
+import flens.config.util.AbstractConfig;
+import flens.core.Config.Option;
+import flens.input.FlensLogHandler;
+import flens.input.util.InputQueueExposer;
 
-	@Override
-	protected void construct() {
+public class LogIn extends AbstractConfig{
 
-		List<String> domain = getArray("domains",Collections.EMPTY_LIST);
-		int interval = getInt("interval",10000);
-		int multiplier = getInt("vm-intervals",10);
-		String jvmSelector = get("jvm", ".*");
-		
-		engine.addInput(new flens.input.JMXInput(name,tagger,jvmSelector,domain,interval,multiplier));
-	}
-
-	
 	@Override
 	protected boolean isIn() {
 		return true;
 	}
 
 	@Override
+	protected void construct() {
+		String level = get("level", Level.INFO.toString());
+		//String filter = get("filter",".*");
+		
+		InputQueueExposer exp = new InputQueueExposer(name, plugin,tagger);
+		FlensLogHandler lh = new flens.input.FlensLogHandler(exp);
+		
+		lh.setLevel(Level.parse(level));
+		//lh.setFilter(Filter.);
+		
+		LogManager.getLogManager().getLogger("").addHandler(lh);
+		
+		engine.addInput(exp);
+	}
+
+	@Override
 	protected boolean isOut() {
 		return false;
 	}
-	
+
 	@Override
 	public List<Option> getOptions() {
 		List<Option>  out = new LinkedList(super.getOptions());
-		out.add(new Option("interval", "int", "10000", "interval between subsequent reports in ms"));
-		out.add(new Option("vm-intervals", "int", "10", "search for new VM's every vm-intervals intervals"));
-		out.add(new Option("jvm", "String", ".*", "pid of vm or regex on vm name"));
-		out.add(new Option("domains", "List", "[]", "jmx domains to report on"));
+		out.add(new Option("level", "String", "http://www.merriam-webster.com/dictionary/pusillanimous", "log level"));
 		return out;
 	}
 
-
 	@Override
 	public String getDescription() {
-		return "Regualarly searches JMX for metrics, jmx key-value metrics become field-values in flens ";
+		return "log tailer with regex support";
 	}
 
 }

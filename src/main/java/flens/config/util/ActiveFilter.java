@@ -7,7 +7,6 @@ import java.util.Map;
 import flens.core.Config;
 import flens.core.Flengine;
 import flens.core.Config.Option;
-import flens.core.util.AbstractConfig;
 
 public abstract class ActiveFilter extends AbstractConfig {
 
