@@ -33,14 +33,14 @@ import flens.filter.util.AbstractFilter;
 
 public class TagFilter extends AbstractFilter {
 
-	private Map<String, String> tags;
+	private Map<String, String> mytags;
 
 
 	public TagFilter(String name,String plugin, Tagger tagger, Matcher matcher, int prio,
 			Map<String, String> tags) {
-		super(name,plugin, tagger, matcher, prio);
+		super(name, plugin,tagger, matcher, prio);
 
-		this.tags = tags;
+		this.mytags = tags;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class TagFilter extends AbstractFilter {
 			//nothing to do
 			//todo make configurable
 		} else {
-			in.setValue(Constants.TAGS, tags);
+			in.setValue(Constants.TAGS, mytags);
 		}
 		return Collections.EMPTY_LIST;
 	}

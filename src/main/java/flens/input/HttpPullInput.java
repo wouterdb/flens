@@ -51,19 +51,22 @@ import flens.util.MVELUtil;
 
 public class HttpPullInput extends AbstractPeriodicInput {
 
-	private URL url;
+	private URL myUrl;
 
 	private String[] collumnNames;
 	private CompiledTemplate[] collumnTemplates;
 
+	private String url;
+
 	public HttpPullInput(String name,String plugin, Tagger tagger, int interval, String url)
 			throws MalformedURLException {
 		super(name,plugin, tagger, interval);
-		this.url = new URL(url);
+		this.url = url;
+		this.myUrl = new URL(url);
 	}
 
 	public void poll() throws IOException {
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		HttpURLConnection con = (HttpURLConnection) myUrl.openConnection();
 		
 		int responseCode = con.getResponseCode();
 		

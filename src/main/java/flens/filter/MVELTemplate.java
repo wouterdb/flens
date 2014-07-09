@@ -47,10 +47,15 @@ public class MVELTemplate extends AbstractFilter {
 	private String[] collumnNames;
 	private CompiledTemplate[] collumnTemplates;
 
+	private List<String> field;
+	private List<String> template;
+
 
 	public MVELTemplate(String name,String plugin, Tagger tagger, Matcher matcher, int prio,
 			List<String> field, List<String> collumnTemplates) {
 		super(name, plugin, tagger, matcher, prio);
+		this.field=field;
+		this.template=collumnTemplates;
 		this.collumnNames = field.toArray(new String[0]);
 		this.collumnTemplates = new CompiledTemplate[collumnTemplates.size()];
 		for (int i = 0; i < collumnTemplates.size(); i++) {

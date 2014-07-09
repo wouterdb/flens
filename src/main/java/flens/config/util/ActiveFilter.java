@@ -31,6 +31,7 @@ public abstract class ActiveFilter extends AbstractConfig {
 		this.tree = tree;
 		this.engine = engine;
 		this.name = name;
+		this.plugin = get("plugin", name);
 
 		logger.info("starting: " + name);
 

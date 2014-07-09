@@ -37,6 +37,7 @@ public class HttpPollerInput extends AbstractConfig {
 		} catch (MalformedURLException e) {
 			warn("plugin failed, bad url");
 			e.printStackTrace();
+			throw new IllegalArgumentException(e);
 		}
 	}
 

@@ -164,12 +164,5 @@ public class AMQPOut extends AbstractPumpOutput {
 
 	}
 
-	
-
-	@Override
-	public String getPlugin() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -53,10 +53,10 @@ public abstract class AbstractPlugin {
 	public abstract String getPlugin();
 	
 	public void writeConfig(Flengine engine, Map<String,Object> tree){
-		Map<String,Object> subtree = new HashMap<String, Object>();
+		Map<String,Object> subtree = Reflector.store(this, engine.getPluginRepo().get(getPlugin()));
 		tree.put(getName(),subtree);
 		
-		Reflector.store(this, engine.getPluginRepo().get(getPlugin()));
+		
 	}
 	
 	

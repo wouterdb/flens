@@ -1,7 +1,9 @@
 package flens.input.util;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
+import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;
 
@@ -33,6 +35,10 @@ public class InputQueueExposer extends AbstractInput {
 
 	public boolean isStopped() {
 		return stopped;
+	}
+	
+	@Override
+	public void writeConfig(Flengine engine, Map<String, Object> tree) {
 	}
 
 }

@@ -32,7 +32,6 @@
  "socket-in":"flens.config.SocketInput",
  "socket-line-in":"flens.config.SocketLineIn",
  "cookbook":"flens.config.CookbookConfig",
- "esper":"dnet.monitor.cep.flens.EsperMasterPlugin",
  "http-poll":"flens.config.HttpPollerInput",
  "splitter":"flens.config.Splitter",
  "alert":"flens.config.AlertPlugin"

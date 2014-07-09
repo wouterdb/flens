@@ -40,19 +40,21 @@ public abstract class AbstractProcessPoller extends AbstractInput {
 	private Timer t;
 	private long period;
 	private boolean running;
+	private LinkedList<String> fullArgs;
 
 	public AbstractProcessPoller(String name, String plugin,Tagger t,String cmd,List<String> args, long period) {
 		super(name,plugin, t);
 		this.cmd=cmd;
 		this.args = new LinkedList<>(args);
 		this.period=period;
-		this.args.add(0, cmd);
+		this.fullArgs = new LinkedList<>(args);
+		this.fullArgs.add(0, cmd);
 	}
 	
 	public synchronized void poll() throws InterruptedException {
 		
 		
-		ProcessBuilder pb = new ProcessBuilder(args);
+		ProcessBuilder pb = new ProcessBuilder(fullArgs);
 		try {
 			proc = pb.start();
 		} catch (IOException e) {
