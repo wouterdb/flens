@@ -237,8 +237,8 @@ public abstract class AbstractConfig implements Config {
 		matcherOpts.add(new Option("tags", "[String]","[]", "only apply to records having all of these tags"));
 		
 		List<Option> taggerOpts = new LinkedList<Config.Option>();
-		matcherOpts.add(new Option("add-tags", "[String]","[]", "add following tags"));
-		matcherOpts.add(new Option("remove-tags", "[String]","[]", "remove following tags"));
+		taggerOpts.add(new Option("add-tags", "[String]","[]", "add following tags"));
+		taggerOpts.add(new Option("remove-tags", "[String]","[]", "remove following tags"));
 		
 		
 		inopts = new LinkedList<Option>();

@@ -3,10 +3,33 @@
 	"name" : "testx1",
 	"tags" : { "tier" : "test"},
 	"init":{
-	  "query":{
-	  	"query-amqp-in":{},
-		"query-ping":{},
-		"query-jmx":{}
+	  "input":{
+	  	"netstat" : {
+	  	 	"plugin":"proc-poll",
+ 			"cmd" : "netstat",
+ 			"args": ["-ntpa"],
+ 			"type" : "netstat",
+ 			"err-type" : "log",
+ 			"interval":1000
+ 		}
+	  },
+	  "filter":{
+	  	"netstat-grok": {
+	  		"plugin":"grok",
+ 			"type":"netstat",
+ 			"infield":"message",
+ 			"script" : "%{NOTSPACE:proto} +%{INT:recvq} +%{INT:sendq} +%{HOSTPORT:local} +%{HOSTPORTSTAR:foreign} +%{NOTSPACE:state} +%{DATA:proc} +",
+ 			"discard":true
+ 		},"alert":{
+ 			"type":"netstat",
+ 			"out-type":"alert",
+ 			"msg":"network connection not found",
+ 			"interval":1200,
+ 			"script":"return local=='0.0.0.0:5555' && state=='LISTEN' && proc~='[0-9]*/nc';"
+ 		}
+	  },
+	  "output":{
+	  	"system-out":{"type":"alert"}
 	  }
  	}
  		 

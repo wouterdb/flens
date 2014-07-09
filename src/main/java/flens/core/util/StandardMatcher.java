@@ -39,7 +39,7 @@ public class StandardMatcher implements Matcher {
 
 	@Override
 	public boolean matches(Record r) {
-		if(type != null && !r.getType().equals(type))
+		if(type != null && !type.equals(r.getType()))
 			return false;
 		return r.getTags().containsAll(tags);
 			

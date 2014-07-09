@@ -40,13 +40,15 @@ public class GrokFilter extends AbstractFilter {
 	private Grok compiled;
 	private String field;
 	private String dir;
+	private boolean discard;
 
 	public GrokFilter(String name, Tagger tagger, Matcher matcher, int prio,
-			String script, String inField, String dir) {
+			String script, String inField, String dir, boolean discardNonMatches) {
 		super(name, tagger, matcher, prio);
 		this.script = script;
 		this.field = inField;
 		this.dir = dir;
+		this.discard=discardNonMatches;
 		start();
 	}
 
@@ -91,8 +93,12 @@ public class GrokFilter extends AbstractFilter {
 		if (inf == null)
 			return Collections.EMPTY_LIST;
 		Match m = compiled.match(inf);
-		if (m == null || m.isNull())
+		if (m == null || m.isNull()){
+			if(discard)
+				in.setType(null);
 			return Collections.EMPTY_LIST;
+		}
+			
 		m.captures();
 
 		in.getValues().putAll(m.toMap());

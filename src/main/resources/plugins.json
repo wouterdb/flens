@@ -39,7 +39,8 @@
  "cookbook":"flens.config.CookbookConfig",
  "esper":"dnet.monitor.cep.flens.EsperMasterPlugin",
  "http-poll":"flens.config.HttpPollerInput",
- "splitter":"flens.config.Splitter"
+ "splitter":"flens.config.Splitter",
+ "alert":"flens.config.AlertPlugin"
 }
  
  

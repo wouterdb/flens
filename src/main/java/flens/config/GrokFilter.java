@@ -37,7 +37,8 @@ public class GrokFilter extends AbstractConfig{
 		String s = get("script", "");
 		String inf = get("infield", "");
 		String dir = get("dir", "");
-		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf,dir));
+		boolean discard=getBool("discard", false);
+		engine.addFilter(new flens.filter.GrokFilter(name,tagger,matcher,prio,s,inf,dir,discard));
 		
 
 	}
@@ -60,6 +61,7 @@ public class GrokFilter extends AbstractConfig{
 		out.add(new Option("script", "String", "", "script to execute"));
 		out.add(new Option("infield", "String", "", "field to match"));
 		out.add(new Option("dir", "String", "", "directory for aux definitions"));
+		out.add(new Option("discard", "boolean", "false", "discard if no match"));
 		return out;
 	}
 }
