@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.ActiveFilter;
-import flens.config.util.AlertOutput;
 import flens.input.util.InputQueueExposer;
+import flens.statefull.AlertOutput;
 
 public class AlertPlugin extends ActiveFilter{
 

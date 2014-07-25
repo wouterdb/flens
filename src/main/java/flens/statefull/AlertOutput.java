@@ -1,4 +1,4 @@
-package flens.config.util;
+package flens.statefull;
 
 import java.io.Serializable;
 import java.util.Timer;
