@@ -61,6 +61,7 @@ public class Constants {
 	 * 
 	 * text message
 	 */
+	@Deprecated
 	public static final String L_MESSAGE = "message";
 	public static final String MESSAGE = "message";
 	
@@ -69,6 +70,7 @@ public class Constants {
 	 * 
 	 * binary message
 	 */
+	@Deprecated
 	public static final String BINARY_MESSAGE = "body";
 	public static final String BODY = "body";
 	
@@ -98,12 +100,26 @@ public class Constants {
 	
 	public static final String SEVERITY = "severity";
 	public static final String VALUES = "values";
+
 	public static final String TAGS = "tags";
-	public static final String UNIT = "unit";
+	
 	public static final String TARGET = "target";
 	
 
+	
+	
 	public static final String SUBRECORDS = "subrecords";
+	
+	
+	public static final String UNIT = "unit";
+	
+	public static final String UNIT_SECONDS = "s";
+	public static final String UNIT_MILISECONDS = "ms";
+	public static final String UNIT_PERSECONDS = "/s";
+	public static final String UNIT_COUNT = "#";
+	public static final String UNIT_NANOSECONDS = "ns";
+	
+	
 
 
 }

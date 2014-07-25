@@ -50,7 +50,7 @@ public class StreamPump extends AbstractActiveInput implements Runnable {
 	}
 
 	protected void dispatch(String s) {
-		dispatch(new Record(s));
+		dispatch(Record.forLog(s));
 	}
 
 	protected void dispatch(Record r) {

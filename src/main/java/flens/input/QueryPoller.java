@@ -60,7 +60,7 @@ public class QueryPoller extends AbstractPeriodicInput {
 			}
 		};
 	}
-	
+
 	private class QueryToRecordPump extends Query{
 
 		public QueryToRecordPump(String query, Map<String, Object> payload) {
@@ -69,12 +69,13 @@ public class QueryPoller extends AbstractPeriodicInput {
 
 		@Override
 		public void respond(byte[] payload) {
-			dispatch(Record.createWithValue(metric,payload));		
+			dispatch(Record.forBlob(metric,payload));		
 		}
 
 		@Override
 		public void respond(String payload) {
-			dispatch(Record.createWithValue(metric,payload));		
+
+			dispatch(Record.forTextMetric(metric,payload));		
 		}
 
 		public void respond(Map<String,Object> payload){

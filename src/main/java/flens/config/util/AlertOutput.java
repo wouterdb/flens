@@ -18,7 +18,7 @@ public class AlertOutput extends AbstractPumpOutput implements Output {
 
 		@Override
 		public void run() {
-			in.send(new Record(msg));
+			in.send(Record.forLog(msg));
 
 		}
 

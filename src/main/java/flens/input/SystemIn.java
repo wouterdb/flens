@@ -61,7 +61,7 @@ public class SystemIn extends AbstractActiveInput {
 
 				line = inr.readLine();
 
-				dispatch(new Record(line));
+				dispatch(Record.forLog(line));
 			}
 
 		} catch (IOException e) {

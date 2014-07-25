@@ -23,12 +23,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractListenerInput;
@@ -67,11 +65,7 @@ public class SocketInput extends
 
 		IOUtils.readFully(in, block);
 
-		Map<String, Object> values = new HashMap<String, Object>();
-
-		values.put(Constants.BODY, block);
-		Record r = Record.createWithTimeHostAndValues(
-				System.currentTimeMillis(), host, values);
+		Record r = Record.forBlobWithHost(host, block);
 		dispatch(r);
 
 	}

@@ -33,6 +33,7 @@ import java.util.TimerTask;
 
 import org.apache.commons.io.IOUtils;
 
+import flens.core.Constants;
 import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -103,7 +104,7 @@ public class SpecInput extends AbstractPeriodicInput {
 			out.close();
 			long delta = System.nanoTime() - now;
 			f.delete();
-			dispatch(Record.createWithValue(metric, delta));
+			dispatch(Record.forMetric(metric, delta,Constants.UNIT_NANOSECONDS));
 		}
 
 		@Override
@@ -144,7 +145,7 @@ public class SpecInput extends AbstractPeriodicInput {
 			IOUtils.read(in, bytes);
 			in.close();
 			long delta = System.nanoTime() - now;
-			dispatch(Record.createWithValue(metric, delta));
+			dispatch(Record.forMetric(metric, delta,Constants.UNIT_NANOSECONDS));
 		}
 
 		@Override
@@ -171,7 +172,7 @@ public class SpecInput extends AbstractPeriodicInput {
 			Process p = pb.start();
 			p.waitFor();
 			long delta = System.nanoTime() - now;
-			dispatch(Record.createWithValue(metric, delta));
+			dispatch(Record.forMetric(metric, delta,Constants.UNIT_NANOSECONDS));
 		}
 
 		@Override
@@ -196,7 +197,7 @@ public class SpecInput extends AbstractPeriodicInput {
 			long now = System.nanoTime();
 			Thread.sleep(interval);
 			long delta = System.nanoTime() - now - (interval * 1000000);
-			dispatch(Record.createWithValue(metric, delta));
+			dispatch(Record.forMetric(metric, delta,Constants.UNIT_NANOSECONDS));
 		}
 
 		@Override
@@ -222,7 +223,7 @@ public class SpecInput extends AbstractPeriodicInput {
 			long x = factor(CPU_NUMBER);
 			long delta = System.nanoTime() - now;
 
-			dispatch(Record.createWithValue(metric, delta));
+			dispatch(Record.forMetric(metric, delta,Constants.UNIT_NANOSECONDS));
 		}
 
 		@Override

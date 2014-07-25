@@ -400,25 +400,25 @@ public class Flengine {
 
 	public void report(Set<Record> out) {
 
-		out.add(new Record("flens.q-in-size", executor.getQueue().size()));
+		out.add(Record.forMetric("flens.q-in-size", executor.getQueue().size(),Constants.UNIT_COUNT));
 		for (Output o : outputs) {
-			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o
-					.getOutputQueue().size()));
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
-					.getRecordsSent()));
-			out.add(new Record(String.format("flens.q-%s-lost", o.getName()), o
-					.getRecordsLost()));
+			out.add(Record.forMetric(String.format("flens.q-%s-size", o.getName()), o
+					.getOutputQueue().size(),Constants.UNIT_COUNT));
+			out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o
+					.getRecordsSent(),Constants.UNIT_COUNT));
+			out.add(Record.forMetric(String.format("flens.q-%s-lost", o.getName()), o
+					.getRecordsLost(),Constants.UNIT_COUNT));
 		}
 		
 		for (Input o : inputs) {
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
-					.getRecordsSent()));
+			out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o
+					.getRecordsSent(),Constants.UNIT_COUNT));
 		}
 		
-		out.add(new Record("flens.exec-threads-active", executor
-				.getActiveCount()));
-		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
-		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
+		out.add(Record.forMetric("flens.exec-threads-active", executor
+				.getActiveCount(),Constants.UNIT_COUNT));
+		out.add(Record.forMetric("flens.exec-threads-live", executor.getPoolSize(),Constants.UNIT_COUNT));
+		out.add(Record.forMetric("flens.exec-seen", executor.getCompletedTaskCount(),Constants.UNIT_COUNT));
 	}
 
 	public void remove(String name) {
