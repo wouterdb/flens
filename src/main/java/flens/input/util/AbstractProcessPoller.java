@@ -19,28 +19,24 @@
  */
 package flens.input.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import flens.core.Record;
 import flens.core.Tagger;
-
 
 public abstract class AbstractProcessPoller extends AbstractInput {
 
-	private String cmd;
+	
+	protected String cmd;
 	protected Process proc;
-	private List args;
-	private Timer t;
-	private long period;
-	private boolean running;
-	private LinkedList<String> fullArgs;
+	protected List<String> args;
+	protected Timer t;
+	protected long period;
+	protected boolean running;
+	protected LinkedList<String> fullArgs;
 
 	public AbstractProcessPoller(String name, String plugin,Tagger t,String cmd,List<String> args, long period) {
 		super(name,plugin, t);

@@ -20,12 +20,10 @@
 package flens.output.util;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 

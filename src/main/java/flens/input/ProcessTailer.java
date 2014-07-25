@@ -21,13 +21,10 @@ package flens.input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractActiveInput;
 import flens.input.util.AbstractInput;
 import flens.input.util.StreamPump;
 
@@ -40,7 +37,7 @@ public class ProcessTailer extends AbstractInput {
 	private StreamPump err;
 	private Tagger outT;
 	private Tagger errT;
-	private List args;
+	private List<String> args;
 
 	public ProcessTailer(String name,String plugin, Tagger out,Tagger err, String cmd,List<String> args) {
 		super(name,plugin, null);

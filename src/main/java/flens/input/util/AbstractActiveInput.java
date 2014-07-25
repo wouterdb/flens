@@ -19,12 +19,7 @@
  */
 package flens.input.util;
 
-import java.util.concurrent.BlockingQueue;
-
-import flens.core.Input;
-import flens.core.Record;
 import flens.core.Tagger;
-import flens.core.util.AbstractPlugin;
 
 public abstract class AbstractActiveInput extends AbstractInput implements Runnable {
 

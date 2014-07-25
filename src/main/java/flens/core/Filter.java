@@ -20,7 +20,6 @@
 package flens.core;
 
 import java.util.Collection;
-import java.util.Set;
 
 public interface Filter extends Plugin {
 	

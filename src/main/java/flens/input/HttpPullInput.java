@@ -20,43 +20,25 @@
 package flens.input;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
 import org.mvel2.templates.CompiledTemplate;
-import org.mvel2.templates.TemplateRuntime;
-
-import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.SpecInput.Spec;
 import flens.input.util.AbstractPeriodicInput;
-import flens.output.util.AbstractPumpOutput;
-import flens.output.util.Influxdb;
-import flens.util.MVELUtil;
 
 public class HttpPullInput extends AbstractPeriodicInput {
 
-	private URL myUrl;
+	protected URL myUrl;
 
-	private String[] collumnNames;
-	private CompiledTemplate[] collumnTemplates;
+	protected String[] collumnNames;
+	protected CompiledTemplate[] collumnTemplates;
 
-	private String url;
+	protected String url;
 
 	public HttpPullInput(String name,String plugin, Tagger tagger, int interval, String url)
 			throws MalformedURLException {
@@ -68,7 +50,7 @@ public class HttpPullInput extends AbstractPeriodicInput {
 	public void poll() throws IOException {
 		HttpURLConnection con = (HttpURLConnection) myUrl.openConnection();
 		
-		int responseCode = con.getResponseCode();
+		//int responseCode = con.getResponseCode();
 		
  
 		BufferedReader in = new BufferedReader(

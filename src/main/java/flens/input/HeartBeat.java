@@ -19,13 +19,11 @@
  */
 package flens.input;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractInput;
 import flens.input.util.AbstractPeriodicInput;
 
 public class HeartBeat extends AbstractPeriodicInput {

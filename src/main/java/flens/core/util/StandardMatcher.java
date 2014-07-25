@@ -19,7 +19,6 @@
  */
 package flens.core.util;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class StandardMatcher implements Matcher {
 	private Set<String> tags;
 	private String type;
 
-	public StandardMatcher(String type, List tags) {
+	public StandardMatcher(String type, List<String> tags) {
 		this.type = type;
 		this.tags = new HashSet<String>(tags);
 	}

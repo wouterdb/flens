@@ -19,23 +19,13 @@
  */
 package flens.output;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateRuntime;
@@ -43,7 +33,6 @@ import org.mvel2.templates.TemplateRuntime;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;
-import flens.output.util.Influxdb;
 import flens.util.MVELUtil;
 
 public class HttpPostOutput extends AbstractPumpOutput {
@@ -69,7 +58,7 @@ public class HttpPostOutput extends AbstractPumpOutput {
 
 	@Override
 	public void run() {
-		Influxdb db;
+		
 		try {
 			
 			while (running) {

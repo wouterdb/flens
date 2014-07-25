@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,10 +70,7 @@ public class GraphiteInput extends AbstractListenerInput<Pair<String,BufferedRea
 		if(line==null)
 			throw new IOException("connection lost");
 		
-		Scanner st = new Scanner(line);
-
-		try {
-			
+		try(Scanner st = new Scanner(line);){			
 			String metricName = st.next();
 			String metric = st.next();
 			long time = st.nextLong();

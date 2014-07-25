@@ -22,12 +22,9 @@ package flens.core;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.net.ssl.HostnameVerifier;
 
 //time in milis
 public class Record {
@@ -44,6 +41,7 @@ public class Record {
 		values.put(Constants.L_MESSAGE, message);
 	}
 
+	
 	public Record(String metric, Object value) {
 		this.tags = new HashSet<String>();
 		this.values = new HashMap<String, Object>();

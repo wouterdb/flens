@@ -27,13 +27,13 @@ import flens.core.Tagger;
 
 public class StandardTagger implements Tagger {
 	private List<String> tags;
-	private List rtags;
+	private List<?> rtags;
 	private String type;
 
 	private final String configprefix;
 
 	public StandardTagger(String prefix, String type, List<String> tags,
-			List rtags) {
+			List<?> rtags) {
 		this.tags = tags;
 		this.rtags = rtags;
 		this.type = type;

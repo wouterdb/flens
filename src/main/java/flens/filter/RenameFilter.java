@@ -30,9 +30,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RenameFilter extends AbstractFilter {
@@ -46,11 +43,11 @@ public class RenameFilter extends AbstractFilter {
 	}
 
 	public Collection<Record> process(Record in) {
-		Map vals = in.getValues();
-		for (Pair ren : this.names) {
+		Map<String,Object> vals = in.getValues();
+		for (Pair<String,String> ren : this.names) {
 			Object val = vals.remove(ren.getKey());
 			if (val != null) {
-				if(!((String)ren.getRight()).isEmpty())
+				if(!(ren.getRight()).isEmpty())
 					vals.put(ren.getRight(), val);
 				if(ren.getRight().equals(Constants.TIME)){
 					
@@ -60,6 +57,6 @@ public class RenameFilter extends AbstractFilter {
 		}
 		
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 }

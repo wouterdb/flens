@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 import flens.input.SelfMonitor;
 
 public class Self extends AbstractConfig{
@@ -47,7 +46,7 @@ public class Self extends AbstractConfig{
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("interval", "int", "60000", "interval (in ms) between subsequent reports"));
 		return out;
 	}

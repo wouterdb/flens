@@ -24,10 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
-import com.rabbitmq.tools.Tracer.Logger;
-
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 import flens.input.FlensLogHandler;
 import flens.input.util.InputQueueExposer;
 
@@ -61,7 +58,7 @@ public class LogIn extends AbstractConfig{
 
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("level", "String", "http://www.merriam-webster.com/dictionary/pusillanimous", "log level"));
 		return out;
 	}

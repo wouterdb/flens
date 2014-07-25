@@ -21,8 +21,6 @@ package flens.filter;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import flens.core.Constants;
@@ -51,7 +49,7 @@ public class TagFilter extends AbstractFilter {
 		} else {
 			in.setValue(Constants.TAGS, mytags);
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 }

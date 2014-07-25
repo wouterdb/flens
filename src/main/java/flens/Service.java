@@ -29,6 +29,7 @@ import flens.core.Util;
 
 public class Service {
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 
 		ConfigParser ch = new ConfigParser();

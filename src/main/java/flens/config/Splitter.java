@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 
 public class Splitter extends AbstractConfig{
 	
@@ -34,6 +33,7 @@ public class Splitter extends AbstractConfig{
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void construct() {
 		List<String> temp = getArray("fields",Collections.EMPTY_LIST);
 		boolean keep = getBool("keep", false);
@@ -55,7 +55,7 @@ public class Splitter extends AbstractConfig{
 
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("fiels", "String", "[]", "fields to become new metrics"));
 		return out;
 	}

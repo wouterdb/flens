@@ -21,8 +21,6 @@ package flens.config;
 
 import flens.config.util.AbstractConfig;
 import flens.core.Config;
-import flens.core.Config.Option;
-import flens.core.Flengine;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,10 +33,11 @@ public class SetFilter extends AbstractConfig
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   protected void construct()
   {
-    List f = getArray("fields", Collections.EMPTY_LIST);
-    List t = getArray("values", Collections.EMPTY_LIST);
+    List<String> f = getArray("fields", Collections.EMPTY_LIST);
+    List<String> t = getArray("values", Collections.EMPTY_LIST);
     if (f.size() != t.size()) {
       throw new IllegalArgumentException("to and from must be same size");
     }

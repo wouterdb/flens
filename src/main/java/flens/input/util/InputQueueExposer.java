@@ -1,8 +1,6 @@
 package flens.input.util;
 
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-
 import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;

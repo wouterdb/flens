@@ -22,7 +22,6 @@ package flens.input;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import flens.core.Flengine;
@@ -220,6 +218,7 @@ public class SpecInput extends AbstractPeriodicInput {
 		@Override
 		public void run() throws IOException {
 			long now = System.nanoTime();
+			@SuppressWarnings("unused")
 			long x = factor(CPU_NUMBER);
 			long delta = System.nanoTime() - now;
 

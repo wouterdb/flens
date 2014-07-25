@@ -20,17 +20,9 @@
 package flens.input;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import flens.core.Record;
 import flens.core.Tagger;
-import flens.input.util.AbstractActiveInput;
-import flens.input.util.AbstractInput;
 import flens.input.util.AbstractProcessPoller;
 import flens.input.util.StreamPump;
 

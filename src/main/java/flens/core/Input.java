@@ -19,7 +19,6 @@
  */
 package flens.core;
 
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public interface Input extends Plugin {

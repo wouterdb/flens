@@ -1,7 +1,6 @@
 package flens.config.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,10 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.LRUMap;
-
 import flens.core.Config;
-import flens.core.Flengine;
 import flens.core.Config.Option;
 
 public class Reflector {
@@ -46,6 +42,7 @@ public class Reflector {
 		return out;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void assertPremissable(Object o) {
 		if(o == null)
 			return;

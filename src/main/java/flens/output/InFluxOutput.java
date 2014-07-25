@@ -19,17 +19,8 @@
  */
 package flens.output;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import org.mvel2.templates.CompiledTemplate;
@@ -44,17 +35,17 @@ import flens.util.MVELUtil;
 public class InFluxOutput extends AbstractPumpOutput {
 
 
-	private int port = 8086;
-	private String host;
-	private String database;
-	private String user;
-	private String password;
+	protected int port = 8086;
+	protected String host;
+	protected String database;
+	protected String user;
+	protected String password;
 	
-	private CompiledTemplate nameTemplate;
-	private String[] collumnNames;
-	private CompiledTemplate[] collumnTemplates;
+	protected CompiledTemplate nameTemplate;
+	protected String[] collumnNames;
+	protected CompiledTemplate[] collumnTemplates;
 	
-	private Influxdb db;
+	protected Influxdb db;
 
 	
 	public InFluxOutput(String name, String plugin, Matcher matcher,String server, int port,String database,String user, String password, String nameTemplate,List<String> collumnNames, List<String> collumnTemplates) {

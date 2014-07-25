@@ -27,13 +27,8 @@ import flens.filter.util.AbstractFilter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class SetFilter extends AbstractFilter {
 	private Map<String, String> pairs = new HashMap<>();
@@ -48,6 +43,6 @@ public class SetFilter extends AbstractFilter {
 	public Collection<Record> process(Record in) {
 		in.getValues().putAll(pairs);
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 }

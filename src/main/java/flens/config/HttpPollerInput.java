@@ -54,7 +54,7 @@ public class HttpPollerInput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("interval", "int", "10000", "interval between subsequent reports in ms"));
 		out.add(new Option("url", "String", "" ,"the url"));
 		return out;

@@ -19,12 +19,10 @@
  */
 package flens.config;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 import flens.output.OpenTsdbOutput;
 
 public class OpenTsdbOut extends AbstractConfig{
@@ -38,6 +36,7 @@ public class OpenTsdbOut extends AbstractConfig{
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void construct() {
 		String host = get("host", "localhost");
 		int port = getInt("port", 4242);
@@ -52,7 +51,7 @@ public class OpenTsdbOut extends AbstractConfig{
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("port", "int", "4242", "port to which to connect"));
 		out.add(new Option("host", "String", "localhost", "host to which to connect"));
 		out.add(new Option("send-tags", "[String]", "[]", "field to append as tags, use [fliedname:tag-name] to rename"));

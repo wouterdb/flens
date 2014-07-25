@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ConfigUtil {
 
 	public static Map<String, Object> collectConfig(String dir)
@@ -31,7 +32,7 @@ public class ConfigUtil {
 
 		if(files==null||files.length==0){
 			System.out.println("no config found");
-			return new HashMap();
+			return new HashMap<String, Object>();
 		}
 		
 		Arrays.sort(files);
@@ -49,6 +50,7 @@ public class ConfigUtil {
 
 	}
 
+	
 	private static Map<String, Object> merge(HashMap<String, Object> out,
 			List<Map<String, Object>> configs) {
 		for (Map<String, Object> map : configs) {

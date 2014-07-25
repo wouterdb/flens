@@ -160,7 +160,7 @@ public class CollectdInput extends AbstractActiveInput {
 
 			switch (Part.find(type)) {
 			case VALUES:
-				List values = readValues(is);
+				List<?> values = readValues(is);
 				out.setValue("values", values);
 				expandAndDispatch(out);
 				break;
@@ -255,6 +255,7 @@ public class CollectdInput extends AbstractActiveInput {
 	 * 
 	 * @param rec
 	 */
+	@SuppressWarnings("unchecked")
 	private void expandAndDispatch(Record rec) {
 		List<Number> nx = (List<Number>) rec.getValues().get(Constants.VALUES);
 		int size = nx.size();

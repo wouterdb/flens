@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 
 public class GrepIn extends AbstractConfig{
 
@@ -47,7 +46,7 @@ public class GrepIn extends AbstractConfig{
 
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("file", "String", "", "file to tail"));
 		out.add(new Option("regex", "String", ".*", "regex to filter results"));
 		out.add(new Option("tail", "Boolean", "true", "tail from the end of the file?"));

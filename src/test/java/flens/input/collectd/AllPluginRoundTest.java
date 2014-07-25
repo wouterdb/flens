@@ -1,21 +1,16 @@
 package flens.input.collectd;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
-import org.mockito.internal.verification.AtLeast;
 
 import flens.core.Config;
 import flens.core.Config.Option;
@@ -46,7 +41,7 @@ public class AllPluginRoundTest {
 	
 	@Parameters(name="{index}: {0}")
 	public static Iterable<Object[]> data() {
-		List<Object[]> out = new LinkedList();
+		List<Object[]> out = new LinkedList<>();
 		for(String name:pr.names())
 			out.add(new Object[]{name});
 		return out;
@@ -81,6 +76,7 @@ public class AllPluginRoundTest {
 		System.out.println(config3);
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> configRoundTrip(Map<String, Object> defaults) {
 		Flengine mocke = mock(Flengine.class);
 		when(mocke.getPluginRepo()).thenReturn(pr);

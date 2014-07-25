@@ -19,13 +19,9 @@
  */
 package flens.input.collectd;
 
-import static flens.core.Constants.*;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class CollectdExpansionTable extends ExpansionTable {

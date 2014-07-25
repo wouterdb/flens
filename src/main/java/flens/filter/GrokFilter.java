@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.nflabs.grok.Grok;
-import com.nflabs.grok.GrokError;
 import com.nflabs.grok.GrokException;
 import com.nflabs.grok.Match;
 
@@ -92,19 +91,19 @@ public class GrokFilter extends AbstractFilter {
 	public Collection<Record> process(Record in) {
 		String inf = (String) in.getValues().get(field);
 		if (inf == null)
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		Match m = compiled.match(inf);
 		if (m == null || m.isNull()){
 			if(discard)
 				in.setType(null);
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 			
 		m.captures();
 
 		in.getValues().putAll(m.toMap());
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 }

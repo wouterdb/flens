@@ -21,9 +21,6 @@ package flens.filter;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-
-import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
@@ -38,12 +35,12 @@ public class CharacterDecoder extends AbstractFilter {
 	@Override
 	public Collection<Record> process(Record in) {
 		//TODO config
-		String encoding = (String) in.getValues().get("encoding");
+		//String encoding = (String) in.getValues().get("encoding");
 		//TODO encoding
 		String s = new String((byte[])in.getValues().get("body"));
 		in.getValues().put("message", s);
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	

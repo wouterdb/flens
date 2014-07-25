@@ -25,12 +25,11 @@ import java.util.List;
 
 import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
-import flens.core.Config.Option;
-import flens.input.OpenTsdbInput;
 
 public class NagiosInput extends AbstractConfig {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void construct() {
 		if(tagger==Tagger.empty)
 			tagger = null;
@@ -40,7 +39,7 @@ public class NagiosInput extends AbstractConfig {
 		String dir = get("dir", "/usr/lib64/nagios/plugins");
 		String metric = get("metric", "dns");
 		String target = get("target", null);
-		List args = getArray("args", Collections.singletonList("8.8.8.8"));
+		List<String> args = getArray("args", Collections.singletonList("8.8.8.8"));
 		int interv = getInt("interval", 10000);
 			
 		engine.addInput(new flens.input.NagiosInput(name,plugin, tagger, err, dir,metric,target,args,interv));
@@ -59,7 +58,7 @@ public class NagiosInput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("interval", "int", "10000", "interval between subsequent reports in ms"));
 		out.add(new Option("err-add-tags", "[String]","[]", "add following tags to err stream"));
 		out.add(new Option("err-remove-tags", "[String]","[]", "remove following tags to err stream"));

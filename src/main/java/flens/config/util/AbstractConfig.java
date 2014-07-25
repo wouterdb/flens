@@ -19,9 +19,7 @@
  */
 package flens.config.util;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +36,7 @@ import flens.core.util.StandardMatcher;
 import flens.core.util.StandardTagger;
 import flens.core.util.TypeTagger;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 public abstract class AbstractConfig implements Config {
 
 	protected Map<String, Object> tree;
@@ -98,7 +97,8 @@ public abstract class AbstractConfig implements Config {
 	}
 
 	protected Tagger readTagger(String prefix) {
-		List tags = getArray(prefix+"add-tag",Collections.EMPTY_LIST);
+		
+		List<String> tags = getArray(prefix+"add-tag",Collections.EMPTY_LIST);
 		String stype = null;
 		if(isIn()){
 			String type = get(prefix+"type",name);
@@ -137,7 +137,7 @@ public abstract class AbstractConfig implements Config {
 	 **********************************************/
 	
 	private List<String> tags;
-	private List rtags;
+	private List<?> rtags;
 	private boolean loopfree;
 	
 
@@ -159,7 +159,7 @@ public abstract class AbstractConfig implements Config {
 	 * utilities
 	 ********************************************************/
 	
-	protected List getArray(String name, List defaultv) {
+	protected List getArray(String name, List<?> defaultv) {
 		Object o = tree.remove(name);
 		if(o == null)
 			return defaultv;

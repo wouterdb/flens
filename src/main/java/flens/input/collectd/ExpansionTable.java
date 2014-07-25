@@ -27,9 +27,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.collections4.MultiMap;
+import org.apache.commons.collections4.map.MultiValueMap;
 
 import flens.core.Record;
 
@@ -116,7 +115,7 @@ public class ExpansionTable {
 
 	}
 
-	private MultiMap mappings = new MultiValueMap();
+	private MultiMap<String,Mapping> mappings = new MultiValueMap<>();
 	private Map<String,String[]> nullmap = new HashMap<String, String[]>();
 
 	public ExpansionTable() {
@@ -132,6 +131,7 @@ public class ExpansionTable {
 	}
 
 	public String[] resolve(String plugin, String type) {
+		@SuppressWarnings("unchecked")
 		Collection<Mapping> mapping = (Collection<Mapping>) mappings
 				.get(plugin);
 		if (mapping == null){

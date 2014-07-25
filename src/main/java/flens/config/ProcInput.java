@@ -25,12 +25,11 @@ import java.util.List;
 
 import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
-import flens.core.Config.Option;
-import flens.input.OpenTsdbInput;
 
 public class ProcInput extends AbstractConfig {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void construct() {
 		if(tagger==Tagger.empty)
 			tagger = null;
@@ -38,7 +37,7 @@ public class ProcInput extends AbstractConfig {
 		if(err==Tagger.empty)
 			err = null;
 		String cmd = get("cmd", "");
-		List args = getArray("args", Collections.EMPTY_LIST);
+		List<String> args = getArray("args", Collections.EMPTY_LIST);
 		engine.addInput(new flens.input.ProcessTailer(name, plugin,tagger, err, cmd,args));
 	}
 
@@ -55,7 +54,7 @@ public class ProcInput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("err-add-tags", "[String]","[]", "add following tags to err stream"));
 		out.add(new Option("err-remove-tags", "[String]","[]", "remove following tags to err stream"));
 		out.add(new Option("err-type", "String", "" ,"type to apply to the records to err stream"));

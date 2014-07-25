@@ -67,6 +67,6 @@ public class JsonEncoder extends AbstractFilter {
 		
 		in.getValues().put(field, json);
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 }

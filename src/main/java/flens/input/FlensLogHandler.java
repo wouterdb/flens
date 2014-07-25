@@ -2,12 +2,8 @@ package flens.input;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
 import flens.core.Record;
 import flens.input.util.InputQueueExposer;
 import static flens.core.Constants.*;
@@ -40,7 +36,7 @@ public class FlensLogHandler extends java.util.logging.Handler {
 	}
 
 	private Record convert(LogRecord record) {
-		Map<String,Object> value = new HashMap();
+		Map<String,Object> value = new HashMap<>();
 		value.put(TIME, record.getMillis());
 		value.put(LEVEL, record.getLevel());
 		value.put(MESSAGE,record.getMessage());

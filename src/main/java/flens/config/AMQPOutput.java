@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.input.OpenTsdbInput;
 
 public class AMQPOutput extends AbstractConfig {
 
@@ -53,7 +52,7 @@ public class AMQPOutput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<>(super.getOptions());
 		out.add(new Option("field", "String", "amqp", "field from which to get body"));
 		out.add(new Option("host", "String", "localhost", "host to connect to"));
 		out.add(new Option("port", "int", "4369", "port to connect to"));

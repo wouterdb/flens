@@ -20,8 +20,6 @@
 package flens.util;
 
 import java.io.InputStream;
-import java.io.Serializable;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 

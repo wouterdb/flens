@@ -5,8 +5,6 @@ import java.util.List;
 
 import flens.config.util.ActiveFilter;
 import flens.config.util.AlertOutput;
-import flens.core.Plugin;
-import flens.core.Config.Option;
 import flens.input.util.InputQueueExposer;
 
 public class AlertPlugin extends ActiveFilter{
@@ -30,7 +28,7 @@ public class AlertPlugin extends ActiveFilter{
 	}
 	
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<>(super.getOptions());
 		out.add(new Option("interval", "int", "12000", "time to wait before alert is raised in ms"));
 		out.add(new Option("script", "String", "return true;", "mvel script to check is record matches"));
 		out.add(new Option("msg", "String", "shots fired", "alert body"));

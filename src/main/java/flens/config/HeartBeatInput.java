@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.input.OpenTsdbInput;
 
 public class HeartBeatInput extends AbstractConfig {
 
@@ -48,7 +47,7 @@ public class HeartBeatInput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("interval", "int", "10", "interval between heartbeats"));
 		
 		return out;

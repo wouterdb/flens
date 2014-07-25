@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 
-import javax.crypto.spec.OAEPParameterSpec;
-
 import com.google.gson.Gson;
 
 import flens.core.Flengine;
@@ -37,6 +35,7 @@ import flens.input.util.AbstractPeriodicInput;
 
 public class QueryPoller extends AbstractPeriodicInput {
 
+	@SuppressWarnings("unchecked")
 	public QueryPoller(Flengine engine, String name, String plugin, Tagger tagger, int interval,String query, String metric) {
 		super(name,plugin, tagger, interval);
 		this.engine = engine;

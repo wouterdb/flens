@@ -53,6 +53,7 @@ public class Splitter extends AbstractFilter implements Filter {
 		for (String name : keys) {
 			Object x = in.getValues().remove(name);
 			if(x instanceof Map){
+				@SuppressWarnings("unchecked")
 				Map<String,Object> m = (Map<String,Object>)x;
 				for(Map.Entry<String,Object> entr:m.entrySet()){
 					pairs.put(entr.getKey(),entr.getValue());

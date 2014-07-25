@@ -24,7 +24,6 @@ import java.util.List;
 
 import flens.config.util.AbstractConfig;
 import flens.input.GraphiteInput;
-import flens.input.OpenTsdbInput;
 
 public class GraphiteIn extends AbstractConfig {
 
@@ -47,7 +46,7 @@ public class GraphiteIn extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("port", "int", "2003", "port on which to listen"));
 		return out;
 	}

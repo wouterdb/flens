@@ -1,6 +1,5 @@
 package flens.config;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateRuntime;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import flens.config.util.AbstractConfig;
 import flens.core.ConfigParser;
@@ -44,6 +42,7 @@ public class CookbookConfig extends AbstractConfig {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void construct() {
 		String template = get("template", null);
@@ -73,7 +72,7 @@ public class CookbookConfig extends AbstractConfig {
 	@Override
 	public List<Option> getOptions() {
 		
-		List<Option> opts = new LinkedList(super.getOptions());
+		List<Option> opts = new LinkedList<>(super.getOptions());
 		opts.add(new Option("template", "String", "", "template file to use, file searchpath is " + Arrays.deepToString(COOKBOOK)));
 		opts.add(new Option("DEBUG", "boolean", "false", "print out expanded config"));
 		

@@ -20,16 +20,12 @@
 package flens.output;
 
 import java.io.IOException;
-import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
-
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;

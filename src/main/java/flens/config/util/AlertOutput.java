@@ -1,19 +1,13 @@
 package flens.config.util;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.mvel2.MVEL;
-import org.mvel2.templates.CompiledTemplate;
-
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
-import flens.core.util.AbstractPlugin;
 import flens.input.util.InputQueueExposer;
 import flens.output.util.AbstractPumpOutput;
 import flens.util.MVELUtil;
@@ -30,13 +24,13 @@ public class AlertOutput extends AbstractPumpOutput implements Output {
 
 	}
 
-	private int interval;
-	private String script;
-	private InputQueueExposer in;
-	private Serializable compiled;
-	private Timer t = new Timer();
-	private AlertTimer tt;
-	private String msg;
+	protected int interval;
+	protected String script;
+	protected InputQueueExposer in;
+	protected Serializable compiled;
+	protected Timer t = new Timer();
+	protected AlertTimer tt;
+	protected String msg;
 
 	public AlertOutput(String name,String plugin, Matcher matcher, int interval, String script, String msg, InputQueueExposer inpex) {
 		super(name,plugin, matcher);

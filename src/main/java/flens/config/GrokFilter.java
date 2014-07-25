@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 
 public class GrokFilter extends AbstractConfig{
 	
@@ -57,7 +56,7 @@ public class GrokFilter extends AbstractConfig{
 
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("script", "String", "", "script to execute"));
 		out.add(new Option("infield", "String", "", "field to match"));
 		out.add(new Option("dir", "String", "", "directory for aux definitions"));

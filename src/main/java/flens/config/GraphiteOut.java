@@ -19,14 +19,11 @@
  */
 package flens.config;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 import flens.output.GraphiteOutput;
-import flens.output.OpenTsdbOutput;
 
 public class GraphiteOut extends AbstractConfig{
 	
@@ -55,7 +52,7 @@ public class GraphiteOut extends AbstractConfig{
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("port", "int", "4242", "port to which to connect"));
 		out.add(new Option("host", "String", "localhost", "host to which to connect"));
 		out.add(new Option("metric", "String", DEFAULT_METRIC, "mvel template to use as metric name for graphite"));

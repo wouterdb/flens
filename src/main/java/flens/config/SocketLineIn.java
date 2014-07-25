@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.input.GraphiteInput;
-import flens.input.OpenTsdbInput;
 import flens.input.SocketLineInput;
 
 public class SocketLineIn extends AbstractConfig {
@@ -48,7 +46,7 @@ public class SocketLineIn extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("port", "int", "0", "port on which to listen"));
 		return out;
 	}

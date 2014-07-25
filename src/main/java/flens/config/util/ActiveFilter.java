@@ -6,7 +6,6 @@ import java.util.Map;
 
 import flens.core.Config;
 import flens.core.Flengine;
-import flens.core.Config.Option;
 
 public abstract class ActiveFilter extends AbstractConfig {
 
@@ -46,10 +45,11 @@ public abstract class ActiveFilter extends AbstractConfig {
 
 	@Override
 	public List<Option> getOptions() {
-		Option name = new Option("name", "String", "plugin name",
-				"name of the filter, for reporting and monitoring purposes");
-
+	
 		List<Option> matcherOpts = new LinkedList<Config.Option>();
+		matcherOpts.add(new Option("name", "String", "plugin name",
+				"name of the filter, for reporting and monitoring purposes"));
+		
 		matcherOpts.add(new Option("type", "String", "name", "only apply to records having this type"));
 		matcherOpts.add(new Option("tags", "[String]", "[]", "only apply to records having all of these tags"));
 		

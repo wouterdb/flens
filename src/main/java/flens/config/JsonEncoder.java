@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 
 public class JsonEncoder extends AbstractConfig{
 
@@ -54,7 +53,7 @@ public class JsonEncoder extends AbstractConfig{
 
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("field", "String", "json", "field in which to place json encode record"));
 		out.add(new Option("fields", "[String]", "null", "fields in record to include in json, if empty use excludes"));
 		out.add(new Option("exclude-fields", "[String]", "null", "fields to ignore when forming json, disabled by include"));

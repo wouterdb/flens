@@ -20,16 +20,15 @@
 package flens.config;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.input.OpenTsdbInput;
 
 public class SpecInput extends AbstractConfig {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void construct() {
 
 		int interval = getInt("interval",10000);
@@ -51,7 +50,7 @@ public class SpecInput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("interval", "int", "10", "interval between specs tests in ms"));
 		out.add(new Option("tests", "[String]", "[\"disk\"]", "test suites to run"));
 

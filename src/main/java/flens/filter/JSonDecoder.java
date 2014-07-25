@@ -41,16 +41,16 @@ public class JSonDecoder extends AbstractFilter {
 		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Record> process(Record in) {
 		//TODO config
 		
-		
-		Map x = decoder.fromJson((String) in.getValues().get("message"),HashMap.class);
+		Map<String, Object> x = decoder.fromJson((String) in.getValues().get("message"),HashMap.class);
 		if(x!=null)
 			in.getValues().putAll(x);
 		tag(in);
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 }

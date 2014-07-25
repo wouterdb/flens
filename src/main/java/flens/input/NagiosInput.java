@@ -23,12 +23,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.tools.javac.util.Pair;
 
 import flens.core.Constants;

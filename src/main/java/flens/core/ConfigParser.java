@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
+@SuppressWarnings("unchecked")
 public class ConfigParser {
 
 	private Flengine engine;
@@ -50,15 +51,17 @@ public class ConfigParser {
 		return engine;
 	}
 
-	protected void load(Map map) {
+	
+	protected void load(Map<String, Object> map) {
 		if (map == null)
 			return;
 
 		SortedMap<Integer, List<String>> keys = new TreeMap<>();
 
-		for (Map.Entry entry : ((Map<String, Object>) map).entrySet()) {
+		for (Map.Entry<String, Object> entry : ((Map<String, Object>) map).entrySet()) {
 			String key = (String) entry.getKey();
 
+			
 			Map<String, Object> value = (Map<String, Object>) entry.getValue();
 
 			Integer prion = 5;
@@ -96,7 +99,7 @@ public class ConfigParser {
 
 	}
 
-	protected void unload(Map map) {
+	protected void unload(Map<?, ?> map) {
 		if (map == null)
 			return;
 
@@ -115,11 +118,11 @@ public class ConfigParser {
 		this.pluginRepo = new PluginRepo();
 	}
 
-	public void construct(Map config) {
-		load((Map) config.remove("query"));
-		load((Map) config.remove("input"));
-		load((Map) config.remove("output"));
-		load((Map) config.remove("filter"));
+	public void construct(Map<String, Object> config) {
+		load((Map<String, Object>) config.remove("query"));
+		load((Map<String, Object>) config.remove("input"));
+		load((Map<String, Object>) config.remove("output"));
+		load((Map<String, Object>) config.remove("filter"));
 	}
 
 	public String help() {

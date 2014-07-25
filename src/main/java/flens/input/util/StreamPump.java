@@ -21,14 +21,8 @@ package flens.input.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.concurrent.BlockingQueue;
-
-import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
-import flens.core.util.AbstractPlugin;
 
 public class StreamPump extends AbstractActiveInput implements Runnable {
 

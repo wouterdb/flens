@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
-import flens.input.OpenTsdbInput;
 
 public class SocketOutput extends AbstractConfig {
 
@@ -49,7 +47,7 @@ public class SocketOutput extends AbstractConfig {
 	
 	@Override
 	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList(super.getOptions());
+		List<Option>  out = new LinkedList<Option>(super.getOptions());
 		out.add(new Option("port", "int", "19850", "port to connect to"));
 		out.add(new Option("host", "String", "localhost", "host to connect to"));
 		out.add(new Option("field", "String", "body", "field to get data from"));

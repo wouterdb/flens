@@ -24,17 +24,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.lang3.tuple.Pair;
 
-import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractListenerInput;

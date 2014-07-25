@@ -22,12 +22,7 @@ package flens.input;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-
-import javax.naming.OperationNotSupportedException;
-
 import flens.core.Flengine;
-import flens.core.Input;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;

@@ -19,12 +19,7 @@
  */
 package flens.config;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
-import flens.input.SelfMonitor;
 
 public class PingQuery extends AbstractConfig{
 

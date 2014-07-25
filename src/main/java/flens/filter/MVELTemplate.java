@@ -19,7 +19,6 @@
  */
 package flens.filter;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mvel2.CompileException;
-import org.mvel2.MVEL;
 import org.mvel2.UnresolveablePropertyException;
 import org.mvel2.templates.CompiledTemplate;
-import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
 
 import flens.core.Matcher;
@@ -44,11 +41,11 @@ public class MVELTemplate extends AbstractFilter {
 	private static final Logger log = Logger.getLogger(MVELTemplate.class
 			.getName());
 
-	private String[] collumnNames;
-	private CompiledTemplate[] collumnTemplates;
+	protected String[] collumnNames;
+	protected CompiledTemplate[] collumnTemplates;
 
-	private List<String> field;
-	private List<String> template;
+	protected List<String> field;
+	protected List<String> template;
 
 
 	public MVELTemplate(String name,String plugin, Tagger tagger, Matcher matcher, int prio,
@@ -82,7 +79,7 @@ public class MVELTemplate extends AbstractFilter {
 		} catch (CompileException | UnresolveablePropertyException e) {
 			log.log(Level.SEVERE, "MVEL failed, context: " + in.getValues(), e);
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 
 		/*
 		 * if(records == null) return Collections.EMPTY_LIST; if(records

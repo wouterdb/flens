@@ -31,12 +31,12 @@ import flens.input.util.AbstractActiveInput;
 
 public class GrepInput extends AbstractActiveInput implements TailerListener{
 
-	private Tailer tailer;
-	private Pattern cregex;
-	private boolean tail;
-	private long delay = 1000;
-	private String file;
-	private String regex;
+	protected Tailer tailer;
+	protected Pattern cregex;
+	protected boolean tail;
+	protected long delay = 1000;
+	protected String file;
+	protected String regex;
 
 	public GrepInput(String name,String plugin, Tagger tagger, String file, String regex,boolean tail) {
 		super(name,plugin,tagger);

@@ -71,7 +71,7 @@ public class GraphiteOutput extends AbstractPumpOutput {
 	private Thread errPump;
 
 	private CompiledTemplate index;
-	private String metric;
+	protected String metric;
 
 	public GraphiteOutput(String name,String plugin, Matcher matcher, String server, int port, String metric) {
 		super(name,plugin, matcher);
