@@ -5,7 +5,7 @@ import java.util.List;
 
 import flens.config.util.ActiveFilter;
 import flens.input.util.InputQueueExposer;
-import flens.output.AlertOutput;
+import flens.statefull.AlertOutput;
 
 public class AlertPlugin extends ActiveFilter{
 

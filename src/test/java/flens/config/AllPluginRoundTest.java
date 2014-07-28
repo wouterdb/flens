@@ -1,4 +1,4 @@
-package flens.input.collectd;
+package flens.config;
 
 import java.util.HashMap;
 import java.util.LinkedList;

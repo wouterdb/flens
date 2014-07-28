@@ -9,7 +9,6 @@ import org.mvel2.MVEL;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.input.util.InputQueueExposer;
-import flens.output.AlertOutput.AlertTimer;
 import flens.util.MVELUtil;
 
 public abstract class AbstractPeriodicOutput extends AbstractPumpOutput {
