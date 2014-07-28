@@ -113,6 +113,8 @@ public class AMQPInput extends AbstractInput implements Consumer {
 
 	@Override
 	public synchronized void stop() {
+		if(closed)
+			return;
 		try {
 			channel.close();
 			connection.close();
@@ -173,6 +175,8 @@ public class AMQPInput extends AbstractInput implements Consumer {
 	}
 
 	protected synchronized void reconnect() {
+		if(closed)
+			return;
 		// re-entrant
 		if (reconnecting)
 			return;

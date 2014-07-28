@@ -29,7 +29,6 @@ import org.mvel2.templates.TemplateRuntime;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;
-import flens.output.util.Influxdb;
 import flens.util.MVELUtil;
 
 public class InFluxOutput extends AbstractPumpOutput {
