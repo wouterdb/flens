@@ -36,6 +36,7 @@ public interface Output extends Plugin {
 	public Queue<Record> getOutputQueue();
 	public void start();
 	public void stop();
+	public void join() throws InterruptedException;
 	
 	
 	//stats, may be an underestimate, due to threading

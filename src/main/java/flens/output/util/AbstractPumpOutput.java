@@ -89,6 +89,12 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 		thread.interrupt();
 	}
 
+	
+	@Override
+	public void join() throws InterruptedException {
+		thread.join();
+	}
+	
 	protected synchronized void reconnect() {
 		// re-entrant
 		if (reconnecting)

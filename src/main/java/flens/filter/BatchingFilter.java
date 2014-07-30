@@ -28,15 +28,13 @@ public class BatchingFilter extends AbstractPeriodicOutput {
 	}
 
 	private int maxbatch;
-	private int maxtime;
-	
 	
 	private List<Record> buffer = new LinkedList<>();
 
-	public BatchingFilter(String name,String plugin, Tagger tagger, Matcher matcher, InputQueueExposer inexp, int maxbatch, int maxtime) {
+	public BatchingFilter(String name,String plugin, Matcher matcher, InputQueueExposer inexp, int maxbatch, int maxtime) {
 		super(name,plugin, matcher, maxtime,inexp );
 		this.maxbatch = maxbatch;
-		this.maxtime = maxtime;
+		
 	}
 
 	@Override

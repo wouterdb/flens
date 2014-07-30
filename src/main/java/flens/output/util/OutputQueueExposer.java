@@ -85,4 +85,9 @@ public class OutputQueueExposer extends AbstractPlugin implements Output {
 		return null;
 	}
 
+	@Override
+	public void join() throws InterruptedException {
+		
+	}
+
 }

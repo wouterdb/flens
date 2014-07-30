@@ -47,8 +47,11 @@ public abstract class AbstractPeriodicOutput extends AbstractPumpOutput {
 				Record r = queue.take();
 				try{
 					process(r);
+					sent++;
 				}catch(Exception e){
 					err("fault in script",e);
+					lost++;
+					reconnect();
 				}
 			}
 		} catch (InterruptedException e) {

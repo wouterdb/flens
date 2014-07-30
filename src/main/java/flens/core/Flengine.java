@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -57,15 +58,15 @@ public class Flengine {
 			int i = 0;
 			while (!newrecords.isEmpty()) {
 				Record current = newrecords.remove();
-				synchronized (filters) {
-					for (Filter f : filters) {
-						if (f.getMatcher().matches(current)) {
-							newrecords.addAll(f.process(current));
-							if (current.getType() == null)
-								break;
-						}
+
+				for (Filter f : filters) {
+					if (f.getMatcher().matches(current)) {
+						newrecords.addAll(f.process(current));
+						if (current.getType() == null)
+							break;
 					}
 				}
+
 				if (current.getType() != null)
 					dispatch(current);
 
@@ -73,8 +74,7 @@ public class Flengine {
 				// FIXME make configurable
 				if (i > 1000)
 					throw new IllegalStateException(
-							"filter loop is overflowing (1000 items producedfrom single record)"
-									+ record);
+							"filter loop is overflowing (1000 items producedfrom single record)" + record);
 
 			}
 
@@ -164,8 +164,7 @@ public class Flengine {
 
 		}
 
-		public boolean offer(Record e, long timeout, TimeUnit unit)
-				throws InterruptedException {
+		public boolean offer(Record e, long timeout, TimeUnit unit) throws InterruptedException {
 			executor.execute(wrap(e));
 			return true;
 		}
@@ -174,8 +173,7 @@ public class Flengine {
 			throw new UnsupportedOperationException();
 		}
 
-		public Record poll(long timeout, TimeUnit unit)
-				throws InterruptedException {
+		public Record poll(long timeout, TimeUnit unit) throws InterruptedException {
 			throw new UnsupportedOperationException();
 		}
 
@@ -207,26 +205,29 @@ public class Flengine {
 
 	private final List<Input> inputs = new LinkedList<Input>();
 	private final List<Output> outputs = new LinkedList<Output>();
-	private final List<Filter> filters = new LinkedList<Filter>();
+	private final List<Filter> filters = new CopyOnWriteArrayList<Filter>();
 	private final Map<String, Integer> refcounts = new HashMap<>();
 
 	private final BlockingQueue<Record> inqueue = new QueueWrapper();
 	private boolean running;
 	private ThreadPoolExecutor executor;
-	
+
 	private PluginRepo pr;
-	
-	
-	public Flengine(PluginRepo pr){
-		this.pr=pr;
+
+	public Flengine(PluginRepo pr) {
+		this.pr = pr;
 	}
 
-	
-	public PluginRepo getPluginRepo(){
+	public PluginRepo getPluginRepo() {
 		return pr;
 	}
-	
+
 	private final Map<String, String> tags = new HashMap<String, String>();
+	private int poolmaxsize;
+
+	public void setPoolSize(int poolsize) {
+		this.poolmaxsize = poolsize;
+	}
 
 	protected boolean count(String name) {
 		synchronized (refcounts) {
@@ -279,8 +280,7 @@ public class Flengine {
 					try {
 						inp.join();
 					} catch (InterruptedException e) {
-						Logger.getLogger(getClass().getName()).log(
-								Level.SEVERE, "should not occur executor", e);
+						Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
 					}
 				}
 				inp.setInputQueue(null);
@@ -314,14 +314,19 @@ public class Flengine {
 	public void addFilter(Filter f) {
 		if (count(f.getName())) {
 			synchronized (filters) {
-				filters.add(f);
-				Collections.sort(filters, new Comparator<Filter>() {
+				int idx = Collections.binarySearch(filters,f, new Comparator<Filter>() {
 
 					@Override
 					public int compare(Filter o1, Filter o2) {
 						return o1.priority() - o2.priority();
 					}
 				});
+				
+				if(idx<0)
+					idx = -(idx+1);
+				filters.add(idx,f);
+				
+				
 			}
 		}
 	}
@@ -345,14 +350,13 @@ public class Flengine {
 
 		// FIXME: make configurable
 		// TODO: is this the best way?
-		executor = new ThreadPoolExecutor(1, 8, 200, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(), new NamedThreadFactory(
-						"flens-mainloop"));
+		executor = new ThreadPoolExecutor(1, poolmaxsize, 200, TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<Runnable>(), new NamedThreadFactory("flens-mainloop"));
 
 		for (Input input : inputs) {
 			input.start();
 		}
-		
+
 		for (QueryHandler input : handlers) {
 			input.start();
 		}
@@ -372,8 +376,7 @@ public class Flengine {
 			}
 		} catch (InterruptedException e) {
 			// TODO what to do now????
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"should not occur executor", e);
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
 			System.exit(1);
 		}
 
@@ -384,8 +387,7 @@ public class Flengine {
 
 		} catch (InterruptedException e) {
 			// TODO what to do now????
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"cloud not close executor", e);
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close executor", e);
 			System.exit(1);
 		}
 
@@ -396,27 +398,34 @@ public class Flengine {
 			}
 			output.stop();
 		}
+
+		try {
+			for (Output output : outputs) {
+
+				output.join();
+
+			}
+		} catch (InterruptedException e) {
+			// TODO what to do now????
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close output", e);
+			System.exit(1);
+		}
 	}
 
 	public void report(Set<Record> out) {
 
 		out.add(new Record("flens.q-in-size", executor.getQueue().size()));
 		for (Output o : outputs) {
-			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o
-					.getOutputQueue().size()));
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
-					.getRecordsSent()));
-			out.add(new Record(String.format("flens.q-%s-lost", o.getName()), o
-					.getRecordsLost()));
+			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o.getOutputQueue().size()));
+			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent()));
+			out.add(new Record(String.format("flens.q-%s-lost", o.getName()), o.getRecordsLost()));
 		}
-		
+
 		for (Input o : inputs) {
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o
-					.getRecordsSent()));
+			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent()));
 		}
-		
-		out.add(new Record("flens.exec-threads-active", executor
-				.getActiveCount()));
+
+		out.add(new Record("flens.exec-threads-active", executor.getActiveCount()));
 		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
 		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
 	}
@@ -469,7 +478,7 @@ public class Flengine {
 		}
 	}
 
-	protected void removeHandler(QueryHandler inp){
+	protected void removeHandler(QueryHandler inp) {
 		if (decount(inp.getName())) {
 			synchronized (handlers) {
 				handlers.remove(inp);
@@ -477,16 +486,62 @@ public class Flengine {
 			}
 		}
 	}
-	
-	public List<QueryHandler> getHandler(Query q){
+
+	public List<QueryHandler> getHandler(Query q) {
 		synchronized (handlers) {
-			List<QueryHandler> qhs = new LinkedList<>(); 
+			List<QueryHandler> qhs = new LinkedList<>();
 			for (QueryHandler qh : handlers) {
-				if(qh.canHandle(q)){
+				if (qh.canHandle(q)) {
 					qhs.add(qh);
 				}
 			}
 			return qhs;
 		}
+	}
+
+	public void dumpConfig(Map<String, Object> config) {
+		config.put("input", dumpInputs(new HashMap<String, Object>()));
+		config.put("filter", dumpFilters(new HashMap<String, Object>()));
+		config.put("output", dumpOutputs(new HashMap<String, Object>()));
+		config.put("query", dumpQueryHandlers(new HashMap<String, Object>()));
+
+	}
+
+	private Map<String, Object> dumpQueryHandlers(Map<String, Object> tree) {
+		synchronized (handlers) {
+			for (QueryHandler inp : handlers) {
+				inp.writeConfig(this, tree);
+			}
+		}
+		return tree;
+	}
+
+	private Map<String, Object> dumpOutputs(Map<String, Object> tree) {
+		synchronized (outputs) {
+			for (Output inp : outputs) {
+				inp.writeConfig(this, tree);
+			}
+		}
+		return tree;
+	}
+
+	private Map<String, Object> dumpFilters(Map<String, Object> tree) {
+		synchronized (filters) {
+			for (Filter inp : filters) {
+				inp.writeConfig(this, tree);
+			}
+		}
+		return tree;
+	}
+
+	private Map<String, Object> dumpInputs(Map<String, Object> tree) {
+
+		synchronized (inputs) {
+			for (Input inp : inputs) {
+				inp.writeConfig(this, tree);
+			}
+		}
+		return tree;
+
 	}
 }

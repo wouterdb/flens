@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.apache.commons.lang3.tuple.Pair;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.*;
+import flens.core.Constants;
 import flens.core.Flengine;
 import flens.core.Matcher;
 import flens.core.Output;
@@ -21,9 +22,12 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
 	public PatternOutput(String name, String plugin) {
 		super(name, plugin, new AllMatcher());
 	}
+	
+	public PatternOutput(String name, String plugin,Matcher m) {
+		super(name, plugin, m);
+	}
 
-	private String name;
-	private String plugin;
+
 
 	@Override
 	public boolean canUpdateConfig() {
@@ -35,15 +39,6 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
 		throw new Error("This should NEVER be used in production");
 	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String getPlugin() {
-		return plugin;
-	}
 
 	private List<Pattern> sequence = new LinkedList<>();
 	private LinkedList<Pair<Long, Record>> q = new LinkedList<>();
@@ -57,7 +52,8 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
 		while (running) {
 			try {
 				Record r = queue.take();
-				q.add(Pair.of(System.currentTimeMillis(), r));
+				sent++;
+				q.add(Pair.of(System.nanoTime(), r));
 			} catch (InterruptedException e) {
 				// normal for stop
 				stop();
@@ -66,22 +62,71 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
 		}
 	}
 	
-	public void analyze(float deltarate) {
+	public void analyze(float deltarate, int deltalength) {
 		int current = 0;
 		
-		/*long last = q.peek().getKey();
-		for (Pair<Long,Record> pair : q) {
-			System.out.println(pair.getKey() + " " + (pair.getKey()-last));
-			last = pair.getKey();
-		}*/
+		float prev = Float.MAX_VALUE;
+		
 		for (Pattern p : sequence) {
-			long start = q.get(current).getKey();
-			long end = q.get(current + p.getNrOfPackets()-1).getKey();
-			long time = end-start;
-			float rate = 1000.0f*p.getNrOfPackets()/time;
-			current += p.getNrOfPackets();
-			System.out.println(time+ " " + p.getNrOfPackets()+ " " +rate);
-			assertEquals("message rate not as expected",p.msgrate,rate,deltarate);
+			if(Math.abs(p.msgrate- prev) < deltarate){
+				System.out.println("packet rates can not be distinguished" + p);
+			}
+			prev = p.msgrate;
+		}
+		
+		for(Pair<Long,Record> rec:q){
+			System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME)+ "\t" + rec.getValue().getValues().get("message"));
+		}
+		
+		for (Pattern p : sequence) {
+			int expectedNroFPackets = p.getNrOfPackets();
+			int deltapacks = (int)(deltalength * p.msgrate / 1000);
+			
+			int i;
+			float rate=0;
+			
+			if(p.warmup){
+				current += expectedNroFPackets;
+				continue;
+			}
+			
+			if(p.nonnormal){
+				if(deltalength!=0)
+					throw new IllegalArgumentException("non normal but no fixed length, not implemented");
+				long now = q.get(current).getKey();
+				
+				long next = q.get(Math.min(current+p.getNrOfPackets(),q.size()-1)).getKey();
+				
+				long time = next - now;
+				rate = 1000000000.0f/time*p.getNrOfPackets();
+				assertEquals(p.msgrate, rate,deltarate);
+				
+				current += p.getNrOfPackets();
+				continue;
+			}
+			
+			//normal
+			for(i = 0;i<expectedNroFPackets+deltapacks && i+current+1<q.size();i++){
+				long now = q.get(i+current).getKey();
+				long next = q.get(i+current+1).getKey();
+				long time = next - now;
+				rate = 1000000000.0f/time;
+				
+				if(!( Math.abs(p.msgrate- rate) < deltarate)){
+					System.out.println(String.format("rate change at packet %d (%d) to %f (expected %f)",i,current,rate,p.msgrate));
+					break;
+				}
+					
+				
+			}
+			
+			//last one is one short, due to interval calc
+			if(i+current+1==q.size())
+				assertEquals("incorrect nr of packets, got rate " + rate ,p.getNrOfPackets(),i+1,deltalength);
+			else
+				assertEquals("incorrect nr of packets, got rate " + rate + " (" + p.msgrate + ")"  ,p.getNrOfPackets(),i,deltalength);
+			
+			current += i;
 		}
 		
 		

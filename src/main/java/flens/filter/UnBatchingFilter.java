@@ -15,8 +15,11 @@ import flens.filter.util.AbstractFilter;
 
 public class UnBatchingFilter extends AbstractFilter implements Filter{
 
-	public UnBatchingFilter(String name, String plugin, Tagger tagger, Matcher matcher,int prio) {
+	private boolean keep;
+
+	public UnBatchingFilter(String name, String plugin, Tagger tagger, Matcher matcher,int prio, boolean keep) {
 		super( name, plugin, tagger, matcher,prio);	
+		this.keep=keep;
 	}
 
 	@Override
@@ -28,7 +31,8 @@ public class UnBatchingFilter extends AbstractFilter implements Filter{
 			for (Record record : list) {
 				outs.add(tag(record));
 			}
-			in.setType(null);
+			if(!keep)
+				in.setType(null);
 		}
 		
 		return outs;
