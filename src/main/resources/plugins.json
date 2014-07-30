@@ -33,7 +33,9 @@
  "cookbook":"flens.config.CookbookConfig",
  "http-poll":"flens.config.HttpPollerInput",
  "splitter":"flens.config.Splitter",
- "alert":"flens.config.AlertPlugin"
+ "alert":"flens.config.AlertPlugin",
+ "batching":"flens.config.BatchPlugin",
+ "unbatching":"flens.config.UnBatchPlugin"
 }
  
  
