@@ -9,70 +9,12 @@
  		},"heartbeat":{
 			"type":"metric",
 			"interval":10000
-		},"JMXInput":{
-			"type":"metric",
-			"jvm":"standalone",
-			"domains" : ["metrics","metrics-details"],
-			"add-tag" : "jmx"
-		},"grep":{
-			"type":"log",
-			"file":"/home/ec2-user/jboss-as-7.2.0.Final/standalone/log/server.log",
-			"regex":".*drm.*"
-			
-			
-		}
- 		
- 	},
+		} 		
  	
- 	"filter" : {
-		"collectd name to metric" :{
- 			"plugin" : "template",
- 			"tags" : ["collectd"],
- 			"template" : "@{plugin!=type?plugin+'.':''}@{type}",
- 			"field":"metric"
- 		},
-		"rename" : {
-			"tags": ["collectd"],
-                        "remove-tag" : ["collectd"],
-			"from": [ "type_instance"	,"plugin_instance"],
-			"to":[ 	  "type"		,"instance"]
-		},
-		"jmx name to metric" :{
- 			"plugin" : "template",
- 			"tags" : ["jmx"],
- 			"template" : "@{plugin}.@{type}",
- 			"field":"imetric"
- 		},"jmx rename" : {
-			"plugin" : "rename",
-			"tags": ["jmx"],
-            "remove-tag" : ["jmx"],
-			"from": [ "plugin_instance","metric","imetric"],
-			"to":[ "instance","type","metric"]
-		},
-		"json-encoder" : {
- 			"add-tag" : ["json"],
- 			"field" : "json",
- 			"fields" : ["time","source","metric","value","type","instance","temporalScope","message"] 
- 		} 
 	},
  	
  	"output" : {
- 		
-		"amqp-out":{
-			"type": "metric",
-			"exchange":"metrics",
-             "tags":["json"],
-			"host":"172.16.3.3",
-			"field" : "json"
-		},
-		"amqp-out-logs":{
-			"plugin":"amqp-out",
-			"type": "log",
-			"exchange":"logs",
-             "tags":["json"],
-			"host":"172.16.3.3",
-			"field" : "json"
-		},"system-out" : {
+ 		"system-out" : {
  			"name" : "out",
  			"type" : "metric"
  			

@@ -223,7 +223,7 @@ public class Flengine {
 	}
 
 	private final Map<String, String> tags = new HashMap<String, String>();
-	private int poolmaxsize;
+	private int poolmaxsize = 8;
 
 	public void setPoolSize(int poolsize) {
 		this.poolmaxsize = poolsize;
