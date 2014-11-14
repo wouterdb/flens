@@ -89,21 +89,17 @@ public class Constants {
 	
 	
 	public static final String INTERVAL = "interval";
-	
-	
-	public static final String PLUGIN = "plugin";
-	public static final String PLUGIN_INSTANCE = "plugin_instance";
-	public static final String TYPE = "type";
-	public static final String TYPE_INSTANCE = "type_instance";
-	
 	public static final String SEVERITY = "severity";
-	public static final String VALUES = "values";
-	public static final String TAGS = "tags";
-	public static final String UNIT = "unit";
-	public static final String TARGET = "target";
 	
 
 	public static final String SUBRECORDS = "subrecords";
+	public static final String UNIT = "unit";
+	public static final String TYPE = "type";
+	public static final String INSTANCE = "instance";
+	
+	
 
+	public static final String TAGS = "tags";
+	
 
 }

@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import flens.core.Constants;
 import flens.core.Record;
 import flens.core.Tagger;
+import flens.input.collectd.TypeingTable.Mapping;
 import flens.input.util.AbstractActiveInput;
 
 /**
@@ -44,16 +45,14 @@ import flens.input.util.AbstractActiveInput;
  */
 public class CollectdInput extends AbstractActiveInput {
 
-	public CollectdInput(String name,String plugin, Tagger tagger, int port,
-			String bindAddress, String _ifAddress) {
+	public CollectdInput(String name, String plugin, Tagger tagger, int port, String bindAddress, String _ifAddress) {
 		super(name, plugin, tagger);
 		this.port = port;
 		this.bindAddress = bindAddress;
 		this.ifAddress = _ifAddress;
 	}
 
-	private static final Logger _log = Logger.getLogger(CollectdInput.class
-			.getName());
+	private static final Logger _log = Logger.getLogger(CollectdInput.class.getName());
 	private static final int BUFFER_SIZE = 1472;
 
 	static final int UINT8_LEN = 1;
@@ -161,7 +160,7 @@ public class CollectdInput extends AbstractActiveInput {
 			switch (Part.find(type)) {
 			case VALUES:
 				List<?> values = readValues(is);
-				out.setValue("values", values);
+				out.setValue(CollectdConstants.VALUES, values);
 				expandAndDispatch(out);
 				break;
 			case TIME:
@@ -188,11 +187,11 @@ public class CollectdInput extends AbstractActiveInput {
 				break;
 			case PLUGIN:
 				String plugin = readString(is, len);
-				out.getValues().put(Constants.PLUGIN, plugin);
+				out.getValues().put(CollectdConstants.PLUGIN, plugin);
 				break;
 			case PLUGIN_INSTANCE:
 				String pluginInstance = readString(is, len);
-				out.getValues().put(Constants.PLUGIN_INSTANCE, pluginInstance);
+				out.getValues().put(CollectdConstants.PLUGIN_INSTANCE, pluginInstance);
 				break;
 			case TYPE:
 				String _type = readString(is, len);
@@ -200,7 +199,7 @@ public class CollectdInput extends AbstractActiveInput {
 				break;
 			case TYPE_INSTANCE:
 				String tI = readString(is, len);
-				out.getValues().put(Constants.TYPE_INSTANCE, tI);
+				out.getValues().put(CollectdConstants.TYPE_INSTANCE, tI);
 				break;
 			case MESSAGE:
 				String msg = readString(is, len);
@@ -248,7 +247,7 @@ public class CollectdInput extends AbstractActiveInput {
 		}
 	}
 
-	private final CollectdExpansionTable cdet = new CollectdExpansionTable();
+	private final CollectdTypeingTable cdet = new CollectdTypeingTable();
 
 	/**
 	 * collectd has multi-valued metrics. The values are not self-descriptive
@@ -257,43 +256,55 @@ public class CollectdInput extends AbstractActiveInput {
 	 */
 	@SuppressWarnings("unchecked")
 	private void expandAndDispatch(Record rec) {
-		List<Number> nx = (List<Number>) rec.getValues().get(Constants.VALUES);
-		int size = nx.size();
+		List<Number> values = (List<Number>) rec.getValues().get(CollectdConstants.VALUES);
+		int size = values.size();
 
-		// single valued
-		if (size == 1) {
-			Number n = (Number) nx.get(0);
-			rec.getValues().remove("values");
-			rec.setValue("value", n);
-			dispatch(rec.doClone());
+		Mapping typeing = cdet.resolve(rec);
+		if (typeing == null) {
+			failAndDispatch(rec, "multi valued record not exanded");
 			return;
 		}
 
-		// multi valued
-		String[] names = cdet.resolve(rec);
-		if (names == null) {
-			_log.warning("multi valued record not exanded: " + rec);
-			dispatch(rec.doClone());
+		if (size != typeing.getNames().length) {
+			failAndDispatch(rec, "multi valued record has unexpected number of values");
 			return;
 		}
 
-		if (size != names.length) {
-			_log.log(Level.SEVERE,
-					"multi valued record has unexpected number of values: "
-							+ rec + " " + names);
-			dispatch(rec.doClone());
-			return;
+		normalizeAndDispatch(rec, values, typeing);
+
+	}
+
+	private void normalizeAndDispatch(Record rec, List<Number> values, Mapping typeing) {
+		rec.getValues().remove(CollectdConstants.VALUES);
+		rec = rec.doClone();
+		
+		//cut out collectd specific parts
+		rec.getValues().remove(CollectdConstants.PLUGIN);
+		Object instance = rec.getValues().remove(CollectdConstants.PLUGIN_INSTANCE);
+		rec.getValues().remove(CollectdConstants.TYPE_INSTANCE);
+		if(instance!=null){
+			rec.getValues().put(Constants.INSTANCE, instance);
+			rec.getValues().put(Constants.TYPE, typeing.plugin);
+		}else{
+			rec.getValues().remove(Constants.TYPE);
 		}
-
-		rec.getValues().remove(Constants.VALUES);
-
-		for (int i = 0; i < names.length; i++) {
-			Record out = (Record) rec.doClone();
-			out.getValues().put(Constants.VALUE, nx.get(i));
-			out.getValues().put(Constants.TYPE_INSTANCE, names[i]);
+			
+		
+		for(int i =0;i<typeing.names.length;i++){
+			Number value = values.get(i);
+			Record out = rec.doClone();
+			out.getValues().put(Constants.VALUE, value);
+			out.getValues().put(Constants.METRIC, typeing.names[i]);
+			
+			
 			dispatch(out);
 		}
+		
+	}
 
+	private void failAndDispatch(Record rec, String msg) {
+		err(msg + ":" + rec.toString());
+		dispatch(rec.doClone());
 	}
 
 	public void stop() {

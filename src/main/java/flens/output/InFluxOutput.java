@@ -83,7 +83,7 @@ public class InFluxOutput extends AbstractPumpOutput {
 				}
 				
 				db.appendSeries("", metric, "", collumnNames, new Object[][] {data});
-				db.sendRequest(true,false);	
+				db.sendRequest(true,true);	
 				sent++;
 			}
 		} catch (UnknownHostException e) {

@@ -38,8 +38,8 @@ public class InfluxDBOutput extends AbstractConfig {
 		String pass = get("pass","guest");
 		
 		String metricname = get("metric","@{metric}");
-		String[] collname = {"time","source"};
-		String[] colltemplate = {"@{time}","@{source}"};
+		String[] collname = {"time","source","value","instance"};
+		String[] colltemplate = {"@{time}","@{source}","@{value}","@{(isdef instance)?instance:null}"};
 		List<String> collnames = getArray("fieldnames",Arrays.asList(collname));
 		List<String> colltemplates = getArray("fieldTemplates",Arrays.asList(colltemplate));
 		engine.addOutput(new flens.output.InFluxOutput(name,plugin,matcher,host,port,db,user,pass,metricname,collnames,colltemplates));

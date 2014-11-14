@@ -9,15 +9,22 @@
  		},"heartbeat":{
 			"type":"metric",
 			"interval":10000
+		},"mvel":{
+			"script":"if(metric!='collectd.cpu.idle'){DISCARD=true;}return null;"
 		} 		
  	
 	},
  	
  	"output" : {
  		"system-out" : {
- 			"name" : "out",
- 			"type" : "metric"
+ 			"type" : "metrics"
  			
+ 		},"influxdb-out":{
+ 			"type":"metric",
+ 			"tags":["collectd"],
+ 			"user":"test",
+ 			"pass":"test",
+ 			"db":"TestDB"
  		}
  		
  	}

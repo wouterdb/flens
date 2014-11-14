@@ -37,6 +37,10 @@ public abstract class AbstractPlugin {
 	protected void err(String msg, Throwable e) {
 		Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg,e);
 	}
+	
+	protected void err(String msg) {
+		Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg);
+	}
 
 	protected void warn(String msg, Exception e) {
 		Logger.getLogger(getClass().getName()).log(Level.WARNING, msg,e);

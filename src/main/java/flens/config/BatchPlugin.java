@@ -6,7 +6,6 @@ import java.util.List;
 import flens.config.util.ActiveFilter;
 import flens.filter.BatchingFilter;
 import flens.input.util.InputQueueExposer;
-import flens.statefull.AlertOutput;
 
 public class BatchPlugin extends ActiveFilter{
 

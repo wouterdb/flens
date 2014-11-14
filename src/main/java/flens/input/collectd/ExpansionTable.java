@@ -19,8 +19,6 @@
  */
 package flens.input.collectd;
 
-import static flens.core.Constants.PLUGIN;
-import static flens.core.Constants.TYPE;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +28,7 @@ import java.util.Map;
 import org.apache.commons.collections4.MultiMap;
 import org.apache.commons.collections4.map.MultiValueMap;
 
+import flens.core.Constants;
 import flens.core.Record;
 
 public class ExpansionTable {
@@ -146,8 +145,8 @@ public class ExpansionTable {
 	}
 
 	public String[] resolve(Record rec) {
-		return resolve((String) rec.getValues().get(PLUGIN), (String) rec
-				.getValues().get(TYPE));
+		return resolve((String) rec.getValues().get(CollectdConstants.PLUGIN), (String) rec
+				.getValues().get(Constants.TYPE));
 	}
 
 	/*public void print() {
