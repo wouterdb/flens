@@ -19,12 +19,15 @@
  */
 package flens.core;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import flens.typing.MetricType;
 
 //time in milis
 public class Record {
@@ -305,6 +308,16 @@ public class Record {
 		this.tags = tags;
 	}
 
+	public Record(Number value, MetricType intype) {
+		tags = new HashSet<String>();
+		values = new HashMap<String, Object>();
+		values.put(Constants.TIME, System.currentTimeMillis());
+		values.put(Constants.SOURCE, Util.hostName());
+		values.put(Constants.METRIC, intype.getName());
+		values.put(Constants.VALUE, value);
+		addMeta(intype);
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -391,6 +404,43 @@ public class Record {
 
 	}
 
+	
+	public byte[] getBytes(String field) {
+		Object raw = values.get(field);
+		
+		byte[] body;
+
+		if (raw instanceof byte[]) {
+			body = (byte[]) raw;
+		} else if (raw instanceof String) {
+			try {
+				body = ((String) raw).getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new Error("could not use utf-8!", e);
+			}
+		} else {
+			try {
+				body = raw.toString().getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new Error("could not use utf-8!", e);
+			}
+		}
+
+		return body;
+	}
+
+	public void addMeta(MetricType metricType) {
+		values.put("unit",metricType.getUnit());
+		values.put("resourcetype",metricType.getResource());
+		values.put("form",metricType.getForm().toString());
+		values.put("range",metricType.getRange());
+	}
+
+	public static Record createFromTypeAndInstance(Number value, MetricType intype, String instance) {
+		Record r = new Record(value, intype);
+		r.values.put(Constants.INSTANCE, instance);
+		return r;
+	}
 	
 
 }

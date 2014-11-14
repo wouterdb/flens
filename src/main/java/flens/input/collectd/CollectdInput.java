@@ -30,6 +30,7 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,11 +40,13 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.collectd.TypeingTable.Mapping;
 import flens.input.util.AbstractActiveInput;
+import flens.typing.MetricType;
+import flens.typing.TypedPlugin;
 
 /**
  * collectd UDP protocol receiver. See collectd/src/network.c:parse_packet
  */
-public class CollectdInput extends AbstractActiveInput {
+public class CollectdInput extends AbstractActiveInput implements TypedPlugin {
 
 	public CollectdInput(String name, String plugin, Tagger tagger, int port, String bindAddress, String _ifAddress) {
 		super(name, plugin, tagger);
@@ -296,7 +299,7 @@ public class CollectdInput extends AbstractActiveInput {
 			out.getValues().put(Constants.VALUE, value);
 			out.getValues().put(Constants.METRIC, typeing.names[i]);
 			
-			
+			out.addMeta(typeing.otype[i]);
 			dispatch(out);
 		}
 		
@@ -313,6 +316,11 @@ public class CollectdInput extends AbstractActiveInput {
 			_socket.close();
 			_socket = null;
 		}
+	}
+
+	@Override
+	public Collection<MetricType> getExpectedTypes() {
+		return cdet.getTypes(); 
 	}
 
 }

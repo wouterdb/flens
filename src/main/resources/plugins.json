@@ -35,7 +35,8 @@
  "splitter":"flens.config.Splitter",
  "alert":"flens.config.AlertPlugin",
  "batching":"flens.config.BatchPlugin",
- "unbatching":"flens.config.UnBatchPlugin"
+ "unbatching":"flens.config.UnBatchPlugin",
+ "LZ4-compress":"flens.config.LZ4Filter"
 }
  
  

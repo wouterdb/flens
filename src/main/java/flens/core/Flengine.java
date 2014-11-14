@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import flens.typing.MetricType;
 import flens.util.NamedThreadFactory;
 
 //TODO reconnect!
@@ -428,6 +429,35 @@ public class Flengine {
 		out.add(new Record("flens.exec-threads-active", executor.getActiveCount()));
 		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
 		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
+		
+		for(SelfReporter r:getSelfReporters()){
+			r.report(out);
+		}
+	}
+
+	protected List<SelfReporter> getSelfReporters() {
+		LinkedList<SelfReporter> sr = new LinkedList<>();
+		for (Input inp : inputs) {
+			if (inp instanceof SelfReporter) {
+				sr.add((SelfReporter) inp);
+			}
+		}
+		for (Filter inp : filters) {
+			if (inp instanceof SelfReporter) {
+				sr.add((SelfReporter) inp);
+			}
+		}
+		for (Output inp : outputs) {
+			if (inp instanceof SelfReporter) {
+				sr.add((SelfReporter) inp);
+			}
+		}
+		for (QueryHandler inp : handlers) {
+			if (inp instanceof SelfReporter) {
+				sr.add((SelfReporter) inp);
+			}
+		}
+		return sr;
 	}
 
 	public void remove(String name) {

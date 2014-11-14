@@ -1,0 +1,36 @@
+#plugin type type_instance -> [name] resource unit form low high 
+cpu			cpu			user	collectd.cpu.user	cpu	jiffies C 0 -
+cpu			cpu			nice	collectd.cpu.nice	cpu	jiffies C 0 -
+cpu			cpu			system	collectd.cpu.system	cpu	jiffies C 0 -
+cpu			cpu			idle	collectd.cpu.idle	cpu	jiffies C 0 -
+cpu			cpu			wait	collectd.cpu.wait	cpu	jiffies C 0 -
+cpu			cpu			interrupt	collectd.cpu.interrupt	cpu	jiffies C 0 -
+cpu			cpu			softirq	collectd.cpu.softirq	cpu	jiffies C 0 -
+cpu			cpu			steal	collectd.cpu.steal	cpu	jiffies C 0 -
+#
+interface	if_octets	*		collectd.if_octets.rx,collectd.if_octets.tx	interface	bytes C 0 -
+interface	if_packets	*		collectd.if_packets.rx,collectd.if_packets.tx	interface	packets C 0 -
+interface	if_errors	*		collectd.if_errors.rx,collectd.if_errors.tx	interface	errors C 0 -
+#
+load		load		*		collectd.load.1m,collectd.load.5m,collectd.load.15m	host load G 0 5000
+#
+memory		memory		buffered	collectd.mem.buffered host bytes G 0 281474976710656
+memory		memory		cached	collectd.mem.cached host bytes G 0 281474976710656
+memory		memory		used	collectd.mem.used host bytes G 0 281474976710656 	 	
+memory		memory		free	collectd.mem.free host bytes G 0 281474976710656
+#
+network		total_values		dispatch-accepted	collectd.net.dispatch-accepted collectd records C 0 -
+network		total_values		dispatch-rejected	collectd.net.dispatch-rejected collectd records C 0 -
+network		total_values		send-accepted	collectd.net.send-accepted collectd records C 0 -
+network		total_values		send-rejected	collectd.net.send-rejected collectd records C 0 -
+network		if_octets	*		collectd.net.octets.rx,collectd.net.octets.tx collectd bytes C 0 -
+network		if_packets	*		collectd.net.packets.rx,collectd.net.packets.tx collectd packets C 0 -
+network		queue_length *		collectd.net.queue_length collectd records C 0 -
+#
+swap		swap_io		in		collectd.swap.in host bytes C 0 -
+swap		swap_io		out		collectd.swap.out host bytes C 0 -
+swap		swap		cached	collectd.swap.cached host bytes G 0 1099511627776
+swap		swap		used	collectd.swap.used host bytes G 0 1099511627776 	 	
+swap		swap		free	collectd.swap.free host bytes G 0 1099511627776
+#
+uptime		uptime		*		collectd.uptime host	seconds G 0 4294967295	
