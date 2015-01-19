@@ -23,7 +23,7 @@ package flens.util;
 import flens.typing.MetricForm;
 
 /**
- * Small tool for config parsing
+ * Small tool for config parsing.
  *
  */
 public class ParseUtil {

@@ -1,0 +1,32 @@
+{
+	"input" : {		
+ 		"collectd-in" : {
+ 			"type" : "metric",
+ 			"add-tag" : "collectd"
+ 		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+ 		"jmx name to metric" :{
+ 			"plugin" : "template",
+ 			"tags" : ["jmx"],
+ 			"template" : "@{plugin}@{(isdef type)?'.'+type:''}",
+ 			"field":"imetric"
+ 		},"jmx rename" : {
+			"plugin" : "rename",
+			"tags": ["jmx"],
+            "remove-tag" : ["jmx"],
+			"from": [ "plugin_instance","metric","imetric"],
+			"to":[ "instance","type","metric"]
+		}
+		
+	},
+ 	
+ 	"output" : {
+ 		"system-out" : {
+ 		}
+ 	}
+ 		 
+
+}

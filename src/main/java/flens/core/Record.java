@@ -121,6 +121,22 @@ public class Record {
         values.put(Constants.METRIC, metric);
         return new Record(null, values, new HashSet<String>());
     }
+    
+
+    @Deprecated
+    public static Record createWithValue(String metric, long delta) {
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(Constants.TIME, System.currentTimeMillis());
+        values.put(Constants.SOURCE, Util.hostName());
+        values.put(Constants.VALUE, delta);
+        values.put(Constants.METRIC, metric);
+        return new Record(null, values, new HashSet<String>());
+    }
+    
+    @Deprecated
+    public static Record createWithValue(String metric, String msg) {
+        return createWithMetricAndMsg(metric, msg);
+    }
 
     /* ************************
      * MSG - LOG***********************
@@ -147,11 +163,11 @@ public class Record {
     // FIXME: text metric Vs Log, smart or not?
     public static Record forTextMetric(String metric, String message) {
         Map<String, Object> values = new HashMap<String, Object>();
-        Set<String> tags = new HashSet<String>();
         values.put(Constants.TIME, System.currentTimeMillis());
         values.put(Constants.SOURCE, Util.hostName());
         values.put(Constants.MESSAGE, message);
         values.put(Constants.METRIC, metric);
+        Set<String> tags = new HashSet<String>();
         return new Record(null, values, tags);
     }
 
@@ -160,12 +176,12 @@ public class Record {
     }
 
     public static Record forLog(String file, String message) {
-        Map<String, Object> values = new HashMap<String, Object>();
-        Set<String> tags = new HashSet<String>();
+        Map<String, Object> values = new HashMap<String, Object>();    
         values.put(Constants.TIME, System.currentTimeMillis());
         values.put(Constants.SOURCE, Util.hostName());
         values.put(Constants.MESSAGE, message);
         values.put(Constants.LOG_FILE, file);
+        Set<String> tags = new HashSet<String>();
         return new Record(null, values, tags);
     }
 
@@ -193,15 +209,6 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    @Deprecated
-    public static Record createWithValue(String metric, long delta) {
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put(Constants.TIME, System.currentTimeMillis());
-        values.put(Constants.SOURCE, Util.hostName());
-        values.put(Constants.VALUE, delta);
-        values.put(Constants.METRIC, metric);
-        return new Record(null, values, new HashSet<String>());
-    }
 
     public static Record forMetric(String metric, long number, String unit) {
         Map<String, Object> values = new HashMap<String, Object>();
@@ -229,7 +236,8 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    public static Record createWithTypeTimeAndValue(long timestamp, String metric, String type, long value, String unit) {
+    public static Record createWithTypeTimeAndValue(
+            long timestamp, String metric, String type, long value, String unit) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(Constants.TIME, timestamp);
         values.put(Constants.SOURCE, Util.hostName());
@@ -275,10 +283,7 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    @Deprecated
-    public static Record createWithValue(String metric, String msg) {
-        return createWithMetricAndMsg(metric, msg);
-    }
+   
 
     @Deprecated
     public static Record createWithMetricAndMsg(String metric, String msg) {
@@ -346,17 +351,17 @@ public class Record {
     }
 
     public long getTimestamp() {
-        Object o = values.get(Constants.TIME);
-        if (o instanceof Number) {
-            return ((Number) o).longValue();
+        Object object = values.get(Constants.TIME);
+        if (object instanceof Number) {
+            return ((Number) object).longValue();
         }
-        if (o instanceof Date) {
-            return ((Date) o).getTime();
+        if (object instanceof Date) {
+            return ((Date) object).getTime();
         }
-        if (o instanceof String) {
-            return Long.parseLong((String) o);
+        if (object instanceof String) {
+            return Long.parseLong((String) object);
         }
-        throw new IllegalStateException("timestamp of unexpected form:" + o + o.getClass());
+        throw new IllegalStateException("timestamp of unexpected form:" + object + object.getClass());
     }
 
     /**

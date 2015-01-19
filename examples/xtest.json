@@ -1,0 +1,106 @@
+{    "input": {
+            "amqp-metric": {
+                "type": "metric-collect",
+                "add-tag": ["binary", "json", "collect"],
+                "host": "172.16.4.8",
+                "exchange": "metrics",
+                "plugin": "amqp-in"
+            },
+            "amqp-log": {
+                "type": "log-collect",
+                "add-tag": ["binary", "json", "collect"],
+                "host": "172.16.4.8",
+                "exchange": "logs",
+                "plugin": "amqp-in"
+            },
+            "heartbeat": {
+                "type": "metric",
+                "interval": 10000.0
+            },
+            "collectd-in": {
+                "type": "metric",
+                "add-tag": "collectd"
+            },
+            "proc": {
+                "cmd": "/usr/bin/journalctl",
+                "args": ["-o", "json", "-f"],
+                "type": "jsonLog",
+                "err-type": "log"
+            }
+        },
+        "filter": {
+            "decoder": {
+                "tags": ["binary", "collect"],
+                "remove-tag": ["binary"],
+                "prio": -10.0
+            },
+            "json-decoder": {
+                "tags": ["json", "collect"],
+                "remove-tag": ["json"],
+                "prio": -9.0
+            },
+            "tag": {},
+            "collectd name to metric": {
+                "plugin": "template",
+                "tags": ["collectd"],
+                "template": "@{plugin!\u003dtype?plugin+\u0027.\u0027:\u0027\u0027}@{type}",
+                "field": "metric"
+            },
+            "rename": {
+                "tags": ["collectd"],
+                "remove-tag": ["collectd"],
+                "from": ["type_instance", "plugin_instance"],
+                "to": ["type", "instance"]
+            },
+            "json-encoder": {
+                "add-tag": ["json"],
+                "field": "json",
+                "fields": ["time", "source", "metric", "value", "type", "instance", "temporalScope", "message", "tags", "tenant"]
+            },
+            "systemd-json-decoder": {
+                "plugin": "json-decoder",
+                "type": "jsonLog",
+                "prio": "1"
+            },
+            "systemd-rename": {
+                "plugin": "rename",
+                "type": "jsonLog",
+                "prio": "3",
+                "from": ["_HOSTNAME", "MESSAGE"],
+                "to": ["source", "message"],
+                "set-type": "log"
+            },
+            "systemd-time": {
+                "plugin": "mvel",
+                "type": "jsonLog",
+                "prio": "2",
+                "script": "time\u003d__REALTIME_TIMESTAMP/1000L; return null;"
+            }
+        },
+        "output": {
+            "amqp-out": {
+                "type": "metric",
+                "exchange": "metrics",
+                "tags": ["json"],
+                "host": "172.16.4.8",
+                "field": "json"
+            },
+            "amqp-out-logs": {
+                "plugin": "amqp-out",
+                "type": "log",
+                "exchange": "logs",
+                "tags": ["json"],
+                "host": "172.16.4.8",
+                "field": "json"
+            },
+            "elasticsearch": {
+                "type": "log-collect",
+                "host": "127.0.0.1",
+                "index": "logstash-@{(new java.text.SimpleDateFormat(\u0027yyyy.MM.dd\u0027)).format(new java.util.Date(time))}"
+            },
+            "graphite-out": {
+                "type": "metric-collect",
+                "host": "127.0.0.1"
+            }
+        }
+        }
