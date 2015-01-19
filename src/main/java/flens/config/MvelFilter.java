@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,42 +17,42 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
 
-public class MvelFilter extends AbstractConfig{
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
-	
-	@Override
-	protected void construct() {
-		String s = get("script", "");
-		engine.addFilter(new flens.filter.MVELFilter(name,plugin,tagger,matcher,prio,s));
-	}
+public class MvelFilter extends AbstractConfig {
 
-	
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected void construct() {
+        String script = get("script", "");
+        engine.addFilter(new flens.filter.MvelFilter(name, plugin, tagger, matcher, prio, script));
+    }
 
-	@Override
-	public String getDescription() {
-		return "run mvel on fields";
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("script", "String", "", "script to execute"));
-		return out;
-	}
+    @Override
+    public String getDescription() {
+        return "run mvel on fields";
+    }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("script", "String", "", "script to execute"));
+        return out;
+    }
 }

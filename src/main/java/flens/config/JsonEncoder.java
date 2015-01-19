@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,46 +17,48 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
+public class JsonEncoder extends AbstractConfig {
 
-public class JsonEncoder extends AbstractConfig{
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void construct() {
+        String field = get("field", "json");
+        List<String> fields = getArray("fields", null);
+        List<String> exfields = getArray("exclude-fields", null);
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void construct() {
-		String field = get("field", "json");
-		List<String> fields = getArray("fields", null);
-		List<String> exfields = getArray("exclude-fields", null);
-		
-		engine.addFilter(new flens.filter.JsonEncoder(name,plugin,tagger,matcher,prio,field,fields,exfields));
-	}
+        engine.addFilter(new flens.filter.JsonEncoder(name, plugin, tagger, matcher, prio, field, fields, exfields));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "encode json messages";
-	}
+    @Override
+    public String getDescription() {
+        return "encode json messages";
+    }
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("field", "String", "json", "field in which to place json encode record"));
-		out.add(new Option("fields", "[String]", "null", "fields in record to include in json, if empty use excludes"));
-		out.add(new Option("exclude-fields", "[String]", "null", "fields to ignore when forming json, disabled by include"));
-		return out;
-	}
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("field", "String", "json", "field in which to place json encode record"));
+        out.add(new Option("fields", "[String]", "null", "fields in record to include in json, if empty use excludes"));
+        out.add(new Option("exclude-fields", "[String]", "null",
+                "fields to ignore when forming json, disabled by include"));
+        return out;
+    }
 }

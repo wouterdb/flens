@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,7 +17,10 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
+
+import flens.util.NamedThreadFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,541 +40,578 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import flens.typing.MetricType;
-import flens.util.NamedThreadFactory;
-
-//TODO reconnect!
-//FIXME: cleanup locking
 public class Flengine {
 
-	public class FilterWorker implements Runnable {
-
-		private final Record record;
-
-		public FilterWorker(Record record) {
-			this.record = record;
-		}
-
-		public void run() {
-			// based loosely on logstash
-			Queue<Record> newrecords = new LinkedList<Record>();
-			newrecords.add(record);
-			int i = 0;
-			while (!newrecords.isEmpty()) {
-				Record current = newrecords.remove();
-
-				for (Filter f : filters) {
-					if (f.getMatcher().matches(current)) {
-						newrecords.addAll(f.process(current));
-						if (current.getType() == null)
-							break;
-					}
-				}
-
-				if (current.getType() != null)
-					dispatch(current);
-
-				i++;
-				// FIXME make configurable
-				if (i > 1000)
-					throw new IllegalStateException(
-							"filter loop is overflowing (1000 items producedfrom single record)" + record);
-
-			}
-
-		}
-
-		private void dispatch(Record current) {
-			synchronized (outputs) {
-				for (Output output : outputs) {
-					if (output.getMatcher().matches(current))
-						output.getOutputQueue().add(current);
-				}
-			}
-		}
-
-	}
-
-	public class QueueWrapper implements BlockingQueue<Record> {
-
-		public Record remove() {
-			throw new UnsupportedOperationException();
-		}
-
-		public Record poll() {
-			throw new UnsupportedOperationException();
-		}
-
-		public Record element() {
-			throw new UnsupportedOperationException();
-		}
-
-		public Record peek() {
-			throw new UnsupportedOperationException();
-		}
-
-		public int size() {
-			return executor.getQueue().size();
-		}
-
-		public boolean isEmpty() {
-			return executor.getQueue().isEmpty();
-		}
-
-		public Iterator<Record> iterator() {
-			throw new UnsupportedOperationException();
-		}
-
-		public Object[] toArray() {
-			throw new UnsupportedOperationException();
-		}
-
-		public <T> T[] toArray(T[] a) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean containsAll(Collection<?> c) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean addAll(Collection<? extends Record> c) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean removeAll(Collection<?> c) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean retainAll(Collection<?> c) {
-			throw new UnsupportedOperationException();
-		}
-
-		public void clear() {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean add(Record e) {
-			executor.execute(wrap(e));
-			return true;
-		}
-
-		public boolean offer(Record e) {
-			executor.execute(wrap(e));
-			return true;
-		}
-
-		public void put(Record e) throws InterruptedException {
-			executor.execute(wrap(e));
-
-		}
-
-		public boolean offer(Record e, long timeout, TimeUnit unit) throws InterruptedException {
-			executor.execute(wrap(e));
-			return true;
-		}
-
-		public Record take() throws InterruptedException {
-			throw new UnsupportedOperationException();
-		}
-
-		public Record poll(long timeout, TimeUnit unit) throws InterruptedException {
-			throw new UnsupportedOperationException();
-		}
-
-		public int remainingCapacity() {
-			return inqueue.remainingCapacity();
-		}
-
-		public boolean remove(Object o) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean contains(Object o) {
-			throw new UnsupportedOperationException();
-		}
-
-		public int drainTo(Collection<? super Record> c) {
-			throw new UnsupportedOperationException();
-		}
-
-		public int drainTo(Collection<? super Record> c, int maxElements) {
-			throw new UnsupportedOperationException();
-		}
-
-		private Runnable wrap(Record record) {
-			return new FilterWorker(record);
-		}
-
-	}
-
-	private final List<Input> inputs = new LinkedList<Input>();
-	private final List<Output> outputs = new LinkedList<Output>();
-	private final List<Filter> filters = new CopyOnWriteArrayList<Filter>();
-	private final Map<String, Integer> refcounts = new HashMap<>();
-
-	private final BlockingQueue<Record> inqueue = new QueueWrapper();
-	private boolean running;
-	private ThreadPoolExecutor executor;
-
-	private PluginRepo pr;
-
-	public Flengine(PluginRepo pr) {
-		this.pr = pr;
-	}
-
-	public PluginRepo getPluginRepo() {
-		return pr;
-	}
-
-	private final Map<String, String> tags = new HashMap<String, String>();
-	private int poolmaxsize = 8;
-
-	public void setPoolSize(int poolsize) {
-		this.poolmaxsize = poolsize;
-	}
-
-	protected boolean count(String name) {
-		synchronized (refcounts) {
-			if (refcounts.containsKey(name)) {
-				refcounts.put(name, refcounts.get(name) + 1);
-				return false;
-			} else {
-				refcounts.put(name, 1);
-				return true;
-			}
-		}
-
-		// TODO: detect collisions
-		// FIXME: locking is fishy
-	}
-
-	protected boolean decount(String name) {
-		synchronized (refcounts) {
-			int count = refcounts.get(name);
-
-			if (count == 1) {
-				refcounts.remove(name);
-				return true;
-			} else {
-				refcounts.put(name, refcounts.get(name) - 1);
-				return false;
-			}
-
-		}
-		// FIXME: locking is fishy
-	}
-
-	public void addInput(Input inp) {
-		if (count(inp.getName())) {
-			synchronized (inputs) {
-				inputs.add(inp);
-				inp.setInputQueue(inqueue);
-				if (running)
-					inp.start();
-			}
-		}
-	}
-
-	protected void removeInput(Input inp) {
-		if (decount(inp.getName())) {
-			synchronized (inputs) {
-				inputs.remove(inp);
-				if (running) {
-					inp.stop();
-					try {
-						inp.join();
-					} catch (InterruptedException e) {
-						Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
-					}
-				}
-				inp.setInputQueue(null);
-			}
-		}
-	}
-
-	public void addOutput(Output outp) {
-		if (count(outp.getName())) {
-			synchronized (outputs) {
-				outputs.add(outp);
-				if (running)
-					outp.start();
-			}
-		}
-	}
-
-	protected void removeOutput(Output outp) {
-		if (decount(outp.getName())) {
-			synchronized (outputs) {
-				outputs.remove(outp);
-				if (running)
-					outp.stop();
-			}
-		}
-	}
-
-	/**
-	 * add filter behind the others
-	 */
-	public void addFilter(Filter f) {
-		if (count(f.getName())) {
-			synchronized (filters) {
-				int idx = Collections.binarySearch(filters,f, new Comparator<Filter>() {
-
-					@Override
-					public int compare(Filter o1, Filter o2) {
-						return o1.priority() - o2.priority();
-					}
-				});
-				
-				if(idx<0)
-					idx = -(idx+1);
-				filters.add(idx,f);
-				
-				
-			}
-		}
-	}
-
-	/**
-	 * add filter behind the others
-	 */
-	protected void removeFilter(Filter f) {
-		if (decount(f.getName())) {
-			synchronized (filters) {
-				filters.remove(f);
-			}
-		}
-	}
-
-	public void start() {
-		running = true;
-		for (Output output : outputs) {
-			output.start();
-		}
-
-		// FIXME: make configurable
-		// TODO: is this the best way?
-		executor = new ThreadPoolExecutor(1, poolmaxsize, 200, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>(), new NamedThreadFactory("flens-mainloop"));
-
-		for (Input input : inputs) {
-			input.start();
-		}
-
-		for (QueryHandler input : handlers) {
-			input.start();
-		}
-
-	}
-
-	public void stop() {
-		running = false;
-		for (Input input : inputs) {
-			input.stop();
-		}
-
-		try {
-			for (Input input : inputs) {
-				System.out.println("joining");
-				input.join();
-			}
-		} catch (InterruptedException e) {
-			// TODO what to do now????
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
-			System.exit(1);
-		}
-
-		try {
-
-			executor.shutdown();
-			executor.awaitTermination(10, TimeUnit.SECONDS);
-
-		} catch (InterruptedException e) {
-			// TODO what to do now????
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close executor", e);
-			System.exit(1);
-		}
-
-		for (Output output : outputs) {
-			while (output.getOutputQueue().size() > 0) {
-				// TODO: best option?
-				Thread.yield();
-			}
-			output.stop();
-		}
-
-		try {
-			for (Output output : outputs) {
-
-				output.join();
-
-			}
-		} catch (InterruptedException e) {
-			// TODO what to do now????
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close output", e);
-			System.exit(1);
-		}
-	}
-
-	public void report(Set<Record> out) {
-
-		out.add(new Record("flens.q-in-size", executor.getQueue().size()));
-		for (Output o : outputs) {
-			out.add(new Record(String.format("flens.q-%s-size", o.getName()), o.getOutputQueue().size()));
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent()));
-			out.add(new Record(String.format("flens.q-%s-lost", o.getName()), o.getRecordsLost()));
-		}
-
-		for (Input o : inputs) {
-			out.add(new Record(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent()));
-		}
-
-		out.add(new Record("flens.exec-threads-active", executor.getActiveCount()));
-		out.add(new Record("flens.exec-threads-live", executor.getPoolSize()));
-		out.add(new Record("flens.exec-seen", executor.getCompletedTaskCount()));
-		
-		for(SelfReporter r:getSelfReporters()){
-			r.report(out);
-		}
-	}
-
-	protected List<SelfReporter> getSelfReporters() {
-		LinkedList<SelfReporter> sr = new LinkedList<>();
-		for (Input inp : inputs) {
-			if (inp instanceof SelfReporter) {
-				sr.add((SelfReporter) inp);
-			}
-		}
-		for (Filter inp : filters) {
-			if (inp instanceof SelfReporter) {
-				sr.add((SelfReporter) inp);
-			}
-		}
-		for (Output inp : outputs) {
-			if (inp instanceof SelfReporter) {
-				sr.add((SelfReporter) inp);
-			}
-		}
-		for (QueryHandler inp : handlers) {
-			if (inp instanceof SelfReporter) {
-				sr.add((SelfReporter) inp);
-			}
-		}
-		return sr;
-	}
-
-	public void remove(String name) {
-		for (Input inp : inputs) {
-			if (inp.getName().equals(name)) {
-				removeInput(inp);
-				return;
-			}
-		}
-		for (Filter inp : filters) {
-			if (inp.getName().equals(name)) {
-				removeFilter(inp);
-				return;
-			}
-		}
-		for (Output inp : outputs) {
-			if (inp.getName().equals(name)) {
-				removeOutput(inp);
-				return;
-			}
-		}
-		for (QueryHandler inp : handlers) {
-			if (inp.getName().equals(name)) {
-				removeHandler(inp);
-				return;
-			}
-		}
-
-	}
-
-	public void addTags(Map<String, String> tags) {
-		this.tags.putAll(tags);
-	}
-
-	public Map<String, String> getTags() {
-		return this.tags;
-	}
-
-	private List<QueryHandler> handlers = new LinkedList<>();
-
-	public void addHandler(QueryHandler qh) {
-		if (count(qh.getName())) {
-			synchronized (handlers) {
-				handlers.add(qh);
-				if (running)
-					qh.start();
-			}
-		}
-	}
-
-	protected void removeHandler(QueryHandler inp) {
-		if (decount(inp.getName())) {
-			synchronized (handlers) {
-				handlers.remove(inp);
-				inp.stop();
-			}
-		}
-	}
-
-	public List<QueryHandler> getHandler(Query q) {
-		synchronized (handlers) {
-			List<QueryHandler> qhs = new LinkedList<>();
-			for (QueryHandler qh : handlers) {
-				if (qh.canHandle(q)) {
-					qhs.add(qh);
-				}
-			}
-			return qhs;
-		}
-	}
-
-	public void dumpConfig(Map<String, Object> config) {
-		config.put("input", dumpInputs(new HashMap<String, Object>()));
-		config.put("filter", dumpFilters(new HashMap<String, Object>()));
-		config.put("output", dumpOutputs(new HashMap<String, Object>()));
-		config.put("query", dumpQueryHandlers(new HashMap<String, Object>()));
-
-	}
-
-	private Map<String, Object> dumpQueryHandlers(Map<String, Object> tree) {
-		synchronized (handlers) {
-			for (QueryHandler inp : handlers) {
-				inp.writeConfig(this, tree);
-			}
-		}
-		return tree;
-	}
-
-	private Map<String, Object> dumpOutputs(Map<String, Object> tree) {
-		synchronized (outputs) {
-			for (Output inp : outputs) {
-				inp.writeConfig(this, tree);
-			}
-		}
-		return tree;
-	}
-
-	private Map<String, Object> dumpFilters(Map<String, Object> tree) {
-		synchronized (filters) {
-			for (Filter inp : filters) {
-				inp.writeConfig(this, tree);
-			}
-		}
-		return tree;
-	}
-
-	private Map<String, Object> dumpInputs(Map<String, Object> tree) {
-
-		synchronized (inputs) {
-			for (Input inp : inputs) {
-				inp.writeConfig(this, tree);
-			}
-		}
-		return tree;
-
-	}
+    private class FilterWorker implements Runnable {
+
+        private final Record record;
+
+        public FilterWorker(Record record) {
+            this.record = record;
+        }
+
+        public void run() {
+            // based loosely on logstash
+            Queue<Record> newrecords = new LinkedList<Record>();
+            newrecords.add(record);
+            int loopcounter = 0;
+            while (!newrecords.isEmpty()) {
+                Record current = newrecords.remove();
+
+                for (Filter f : filters) {
+                    if (f.getMatcher().matches(current)) {
+                        newrecords.addAll(f.process(current));
+                        if (current.getType() == null) {
+                            break;
+                        }
+                    }
+                }
+
+                if (current.getType() != null) {
+                    dispatch(current);
+                }
+
+                loopcounter++;
+                // FIXME make configurable
+                if (loopcounter > 1000) {
+                    throw new IllegalStateException(
+                            "filter loop is overflowing (1000 items produced from single record)" + record);
+                }
+
+            }
+
+        }
+
+        private void dispatch(Record current) {
+            synchronized (outputs) {
+                for (Output output : outputs) {
+                    if (output.getMatcher().matches(current)) {
+                        output.getOutputQueue().add(current);
+                    }
+                }
+            }
+        }
+
+    }
+
+    public class QueueWrapper implements BlockingQueue<Record> {
+
+        public void put(Record rec) throws InterruptedException {
+            executor.execute(wrap(rec));
+        }
+
+        public Record remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean remove(Object object) {
+            throw new UnsupportedOperationException();
+        }
+
+        public Record poll() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Record poll(long timeout, TimeUnit unit) throws InterruptedException {
+            throw new UnsupportedOperationException();
+        }
+
+        public Record element() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Record peek() {
+            throw new UnsupportedOperationException();
+        }
+
+        public int size() {
+            return executor.getQueue().size();
+        }
+
+        public boolean isEmpty() {
+            return executor.getQueue().isEmpty();
+        }
+
+        public Iterator<Record> iterator() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Object[] toArray() {
+            throw new UnsupportedOperationException();
+        }
+
+        public <T> T[] toArray(T[] ar) {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean containsAll(Collection<?> co) {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean addAll(Collection<? extends Record> co) {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean removeAll(Collection<?> co) {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean retainAll(Collection<?> co) {
+            throw new UnsupportedOperationException();
+        }
+
+        public void clear() {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean add(Record rec) {
+            executor.execute(wrap(rec));
+            return true;
+        }
+
+        public boolean offer(Record rec) {
+            executor.execute(wrap(rec));
+            return true;
+        }
+
+        public boolean offer(Record rec, long timeout, TimeUnit unit) throws InterruptedException {
+            executor.execute(wrap(rec));
+            return true;
+        }
+
+        public Record take() throws InterruptedException {
+            throw new UnsupportedOperationException();
+        }
+
+        public int remainingCapacity() {
+            return inqueue.remainingCapacity();
+        }
+
+        public boolean contains(Object object) {
+            throw new UnsupportedOperationException();
+        }
+
+        public int drainTo(Collection<? super Record> co) {
+            throw new UnsupportedOperationException();
+        }
+
+        public int drainTo(Collection<? super Record> co, int maxElements) {
+            throw new UnsupportedOperationException();
+        }
+
+        private Runnable wrap(Record record) {
+            return new FilterWorker(record);
+        }
+
+    }
+
+    private final List<Input> inputs = new LinkedList<Input>();
+    private final List<Output> outputs = new LinkedList<Output>();
+    private final List<Filter> filters = new CopyOnWriteArrayList<Filter>();
+    private final Map<String, Integer> refcounts = new HashMap<>();
+
+    private final BlockingQueue<Record> inqueue = new QueueWrapper();
+    private boolean running;
+    private ThreadPoolExecutor executor;
+
+    private PluginRepo pr;
+
+    public Flengine(PluginRepo pr) {
+        this.pr = pr;
+    }
+
+    public PluginRepo getPluginRepo() {
+        return pr;
+    }
+
+    private final Map<String, String> tags = new HashMap<String, String>();
+    private int poolmaxsize = 8;
+
+    public void setPoolSize(int poolsize) {
+        this.poolmaxsize = poolsize;
+    }
+
+    protected boolean count(String name) {
+        synchronized (refcounts) {
+            if (refcounts.containsKey(name)) {
+                refcounts.put(name, refcounts.get(name) + 1);
+                return false;
+            } else {
+                refcounts.put(name, 1);
+                return true;
+            }
+        }
+
+        // TODO: detect collisions
+        // FIXME: locking is fishy
+    }
+
+    protected boolean decount(String name) {
+        synchronized (refcounts) {
+            int count = refcounts.get(name);
+
+            if (count == 1) {
+                refcounts.remove(name);
+                return true;
+            } else {
+                refcounts.put(name, refcounts.get(name) - 1);
+                return false;
+            }
+
+        }
+        // FIXME: locking is fishy
+    }
+
+    /**
+     * add a new input plugin to the engine
+     */
+    public void addInput(Input inp) {
+        if (count(inp.getName())) {
+            synchronized (inputs) {
+                inputs.add(inp);
+                inp.setInputQueue(inqueue);
+                if (running) {
+                    inp.start();
+                }
+            }
+        }
+    }
+
+    protected void removeInput(Input inp) {
+        if (decount(inp.getName())) {
+            synchronized (inputs) {
+                inputs.remove(inp);
+                if (running) {
+                    inp.stop();
+                    try {
+                        inp.join();
+                    } catch (InterruptedException e) {
+                        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
+                    }
+                }
+                inp.setInputQueue(null);
+            }
+        }
+    }
+
+    /**
+     * Add an ouptut plugin.
+     */
+    public void addOutput(Output outp) {
+        if (count(outp.getName())) {
+            synchronized (outputs) {
+                outputs.add(outp);
+                if (running) {
+                    outp.start();
+                }
+            }
+        }
+    }
+
+    protected void removeOutput(Output outp) {
+        if (decount(outp.getName())) {
+            synchronized (outputs) {
+                outputs.remove(outp);
+                if (running) {
+                    outp.stop();
+                }
+            }
+        }
+    }
+
+    /**
+     * add filter behind the others.
+     */
+    public void addFilter(Filter filter) {
+        if (count(filter.getName())) {
+            // filters is locked for modification, but is itself CoppyOnWrite,
+            // and can be used while locked
+            synchronized (filters) {
+                int idx = Collections.binarySearch(filters, filter, new Comparator<Filter>() {
+
+                    @Override
+                    public int compare(Filter o1, Filter o2) {
+                        return o1.priority() - o2.priority();
+                    }
+                });
+
+                if (idx < 0) {
+                    idx = -(idx + 1);
+                }
+                filters.add(idx, filter);
+
+            }
+        }
+    }
+
+    protected void removeFilter(Filter filter) {
+        if (decount(filter.getName())) {
+            synchronized (filters) {
+                // filters is locked for modification, but is itself
+                // CoppyOnWrite,
+                // and can be used while locked
+                filters.remove(filter);
+            }
+        }
+    }
+
+    /**
+     * start the engine.
+     */
+    public void start() {
+        running = true;
+        for (Output output : outputs) {
+            output.start();
+        }
+
+        // FIXME: make configurable
+        // TODO: is this the best way?
+        executor = new ThreadPoolExecutor(1, poolmaxsize, 200, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(), new NamedThreadFactory("flens-mainloop"));
+
+        for (Input input : inputs) {
+            input.start();
+        }
+
+        for (QueryHandler input : handlers) {
+            input.start();
+        }
+
+    }
+
+    /**
+     * stop the engine.
+     */
+    public void stop() {
+        running = false;
+        for (Input input : inputs) {
+            input.stop();
+        }
+
+        try {
+            for (Input input : inputs) {
+                System.out.println("joining");
+                input.join();
+            }
+        } catch (InterruptedException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "should not occur executor", e);
+            throw new Error(e);
+        }
+
+        try {
+
+            executor.shutdown();
+            executor.awaitTermination(10, TimeUnit.SECONDS);
+
+        } catch (InterruptedException e) {
+            // TODO what to do now????
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close executor", e);
+            throw new Error(e);
+        }
+
+        for (Output output : outputs) {
+            while (output.getOutputQueue().size() > 0) {
+                // TODO: best option?
+                Thread.yield();
+            }
+            output.stop();
+        }
+
+        try {
+            for (Output output : outputs) {
+
+                output.join();
+
+            }
+        } catch (InterruptedException e) {
+            // TODO what to do now????
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close output", e);
+            throw new Error(e);
+        }
+    }
+
+    /**
+     * add a full report on queue statistics to the given set of records.
+     */
+    public void report(Set<Record> out) {
+
+        out.add(Record.forMetric("flens.q-in-size", executor.getQueue().size(), "record"));
+        for (Output o : outputs) {
+            out.add(Record.forMetric(
+                    String.format("flens.q-%s-size", o.getName()), o.getOutputQueue().size(), "record"));
+            out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent(), "record"));
+            out.add(Record.forMetric(String.format("flens.q-%s-lost", o.getName()), o.getRecordsLost(), "record"));
+        }
+
+        for (Input o : inputs) {
+            out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent(), "record"));
+        }
+
+        out.add(Record.forMetric("flens.exec-threads-active", executor.getActiveCount(), "thread"));
+        out.add(Record.forMetric("flens.exec-threads-live", executor.getPoolSize(), "thread"));
+        out.add(Record.forMetric("flens.exec-seen", executor.getCompletedTaskCount(), "record"));
+
+        for (SelfReporter r : getSelfReporters()) {
+            r.report(out);
+        }
+    }
+
+    protected List<SelfReporter> getSelfReporters() {
+        LinkedList<SelfReporter> sr = new LinkedList<>();
+        for (Input inp : inputs) {
+            if (inp instanceof SelfReporter) {
+                sr.add((SelfReporter) inp);
+            }
+        }
+        for (Filter inp : filters) {
+            if (inp instanceof SelfReporter) {
+                sr.add((SelfReporter) inp);
+            }
+        }
+        for (Output inp : outputs) {
+            if (inp instanceof SelfReporter) {
+                sr.add((SelfReporter) inp);
+            }
+        }
+        for (QueryHandler inp : handlers) {
+            if (inp instanceof SelfReporter) {
+                sr.add((SelfReporter) inp);
+            }
+        }
+        return sr;
+    }
+
+    /**
+     * Remove a plugin with a given name.
+     * 
+     * @param name
+     *            name of the plugin to be removed
+     */
+    public void remove(String name) {
+        for (Input inp : inputs) {
+            if (inp.getName().equals(name)) {
+                removeInput(inp);
+                return;
+            }
+        }
+        for (Filter inp : filters) {
+            if (inp.getName().equals(name)) {
+                removeFilter(inp);
+                return;
+            }
+        }
+        for (Output inp : outputs) {
+            if (inp.getName().equals(name)) {
+                removeOutput(inp);
+                return;
+            }
+        }
+        for (QueryHandler inp : handlers) {
+            if (inp.getName().equals(name)) {
+                removeHandler(inp);
+                return;
+            }
+        }
+
+    }
+
+    public void addTags(Map<String, String> tags) {
+        this.tags.putAll(tags);
+    }
+
+    public Map<String, String> getTags() {
+        return this.tags;
+    }
+
+    private List<QueryHandler> handlers = new LinkedList<>();
+
+    /**
+     * Add a query handler.
+     * 
+     */
+    public void addHandler(QueryHandler qh) {
+        if (count(qh.getName())) {
+            synchronized (handlers) {
+                handlers.add(qh);
+                if (running) {
+                    qh.start();
+                }
+            }
+        }
+    }
+
+    protected void removeHandler(QueryHandler inp) {
+        if (decount(inp.getName())) {
+            synchronized (handlers) {
+                handlers.remove(inp);
+                inp.stop();
+            }
+        }
+    }
+
+    /**
+     * return all query handlers able to handle the given query.
+     */
+    public List<QueryHandler> getHandler(Query query) {
+        synchronized (handlers) {
+            List<QueryHandler> qhs = new LinkedList<>();
+            for (QueryHandler qh : handlers) {
+                if (qh.canHandle(query)) {
+                    qhs.add(qh);
+                }
+            }
+            return qhs;
+        }
+    }
+
+    /**
+     * Dump the engines running config into the map.
+     */
+    public void dumpConfig(Map<String, Object> config) {
+        config.put("input", dumpInputs(new HashMap<String, Object>()));
+        config.put("filter", dumpFilters(new HashMap<String, Object>()));
+        config.put("output", dumpOutputs(new HashMap<String, Object>()));
+        config.put("query", dumpQueryHandlers(new HashMap<String, Object>()));
+
+    }
+
+    private Map<String, Object> dumpQueryHandlers(Map<String, Object> tree) {
+        synchronized (handlers) {
+            for (QueryHandler inp : handlers) {
+                inp.writeConfig(this, tree);
+            }
+        }
+        return tree;
+    }
+
+    private Map<String, Object> dumpOutputs(Map<String, Object> tree) {
+        synchronized (outputs) {
+            for (Output inp : outputs) {
+                inp.writeConfig(this, tree);
+            }
+        }
+        return tree;
+    }
+
+    private Map<String, Object> dumpFilters(Map<String, Object> tree) {
+        synchronized (filters) {
+            // filters is locked for modification, but is itself CoppyOnWrite,
+            // and can be used while locked
+            for (Filter inp : filters) {
+                inp.writeConfig(this, tree);
+            }
+        }
+        return tree;
+    }
+
+    private Map<String, Object> dumpInputs(Map<String, Object> tree) {
+
+        synchronized (inputs) {
+            for (Input inp : inputs) {
+                inp.writeConfig(this, tree);
+            }
+        }
+        return tree;
+
+    }
 }

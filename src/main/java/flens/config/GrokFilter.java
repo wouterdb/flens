@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,50 +17,49 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
+public class GrokFilter extends AbstractConfig {
 
-public class GrokFilter extends AbstractConfig{
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
-	
-	@Override
-	protected void construct() {
-		String s = get("script", "");
-		String inf = get("infield", "");
-		String dir = get("dir", "");
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-		boolean discard=getBool("discard", false);
-		engine.addFilter(new flens.filter.GrokFilter(name,plugin,tagger,matcher,prio,s,inf,dir,discard));
+    @Override
+    protected void construct() {
+        String script = get("script", "");
+        String inf = get("infield", "");
+        String dir = get("dir", "");
 
-	}
+        boolean discard = getBool("discard", false);
+        engine.addFilter(new flens.filter.GrokFilter(name, plugin, tagger, matcher, prio, script, inf, dir, discard));
 
-	
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "run mvel on fields";
-	}
+    @Override
+    public String getDescription() {
+        return "run grok on a field";
+    }
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("script", "String", "", "script to execute"));
-		out.add(new Option("infield", "String", "", "field to match"));
-		out.add(new Option("dir", "String", "", "directory for aux definitions"));
-		out.add(new Option("discard", "boolean", "false", "discard if no match"));
-		return out;
-	}
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("script", "String", "", "script to execute"));
+        out.add(new Option("infield", "String", "", "field to match"));
+        out.add(new Option("dir", "String", "", "directory for aux definitions"));
+        out.add(new Option("discard", "boolean", "false", "discard if no match"));
+        return out;
+    }
 }

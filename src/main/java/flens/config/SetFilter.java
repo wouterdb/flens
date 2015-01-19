@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
@@ -26,39 +27,36 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SetFilter extends AbstractConfig
-{
-  protected boolean isIn()
-  {
-    return false;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void construct()
-  {
-    List<String> f = getArray("fields", Collections.EMPTY_LIST);
-    List<String> t = getArray("values", Collections.EMPTY_LIST);
-    if (f.size() != t.size()) {
-      throw new IllegalArgumentException("to and from must be same size");
+public class SetFilter extends AbstractConfig {
+    protected boolean isIn() {
+        return false;
     }
-    this.engine.addFilter(new flens.filter.SetFilter(this.name, plugin, this.tagger, this.matcher,prio, f, t));
-  }
 
-  protected boolean isOut()
-  {
-    return false;
-  }
+    @SuppressWarnings("unchecked")
+    protected void construct() {
+        List<String> from = getArray("fields", Collections.EMPTY_LIST);
+        List<String> to = getArray("values", Collections.EMPTY_LIST);
+        if (from.size() != to.size()) {
+            throw new IllegalArgumentException("to and from must be same size");
+        }
+        this.engine.addFilter(new flens.filter.SetFilter(this.name, plugin, this.tagger, this.matcher, prio, from, to));
+    }
 
-  public String getDescription()
-  {
-    return "set fields";
-  }
+    protected boolean isOut() {
+        return false;
+    }
 
-  public List<Config.Option> getOptions()
-  {
-    LinkedList<Option> out = new LinkedList<Option>(super.getOptions());
-    out.add(new Config.Option("fields", "List", "[]", "field names"));
-    out.add(new Config.Option("values", "List", "[]", "values"));
-    return out;
-  }
+    public String getDescription() {
+        return "set fields of a record";
+    }
+
+    /**
+     * @see flens.config.util.AbstractConfig#getOptions()
+     */
+    public List<Config.Option> getOptions() {
+        LinkedList<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Config.Option("fields", "List", "[]", "field names"));
+        out.add(new Config.Option("values", "List", "[]", "values"));
+        return out;
+    }
 }

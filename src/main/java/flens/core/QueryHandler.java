@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,17 +17,21 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
-public interface QueryHandler extends Plugin{
-	
-	public boolean canHandle(Query q);
-	public void handle(Query q);
-	
-	public String getName();
-	
-	public void start();
-	public void stop();
-	public void join();
+public interface QueryHandler extends Plugin {
+
+    public boolean canHandle(Query query);
+
+    public void handle(Query query);
+
+    public String getName();
+
+    public void start();
+
+    public void stop();
+
+    public void join();
 
 }

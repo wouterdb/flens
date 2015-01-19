@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,29 +17,31 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core;
 
-import java.util.Map;
+package flens.core;
 
 import flens.config.util.ConfigWriteable;
 
-public interface Tagger extends ConfigWriteable{
-	
+import java.util.Map;
 
-	Tagger empty = new Tagger() {
-		
-		@Override
-		public void adapt(Record r) {
-		}
+/**
+ * object that adds or removes tags and types on records.
+ */
+public interface Tagger extends ConfigWriteable {
 
-		@Override
-		public void outputConfig(Map<String, Object> tree) {
-			//defaults,...
-		}
-		
-		
-	};
+    Tagger empty = new Tagger() {
 
-	public void adapt(Record r);
+        @Override
+        public void adapt(Record record) {
+        }
+
+        @Override
+        public void outputConfig(Map<String, Object> tree) {
+            // defaults,...
+        }
+
+    };
+
+    public void adapt(Record record);
 
 }

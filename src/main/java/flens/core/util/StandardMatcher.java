@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,38 +17,40 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core.util;
+
+import flens.core.Matcher;
+import flens.core.Record;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import flens.core.Matcher;
-import flens.core.Record;
-
 public class StandardMatcher implements Matcher {
 
-	private Set<String> tags;
-	private String type;
+    private Set<String> tags;
+    private String type;
 
-	public StandardMatcher(String type, List<String> tags) {
-		this.type = type;
-		this.tags = new HashSet<String>(tags);
-	}
+    public StandardMatcher(String type, List<String> tags) {
+        this.type = type;
+        this.tags = new HashSet<String>(tags);
+    }
 
-	@Override
-	public boolean matches(Record r) {
-		if(type != null && !type.equals(r.getType()))
-			return false;
-		return r.getTags().containsAll(tags);
-			
-	}
+    @Override
+    public boolean matches(Record rec) {
+        if (type != null && !type.equals(rec.getType())) {
+            return false;
+        }
+        return rec.getTags().containsAll(tags);
 
-	@Override
-	public void outputConfig(Map<String, Object> tree) {
-		tree.put("type", type);
-		tree.put("tags", tags);
-	}
+    }
+
+    @Override
+    public void outputConfig(Map<String, Object> tree) {
+        tree.put("type", type);
+        tree.put("tags", tags);
+    }
 
 }

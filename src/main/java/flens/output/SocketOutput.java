@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,111 +17,55 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.output;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.net.UnknownHostException;
+package flens.output;
 
 import flens.core.Matcher;
 import flens.core.Record;
-import flens.output.util.AbstractPumpOutput;
+import flens.output.util.AbstractSocketOutput;
 
-public class SocketOutput extends AbstractPumpOutput {
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
-	public class ErrPump implements Runnable {
 
-		private BufferedReader reader;
 
-		public ErrPump(InputStream in) {
-			reader = new BufferedReader(new InputStreamReader(in));
-		}
+public class SocketOutput extends AbstractSocketOutput<DataOutputStream> {
 
-		@Override
-		public void run() {
-			try {
-				while (running) {
-					warn("got: " + reader.readLine());
-				}
+    private String field;
 
-			} catch (Exception e) {
-				err("error punp broke", e);
-			}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param matcher
+     *            matcher this output should used to select records
+     * @param server
+     *            hostname of the AMQP server
+     * @param port
+     *            TCP port to connect to
+     * @param field
+     *            name of the field that is to be sent over the socket
+     */
+    public SocketOutput(String name, String plugin, Matcher matcher, String server, int port, String field) {
+        super(name, plugin, matcher, server, port);
+        this.field = field;
+    }
 
-		}
+    @Override
+    protected DataOutputStream getWriter(OutputStream outputStream) {
+        return new DataOutputStream(outputStream);
+    }
 
-	}
-
-	private int port;
-	private String host;
-	private Thread errPump;
-	private String field;
-
-	public SocketOutput(String name,String plugin, Matcher matcher, String server, int port,
-			String field) {
-		super(name,plugin, matcher);
-		this.port = port;
-		this.host = server;
-		this.field = field;
-	}
-
-	@Override
-	public void run() {
-		Socket s = null;
-		Record r = null;
-		try {
-			s = new Socket(host, port);
-			s.setTcpNoDelay(true);
-			DataOutputStream br = new DataOutputStream(s.getOutputStream());
-			hookOnErrpump(s);
-			while (running) {
-				r = queue.take();
-
-				Object value = r.getValues().get(field);
-				byte[] bx = getBytes(value);
-				br.writeInt(bx.length);
-				br.write(bx);
-				br.flush();
-				sent++;
-			}
-		} catch (UnknownHostException e) {
-
-			err(getName() + " host not know", e);
-		} catch (IOException e) {
-			lost++;
-			err(getName() + " pipe broken, going into reconnect", e);
-			reconnect();
-		} catch (InterruptedException e) {
-			// normal
-		} finally {
-			if (s != null)
-				try {
-					s.close();
-				} catch (IOException e) {
-					warn(getName() + "could not close socket", e);
-				}
-		}
-
-	}
-
-	private void hookOnErrpump(Socket s) {
-		try {
-			errPump = new Thread(new ErrPump(s.getInputStream()));
-		} catch (IOException e) {
-			err(" err pipe setup failed", e);
-		}
-
-	}
-
-	@Override
-	public void stop() {
-		super.stop();
-		if (errPump != null)
-			errPump.interrupt();
-	}
+    @Override
+    protected void dispatch(DataOutputStream br, Record record) throws IOException {
+        Object value = record.getValues().get(field);
+        byte[] bx = getBytes(value);
+        br.writeInt(bx.length);
+        br.write(bx);
+        br.flush();
+    }
 
 }

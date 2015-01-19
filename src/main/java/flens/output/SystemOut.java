@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,35 +17,37 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.output;
 
-import java.io.PrintStream;
+package flens.output;
 
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;
 
+import java.io.PrintStream;
+
 public class SystemOut extends AbstractPumpOutput implements Output {
 
-	private PrintStream stream;
-	
-	public SystemOut(String name,String plugin, Matcher matcher) {
-		super(name,plugin, matcher);
-		stream = System.out;
-	}
+    private PrintStream stream;
 
-	public void run() {
-		
-		try {
-			while (running) {
-				Record r = queue.take();
-				stream.println(String.format("[%s] %s",getName(),r.toLine()));
-				sent++;
-			}
-		} catch (InterruptedException e) {
-			// break loop
-		}
+    public SystemOut(String name, String plugin, Matcher matcher) {
+        super(name, plugin, matcher);
+        stream = System.out;
+    }
 
-	}
+    @Override
+    public void run() {
+
+        try {
+            while (running) {
+                Record record = queue.take();
+                stream.println(String.format("[%s] %s", getName(), record.toLine()));
+                sent++;
+            }
+        } catch (InterruptedException e) {
+            // break loop
+        }
+
+    }
 }

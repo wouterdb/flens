@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,32 +17,42 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.util.Collection;
 
+/**
+ * A plugin that modifies individual records.
+ * All filters form a chain 
+ * <p/>
+ * All filters must be thread safe
+ *
+ */
 public interface Filter extends Plugin {
-	
-	/**
-	 * 
-	 * make changes to the input record
-	 * new records can be return
-	 * 
-	 * each record is passed along all filters in order
-	 * new records go back to the start of the pipe. 
-	 * 
-	 * if the type of in is set to null, in is discarded
-	 * 
-	 * @param in
-	 * @return
-	 */
-	public Collection<Record> process(Record in);
-	
-	/**
-	 * idempotent, fast
-	 */
-	public Matcher getMatcher();
-	
-	public int priority();
+
+    /**
+     * Process a record. 
+     * <p/>
+     * Each filter can do one of the following. 
+     * <ul>
+     * <li> Make changes to the input record. The changed record is passed to the next filter.</li> 
+     * <li> New records can be return. New records are fed to the start of the filter chain. </li>
+     * <li> If the type of the input record is set to null, it is discarded </li>
+     * </ul> 
+     */
+    public Collection<Record> process(Record in);
+
+    /**
+     * The Matcher determines to which records this plugin is applied. 
+     * <p/>
+     * idempotent, fast.
+     */
+    public Matcher getMatcher();
+
+    /**
+     * Plugins are executed in order of priority (lowest first).
+     */
+    public int priority();
 
 }

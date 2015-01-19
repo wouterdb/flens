@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,27 +17,24 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfigBuilder extends ConfigParser{
-	
-	
-	
-	
-	private Map<String, Object> config;
-	
-	@SuppressWarnings("unchecked")
-	public ConfigBuilder(Reader is) {
-		config = gson.fromJson(is, HashMap.class);
-	}
+public class ConfigBuilder extends ConfigParser {
 
-	public void run() {
-		construct(config);
-	}
+    private Map<String, Object> config;
 
-	
+    @SuppressWarnings("unchecked")
+    public ConfigBuilder(Reader is) {
+        config = gson.fromJson(is, HashMap.class);
+    }
+
+    public void run() {
+        construct(config);
+    }
+
 }

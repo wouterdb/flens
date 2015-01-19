@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,10 +17,8 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.input.util;
 
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
+package flens.input.util;
 
 import flens.core.Flengine;
 import flens.core.Input;
@@ -28,54 +26,64 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.core.util.AbstractPlugin;
 
-public abstract class AbstractInput extends AbstractPlugin implements Input{
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
-	protected BlockingQueue<Record> in;
-	protected Tagger tagger;
-	protected String name;
-	private String plugin;
-	private int sent;
+public abstract class AbstractInput extends AbstractPlugin implements Input {
 
-	public AbstractInput(String name,String plugin,Tagger tagger) {
-		this.name = name;
-		this.tagger = tagger;
-		this.plugin = plugin;
-	}
+    protected BlockingQueue<Record> in;
+    protected Tagger tagger;
+    protected String name;
+    private String plugin;
+    private int sent;
 
-	
-	@Override
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String getPlugin() {
-		return plugin;
-	}
-	
-	
-	protected void dispatch(Record r){
-		tagger.adapt(r);
-		in.add(r);
-		sent++;
-	}
-	
-	public void setInputQueue(BlockingQueue<Record> queue) {
-		this.in = queue;
-	}
-	
-	public int getRecordsSent() {
-		return sent;
-	}
-	
-	@Override
-	public boolean canUpdateConfig() {
-		return false;
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     */
+    public AbstractInput(String name, String plugin, Tagger tagger) {
+        this.name = name;
+        this.tagger = tagger;
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void updateConfig(Flengine engine, Map<String, Object> tree) {
-		throw new UnsupportedOperationException();
-	}
-	
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getPlugin() {
+        return plugin;
+    }
+
+    protected void dispatch(Record out) {
+        tagger.adapt(out);
+        in.add(out);
+        sent++;
+    }
+
+    public void setInputQueue(BlockingQueue<Record> queue) {
+        this.in = queue;
+    }
+
+    public int getRecordsSent() {
+        return sent;
+    }
+
+    @Override
+    public boolean canUpdateConfig() {
+        return false;
+    }
+
+    @Override
+    public void updateConfig(Flengine engine, Map<String, Object> tree) {
+        throw new UnsupportedOperationException();
+    }
+
 }

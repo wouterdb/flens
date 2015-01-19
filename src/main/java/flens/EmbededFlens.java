@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,75 +17,93 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens;
+
+import flens.core.ConfigBuilder;
+import flens.core.Flengine;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import flens.core.ConfigBuilder;
-import flens.core.Flengine;
-
+/**
+ * Embedded instance of flens.
+ * <p/>
+ * It attempt to read a config from
+ * <ul>
+ * <li>the filename found in the system property flens.config</li>
+ * <li>the file called flens.json, as found by the classloader</li>
+ * </ul>
+ *
+ */
 public class EmbededFlens {
-	
-	
-	
-	private Flengine engine;
 
-	public EmbededFlens() {
-		
-		Reader s = getConfig();
-		if(s==null)
-			return;
-		ConfigBuilder cb = new ConfigBuilder(s);
-		cb.run();
-		this.engine=cb.getEngine();
-	}
+    /**
+     * Engine used by this EmbededFlens instance.
+     */
+    private Flengine engine;
 
-	public EmbededFlens(Flengine engine) {
-		this.engine=engine;
-	}
+    protected EmbededFlens() {
+        Reader config = getConfig();
+        if (config == null) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+                    "EmbededFlens could not find any configuration, bailing out.");
+            return;
+        }
+        ConfigBuilder cb = new ConfigBuilder(config);
+        cb.run();
+        this.engine = cb.getEngine();
+    }
 
-	protected Reader getConfig() {
-		String prop = System.getProperty("flens.config");
-		if(prop==null)
-			return getHardConfig();
-		try {
-			return new FileReader(prop);
-		} catch (FileNotFoundException e) {
-			//fixme: log decently
-			e.printStackTrace();
-			return getHardConfig();
-		}
-	}
-	
-	protected Reader getHardConfig() {
-		return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("flens.json"));
-	}
+    public EmbededFlens(Flengine engine) {
+        this.engine = engine;
+    }
 
-	public Flengine getEngine() {
-		return engine;
-	}
-	
-	
-	private static EmbededFlens instance;
-	
-	public static EmbededFlens getInstance(){
-		if(instance != null)
-			return instance;
-		synchronized(EmbededFlens.class){
-			if(instance != null)
-				return instance;
-			instance = new EmbededFlens();
-			if(instance.engine!=null)
-				instance.engine.start();
-		}
-		return instance;
-	}
+    protected Reader getConfig() {
+        String prop = System.getProperty("flens.config");
+        if (prop == null) {
+            return getHardConfig();
+        }
+        try {
+            return new FileReader(prop);
+        } catch (FileNotFoundException e) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Config file not found", e);
+            return getHardConfig();
+        }
+    }
 
-	public static void setInstance(Flengine engine) {
-		instance = new EmbededFlens(engine);
-	}
+    protected Reader getHardConfig() {
+        return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("flens.json"));
+    }
+
+    public Flengine getEngine() {
+        return engine;
+    }
+
+    private static EmbededFlens instance;
+
+    /**
+     * Only works correctly if a configuration is present.
+     * 
+     * @return the shared EmbededFlens instance for this machine.
+     */
+    public static synchronized EmbededFlens getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+        instance = new EmbededFlens();
+        if (instance.engine != null) {
+            instance.engine.start();
+        }
+        return instance;
+    }
+
+    public static synchronized void setInstance(Flengine engine) {
+        instance = new EmbededFlens(engine);
+    }
 
 }

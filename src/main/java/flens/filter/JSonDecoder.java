@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,40 +17,42 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.filter;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class JSonDecoder extends AbstractFilter {
 
-	private Gson decoder;
+    private Gson decoder;
 
-	public JSonDecoder(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
-		super(name, plugin,tagger, matcher,prio);
-		decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
-	}
+    public JSonDecoder(String name, String plugin, Tagger tagger, Matcher matcher, int prio) {
+        super(name, plugin, tagger, matcher, prio);
+        decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Collection<Record> process(Record in) {
-		//TODO config
-		
-		Map<String, Object> x = decoder.fromJson((String) in.getValues().get("message"),HashMap.class);
-		if(x!=null)
-			in.getValues().putAll(x);
-		tag(in);
-		return Collections.emptyList();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<Record> process(Record in) {
+        // TODO config
+
+        Map<String, Object> values = decoder.fromJson((String) in.getValues().get("message"), HashMap.class);
+        if (values != null) {
+            in.getValues().putAll(values);
+        }
+        tag(in);
+        return Collections.emptyList();
+    }
 
 }

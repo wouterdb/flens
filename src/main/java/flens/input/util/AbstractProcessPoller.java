@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,7 +17,10 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input.util;
+
+import flens.core.Tagger;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -25,79 +28,98 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import flens.core.Tagger;
-
 public abstract class AbstractProcessPoller extends AbstractInput {
 
-	
-	protected String cmd;
-	protected Process proc;
-	protected List<String> args;
-	protected Timer t;
-	protected long period;
-	protected boolean running;
-	protected LinkedList<String> fullArgs;
+    protected String cmd;
+    protected Process proc;
+    protected List<String> args;
+    protected Timer timer;
+    protected long period;
+    protected boolean running;
+    protected LinkedList<String> fullArgs;
 
-	public AbstractProcessPoller(String name, String plugin,Tagger t,String cmd,List<String> args, long period) {
-		super(name,plugin, t);
-		this.cmd=cmd;
-		this.args = new LinkedList<>(args);
-		this.period=period;
-		this.fullArgs = new LinkedList<>(args);
-		this.fullArgs.add(0, cmd);
-	}
-	
-	public synchronized void poll() throws InterruptedException {
-		
-		
-		ProcessBuilder pb = new ProcessBuilder(fullArgs);
-		try {
-			proc = pb.start();
-		} catch (IOException e) {
-			err("could not start process", e);
-			return;
-		}
-		
-		captureStreams();
-		
-		proc.waitFor();
-		
-		postRun();
-		running=false;
-		proc = null;
-		notify();
-	}
+    /**
+      * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param taggr
+     *            tagger used to mark output records (one line becomes one
+     *            record)
+     
+     * @param cmd
+     *            command to execute
+     * @param args
+     *            arguments to the command
+     * @param period
+     *            polling period
+     */
+    public AbstractProcessPoller(String name, String plugin, Tagger taggr, String cmd, List<String> args, long period) {
+        super(name, plugin, taggr);
+        this.cmd = cmd;
+        this.args = new LinkedList<>(args);
+        this.period = period;
+        this.fullArgs = new LinkedList<>(args);
+        this.fullArgs.add(0, cmd);
+    }
 
-	protected abstract void captureStreams();
-	protected abstract void postRun() throws InterruptedException;
+    synchronized void poll() throws InterruptedException {
 
-	public synchronized void stop() {
-		t.cancel();
-		if(proc!=null)
-			proc.destroy();
-	}
+        ProcessBuilder pb = new ProcessBuilder(fullArgs);
+        try {
+            proc = pb.start();
+        } catch (IOException e) {
+            err("could not start process", e);
+            return;
+        }
 
-	public synchronized void join() throws InterruptedException {
-		if(running)
-			wait();	
-	}
+        captureStreams();
 
-	@Override
-	public synchronized void start() {
-		running=true;
-		t = new Timer(getName());
-		t.schedule(new TimerTask(){
+        proc.waitFor();
 
-			@Override
-			public void run() {
-				try {
-					poll();
-				} catch (InterruptedException e) {
-					err("failed to poll",e);
-				}
-				
-			}}, 0, period);
-		
-	}
+        postRun();
+        running = false;
+        proc = null;
+        notify();
+    }
+
+    protected abstract void captureStreams();
+
+    protected abstract void postRun() throws InterruptedException;
+
+    @Override
+    public synchronized void stop() {
+        timer.cancel();
+        if (proc != null) {
+            proc.destroy();
+        }
+    }
+
+    @Override
+    public synchronized void join() throws InterruptedException {
+        while (running) {
+            wait();
+        }
+    }
+
+    @Override
+    public synchronized void start() {
+        running = true;
+        timer = new Timer(getName());
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                try {
+                    poll();
+                } catch (InterruptedException e) {
+                    err("failed to poll", e);
+                }
+
+            }
+        }, 0, period);
+
+    }
 
 }

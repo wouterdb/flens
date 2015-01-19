@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.filter;
 
 import flens.core.Matcher;
@@ -31,18 +32,37 @@ import java.util.List;
 import java.util.Map;
 
 public class SetFilter extends AbstractFilter {
-	private Map<String, String> pairs = new HashMap<>();
+    private Map<String, String> pairs = new HashMap<>();
 
-	public SetFilter(String name,String plugin, Tagger tagger, Matcher matcher,int prio,
-			List<String> f, List<String> v) {
-		super(name, plugin, tagger, matcher,prio);
-		for (int i = 0; i < f.size(); i++)
-			this.pairs.put(f.get(i),v.get(i));
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param matcher
+     *            matcher this filter should used to select recrods
+     * @param prio
+     *            plugin priority
+     * @param fields
+     *            fields to store results in
+     * @param values
+     *            values to set the fields to
+     */
+    public SetFilter(String name, String plugin, Tagger tagger, Matcher matcher, int prio, List<String> fields,
+            List<String> values) {
+        super(name, plugin, tagger, matcher, prio);
+        for (int i = 0; i < fields.size(); i++) {
+            this.pairs.put(fields.get(i), values.get(i));
+        }
+    }
 
-	public Collection<Record> process(Record in) {
-		in.getValues().putAll(pairs);
-		tag(in);
-		return Collections.emptyList();
-	}
+    @Override
+    public Collection<Record> process(Record in) {
+        in.getValues().putAll(pairs);
+        tag(in);
+        return Collections.emptyList();
+    }
 }

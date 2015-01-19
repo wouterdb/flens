@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,35 +17,36 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class PingQuery extends AbstractConfig{
+public class PingQuery extends AbstractConfig {
 
-	@Override
-	protected void construct() {
-		engine.addHandler(new flens.query.PingQuery(name,plugin));	
-	}
+    @Override
+    protected void construct() {
+        engine.addHandler(new flens.query.PingQuery(name, plugin));
+    }
 
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	protected boolean isQuery() {
-		return true;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "ping query";
-	}
+    @Override
+    protected boolean isQuery() {
+        return true;
+    }
+
+    @Override
+    public String getDescription() {
+        return "ping query";
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,30 +17,36 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.util;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NamedThreadFactory implements ThreadFactory {
-	private final ThreadGroup group;
-	private final AtomicInteger threadNumber = new AtomicInteger(1);
-	private final String namePrefix;
+    private final ThreadGroup group;
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private final String namePrefix;
 
-	public NamedThreadFactory(String perfix) {
-		SecurityManager s = System.getSecurityManager();
-		group = (s != null) ? s.getThreadGroup() : Thread.currentThread()
-				.getThreadGroup();
-		this.namePrefix = perfix;
-	}
+    /**
+     * @param perfix
+     *            prefix to put before thread name.
+     */
+    public NamedThreadFactory(String perfix) {
+        SecurityManager sec = System.getSecurityManager();
+        group = (sec != null) ? sec.getThreadGroup() : Thread.currentThread().getThreadGroup();
+        this.namePrefix = perfix;
+    }
 
-	public Thread newThread(Runnable r) {
-		Thread t = new Thread(group, r, namePrefix
-				+ threadNumber.getAndIncrement(), 0);
-		if (t.isDaemon())
-			t.setDaemon(false);
-		if (t.getPriority() != Thread.NORM_PRIORITY)
-			t.setPriority(Thread.NORM_PRIORITY);
-		return t;
-	}
+    @Override
+    public Thread newThread(Runnable runnable) {
+        Thread thread = new Thread(group, runnable, namePrefix + threadNumber.getAndIncrement(), 0);
+        if (thread.isDaemon()) {
+            thread.setDaemon(false);
+        }
+        if (thread.getPriority() != Thread.NORM_PRIORITY) {
+            thread.setPriority(Thread.NORM_PRIORITY);
+        }
+        return thread;
+    }
 }

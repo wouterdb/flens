@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,74 +17,70 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.query;
 
-import java.util.Map;
+package flens.query;
 
 import flens.core.Flengine;
 import flens.core.Query;
 import flens.core.QueryHandler;
 import flens.core.util.AbstractPlugin;
 
+import java.util.Map;
+
 public class PingQuery extends AbstractPlugin implements QueryHandler {
 
-	private String name;
-	private String plugin;
+    private String name;
+    private String plugin;
 
-	public PingQuery(String name, String plugin) {
-		this.name = name;
-		this.plugin = plugin;
-	}
+    public PingQuery(String name, String plugin) {
+        this.name = name;
+        this.plugin = plugin;
+    }
 
-	@Override
-	public boolean canHandle(Query q) {
-		return q.getQuery().startsWith("ping://");
-	}
+    @Override
+    public boolean canHandle(Query query) {
+        return query.getQuery().startsWith("ping://");
+    }
 
-	@Override
-	public void handle(Query q) {
-		q.respond("pong " + System.currentTimeMillis());
+    @Override
+    public void handle(Query query) {
+        query.respond("pong " + System.currentTimeMillis());
 
-	}
+    }
 
-	@Override
-	public void start() {
-		// TODO Auto-generated method stub
+    @Override
+    public void start() {
 
-	}
+    }
 
-	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
+    @Override
+    public void stop() {
 
-	}
+    }
 
-	@Override
-	public void join() {
-		// TODO Auto-generated method stub
+    @Override
+    public void join() {
 
-	}
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public String getPlugin() {
-		return plugin;
-	}
+    @Override
+    public String getPlugin() {
+        return plugin;
+    }
 
-	@Override
-	public boolean canUpdateConfig() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean canUpdateConfig() {
+        return false;
+    }
 
-	@Override
-	public void updateConfig(Flengine engine, Map<String, Object> tree) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void updateConfig(Flengine engine, Map<String, Object> tree) {
+
+    }
 
 }

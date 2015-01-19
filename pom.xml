@@ -30,11 +30,6 @@
 			<version>3.0.2</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
@@ -66,6 +61,7 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.jpountz.lz4</groupId>
@@ -89,16 +85,16 @@
 			<plugin>
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
+				<version>1.9.0</version>
 				<configuration>
 					<header>header.txt</header>
 					<excludes>
 						<exclude>target/**</exclude>
 						<exclude>localRepo/**</exclude>
+						<exclude>**/*.json</exclude>
 					</excludes>
 				</configuration>
-				<!-- <executions> <execution> <goals> <goal>check</goal> </goals> </execution> 
-					</executions> -->
+				<!-- <executions> <execution> <goals> <goal>check</goal> </goals> </execution> </executions> -->
 			</plugin>
 
 			<plugin>
@@ -219,12 +215,33 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.16</version>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.14-SNAPSHOT</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+					<linkXRef>false</linkXRef>
+				</configuration>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -247,6 +264,25 @@
 											<goal>
 												copy-dependencies
 											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-checkstyle-plugin
+										</artifactId>
+										<versionRange>
+											[2.13,)
+										</versionRange>
+										<goals>
+											<goal>check</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -297,7 +333,7 @@
 
 	<repositories>
 		<repository>
-			<id>nflabs public repository release</id>
+			<id>nflabs.public</id>
 			<url>https://github.com/NFLabs/mvn-repo/raw/master/releases</url>
 			<releases>
 				<enabled>true</enabled>
@@ -307,7 +343,7 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>nflabs public repository snapshot</id>
+			<id>nflabs.snapshot</id>
 			<url>https://github.com/NFLabs/mvn-repo/raw/master/snapshots</url>
 			<releases>
 				<enabled>false</enabled>
@@ -317,5 +353,19 @@
 			</snapshots>
 		</repository>
 	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>apache.snapshots</id>
+			<name>Apache snapshot</name>
+			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>

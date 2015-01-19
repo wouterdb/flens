@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,167 +17,126 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.output;
 
-import java.io.BufferedReader;
+import flens.core.Flengine;
+import flens.core.Matcher;
+import flens.core.Record;
+import flens.output.util.AbstractSocketOutput;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.lang3.tuple.Pair;
 
-import flens.core.Flengine;
-import flens.core.Matcher;
-import flens.core.Record;
-import flens.output.util.AbstractPumpOutput;
 
-public class OpenTsdbOutput extends AbstractPumpOutput {
 
-	public class ErrPump implements Runnable {
+public class OpenTsdbOutput extends AbstractSocketOutput<BufferedWriter> {
 
-		private BufferedReader reader;
-
-		public ErrPump(InputStream in) {
-			reader = new BufferedReader(new InputStreamReader(in));
-		}
-
-		@Override
-		public void run() {
-			try {
-				while(running){
-					warn("got: " + reader.readLine());
-				}
-					
-			}catch (Exception e) {
-				err("error pump broke",e);
-			}
-
-		}
-
-	}
-
-	private int port = 4242;
-	private String host;
-	
     private Set<Pair<String, String>> sendTags = new HashSet<>();
-	private Thread errPump;
-	
-	public OpenTsdbOutput(String name,String plugin, Matcher matcher,String server, int port) {
-		super(name,plugin,matcher);
-		this.port = port;
-		this.host = server;
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param matcher
+     *            matcher this output should used to select records
+     * @param server
+     *            hostname of the AMQP server
+     * @param port
+     *            TCP port to connect to
+     */
+    public OpenTsdbOutput(String name, String plugin, Matcher matcher, String server, int port) {
+        super(name, plugin, matcher,server,port);
+    
+    }
 
-	public OpenTsdbOutput(String name, String plugin,Matcher matcher,String server, int port,List<String> sendTags) {
-		super(name,plugin,matcher);
-		this.port = port;
-		this.host = server;
-		for(String s:sendTags){
-			String[] parts = s.split(":",2);
-			if(parts.length==2){
-				this.sendTags.add(Pair.of(parts[0], parts[1]));
-			}else
-				this.sendTags.add(Pair.of(parts[0], parts[0]));
-		}
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param matcher
+     *            matcher this output should used to select records
+     * @param server
+     *            hostname of the AMQP server
+     * @param port
+     *            TCP port to connect to
+     * @param sendTags
+     *            additional tags to send
+     */
+    public OpenTsdbOutput(String name, String plugin, Matcher matcher, String server, int port, List<String> sendTags) {
+        super(name, plugin, matcher,server,port);
+        for (String s : sendTags) {
+            String[] parts = s.split(":", 2);
+            if (parts.length == 2) {
+                this.sendTags.add(Pair.of(parts[0], parts[1]));
+            } else {
+                this.sendTags.add(Pair.of(parts[0], parts[0]));
+            }
+        }
+    }
 
-	@Override
-	public void writeConfig(Flengine engine, Map<String, Object> tree) {
-		Map<String,Object> subtree = new HashMap<String, Object>();
-		tree.put(getName(),subtree);
-		subtree.put("plugin", getPlugin());
-		
-		subtree.put("host", host);
-		subtree.put("port", port);
-		getMatcher().outputConfig(subtree);
-		
-		List<String> sendTags = new LinkedList<>();
-		
-		for(Pair<String, String> tag:this.sendTags){
-			sendTags.add(tag.getKey()+":"+tag.getValue());
-		}
-		subtree.put("send-tags",sendTags);
-		
-	}
-	
-	@Override
-	public void run() {
-		Socket s = null;
-		Record r = null;
-		try {
-			s = new Socket(host, port);
-			s.setTcpNoDelay(true);
-			BufferedWriter br = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-			hookOnErrpump(s);
-			while(running){
-				r = queue.take();
-				String suffix = collectSendTags(r);
-				br.write(String.format("put %s %d %s host=%s%s\n",r.getValues().get("metric"),r.getTimestamp()/1000,r.getValues().get("value"),r.getSource(),suffix));
-				//System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),r.getTimestamp(),r.getValues().get("value"),r.getSource()));
-				br.flush();
-				sent++;
-			}
-		} catch (UnknownHostException e) {
-			
-			err(getName()+ " host not know",e);
-		} catch (IOException e) {
-			err(getName()+ " pipe broken, going into reconnect",e);
-			lost++;
-			reconnect();
-		} catch (InterruptedException e) {
-			//normal
-		}finally{
-			if(s!=null)
-				try {
-					s.close();
-				} catch (IOException e) {
-					warn(getName()+ "could not close socket",e);
-				}
-		}
-		
-		
-	}
-	
-	private String collectSendTags(Record r) {
-		StringBuffer b = new StringBuffer();
-		Map<String,Object> vals = r.getValues();
-		for(Pair<String, String> names:sendTags){
-			Object v = vals.get(names.getLeft());
-			if(v!=null){
-				b.append(" ");
-				b.append(names.getRight());
-				b.append("=");
-				b.append(v);
-			}
-		}
-		return b.toString();
-	}
+    @Override
+    public void writeConfig(Flengine engine, Map<String, Object> tree) {
+        Map<String, Object> subtree = new HashMap<String, Object>();
+        tree.put(getName(), subtree);
+        subtree.put("plugin", getPlugin());
 
-	private void hookOnErrpump(Socket s) {
-		try {
-			errPump = new Thread(new ErrPump(s.getInputStream()));
-		} catch (IOException e) {
-			err(" err pipe setup failed",e);
-		}
-		
-	}
+        subtree.put("host", host);
+        subtree.put("port", port);
+        getMatcher().outputConfig(subtree);
 
-	
+        List<String> sendTags = new LinkedList<>();
 
-	@Override
-	public void stop() {
-		super.stop();
-		if(errPump!=null)
-			errPump.interrupt();
-	}
-	
+        for (Pair<String, String> tag : this.sendTags) {
+            sendTags.add(tag.getKey() + ":" + tag.getValue());
+        }
+        subtree.put("send-tags", sendTags);
+
+    }
+
+    private String collectSendTags(Record record) {
+        StringBuffer buffer = new StringBuffer();
+        Map<String, Object> vals = record.getValues();
+        for (Pair<String, String> names : sendTags) {
+            Object value = vals.get(names.getLeft());
+            if (value != null) {
+                buffer.append(" ");
+                buffer.append(names.getRight());
+                buffer.append("=");
+                buffer.append(value);
+            }
+        }
+        return buffer.toString();
+    }
+
+    @Override
+    protected BufferedWriter getWriter(OutputStream outputStream) {
+        return new BufferedWriter(new OutputStreamWriter(outputStream));
+    }
+
+    @Override
+    protected void dispatch(BufferedWriter outstream, Record record) throws IOException {
+        String suffix = collectSendTags(record);
+        outstream.write(String.format("put %s %d %s host=%s%s\n", record.getValues().get("metric"),
+                record.getTimestamp() / 1000, record.getValues().get("value"), record.getSource(), suffix));
+        // System.out.println(String.format("put %s %d %s host=%s",r.getValues().get("metric"),
+        // r.getTimestamp(),r.getValues().get("value"),r.getSource()));
+        outstream.flush();
+    }
+
+  
+
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,31 +17,41 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.util.Queue;
 
 public interface Output extends Plugin {
 
-	/**
-	 * idempotent, fast
-	 */
-	public Matcher getMatcher();
-	
-	/**
-	 * @return the output queue
-	 * 
-	 * method is idempotent
-	 */
-	public Queue<Record> getOutputQueue();
-	public void start();
-	public void stop();
-	public void join() throws InterruptedException;
-	
-	
-	//stats, may be an underestimate, due to threading
-	//prefer loss to lock
-	public int getRecordsSent();
-	public int getRecordsLost();
-	
+    /**
+     * The Matcher determines to which records this plugin is applied. 
+     * <p/>
+     * idempotent, fast.
+     */
+    public Matcher getMatcher();
+
+    /**
+     *  Return the output queue from which this output will read its records.
+     * <p/>
+     * Method is idempotent
+     *         
+     * @return the output queue
+     */
+    public Queue<Record> getOutputQueue();
+
+    public void start();
+
+    public void stop();
+
+    public void join() throws InterruptedException;
+
+     
+    /**
+     * stats, may be an underestimate, due to threading. prefer loss to lock
+     */
+    public int getRecordsSent(); 
+    
+    public int getRecordsLost();
+
 }

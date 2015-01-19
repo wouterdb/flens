@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,30 +17,32 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class CharacterDecoder extends AbstractConfig{
+public class CharacterDecoder extends AbstractConfig {
 
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected void construct() {
-		engine.addFilter(new flens.filter.CharacterDecoder(name,plugin,tagger,matcher,prio));
-	}
+    @Override
+    protected void construct() {
+        engine.addFilter(new flens.filter.CharacterDecoder(name, plugin, tagger, matcher, prio));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "decode binary messages";
-	}
+    @Override
+    public String getDescription() {
+        return "Decode binary messages, take as binary blob out of the body field"
+                + " and put it in the message field as a string";
+    }
 
 }

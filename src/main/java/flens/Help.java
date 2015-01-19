@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,16 +17,21 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens;
 
-import java.io.FileNotFoundException;
 import flens.core.ConfigParser;
 
+import java.io.FileNotFoundException;
+
 public class Help {
-	
-	public static void main(String[] args) throws FileNotFoundException {
-		ConfigParser cp = new ConfigParser();
-		System.out.println(cp.help());
-	}
+
+    /**
+     * Print out all help files of all available plugins.
+     */
+    public static void main(String[] args) throws FileNotFoundException {
+        ConfigParser cp = new ConfigParser();
+        System.out.println(cp.help());
+    }
 
 }

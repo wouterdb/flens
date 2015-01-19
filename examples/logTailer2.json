@@ -3,7 +3,7 @@
  	"amqp-in" : {
  			"type" : "log",
  			"add-tag" : ["binary","json"],
- 			"host": "127.0.0.1",
+ 			"host": "172.16.4.8",
  			"exchange":"metrics"
  		}
  		
@@ -20,7 +20,8 @@
  			"remove-tag" : ["json"]
  		},"mvel":{
  			"prio":3,
- 			"script":"System.out.println(source + ':\t' +message);"
+ 			"script":"System.out.println(time);"
+ 			
  		}
 	},
  	

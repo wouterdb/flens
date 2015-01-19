@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,43 +17,42 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
-
 public class SocketInput extends AbstractConfig {
 
-	@Override
-	protected void construct() {
-		int port = getInt("port",19850);
-		engine.addInput(new flens.input.SocketInput(name,plugin,tagger,port));
-	}
+    @Override
+    protected void construct() {
+        int port = getInt("port", 19850);
+        engine.addInput(new flens.input.SocketInput(name, plugin, tagger, port));
+    }
 
-	
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("port", "int", "19850", "port to connect to"));
-		return out;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("port", "int", "19850", "port to connect to"));
+        return out;
+    }
 
-	@Override
-	public String getDescription() {
-		return "Listen on TCP socket for opentsdb messages";
-	}
+    @Override
+    public String getDescription() {
+        return "Listen on TCP socket for opentsdb messages";
+    }
 
 }

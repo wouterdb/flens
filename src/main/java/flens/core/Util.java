@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.net.InetAddress;
@@ -25,22 +26,25 @@ import java.util.logging.Logger;
 
 public class Util {
 
-	private static String hostname;
-	
-	public static void overriderHostname(String name){
-		hostname=name;
-	}
+    private static String hostname;
 
-	public static String hostName() {
-		if(hostname == null){
-			 try {
-				hostname = InetAddress.getLocalHost().getHostName();
-			} catch (UnknownHostException e) {
-				hostname = "localhost";
-				Logger.getLogger("flens.core").warning("could not find hostname");
-			}
-		}
-		return hostname ;
-	}
+    public static void overriderHostname(String name) {
+        hostname = name;
+    }
+
+    /**
+     * Get the hostname used in records.
+     */
+    public static String hostName() {
+        if (hostname == null) {
+            try {
+                hostname = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                hostname = "localhost";
+                Logger.getLogger("flens.core").warning("could not find hostname");
+            }
+        }
+        return hostname;
+    }
 
 }

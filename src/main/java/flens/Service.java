@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,45 +17,52 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens;
 
 import static flens.core.util.ConfigUtil.collectConfig;
 
-import java.io.IOException;
-import java.util.Map;
-
 import flens.core.ConfigParser;
 import flens.core.Util;
 
+import java.io.IOException;
+import java.util.Map;
+
 public class Service {
 
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args) throws IOException {
+    /**
+     * Start new flens instance, from config directory, given as the first argument.
+     */
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args) throws IOException {
 
-		ConfigParser ch = new ConfigParser();
-		
-		Map<String, Object> myconfig = collectConfig(args[0]);
+        ConfigParser ch = new ConfigParser();
 
-		Map<String, String> tags = (Map<String, String>) myconfig.get("tags");
+        Map<String, Object> myconfig = collectConfig(args[0]);
 
-		Map<String, Object> initial = (Map<String, Object>) myconfig
-				.get("init");
+        Map<String, String> tags = (Map<String, String>) myconfig.get("tags");
 
-		String name = (String) myconfig.get("name");
-		if(name != null)
-			Util.overriderHostname(name);
+        Map<String, Object> initial = (Map<String, Object>) myconfig.get("init");
 
-		if(initial!=null)
-			ch.construct(initial);
-		
-		if(tags!=null)
-			ch.getEngine().addTags(tags);
-		
-		ch.getEngine().start();
-		EmbededFlens.setInstance(ch.getEngine());
-		
-	}
+        String name = (String) myconfig.get("name");
+        if (name != null) {
+            Util.overriderHostname(name);
+        }
 
+        if (initial != null) {
+            ch.construct(initial);
+        } else {
+            //fallback, making config without init block work
+            ch.construct(myconfig);
+        }
 
+        if (tags != null) {
+            ch.getEngine().addTags(tags);
+        }
+
+        ch.getEngine().start();
+        EmbededFlens.setInstance(ch.getEngine());
+
+    }
 
 }

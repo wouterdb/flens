@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,27 +17,28 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-import java.io.InputStreamReader;
 
-import com.nflabs.grok.Grok;
-import com.nflabs.grok.Match;
+package flens.test.util;
 
-class GTest {
+import org.apache.commons.lang3.RandomStringUtils;
 
-	
+import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
-	public static void main(String[] args) throws Throwable {
-		Grok g = new Grok();
-		String example = "INFO: workflow 68fac406-78d1-4ffe-923f-a824f9f447fa took: 389163 by jos";
+public class DataHeavyPattern extends Pattern {
 
-		String pat = "INFO: workflow %{UUID:temporalScope} took: %{INT:value} by %{USERNAME:tenant}";
-		
-		g.addPatternFromReader(new InputStreamReader(GTest.class.getResourceAsStream("base")));
-		g.compile(pat);
-		Match m = g.match(example);
-		m.captures();
-		System.out.println(m.toMap());
-	}
+    private Random random;
 
+    public DataHeavyPattern(int length, int msgrate) throws NoSuchAlgorithmException {
+        super(length, msgrate, null);
+
+        random = new Random(123456);
+
+    }
+
+    @Override
+    public String getMessage(int id) {
+        return RandomStringUtils.random(4096, 0, 0, true, true, null, random);
+    }
 
 }

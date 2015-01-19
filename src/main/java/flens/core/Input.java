@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,24 +17,27 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.util.concurrent.BlockingQueue;
 
 public interface Input extends Plugin {
 
-	public void setInputQueue(BlockingQueue<Record> queue);
+    public void setInputQueue(BlockingQueue<Record> queue);
 
-	public void start();
-	public void stop();
+    public void start();
 
-	/**
-	 * await stop
-	 * 
-	 * @throws InterruptedException
-	 */
-	public void join() throws InterruptedException;
+    public void stop();
 
-	public int getRecordsSent();
+    /**
+     * Await stop.
+     */
+    public void join() throws InterruptedException;
+
+    /**
+     * stats, may be an underestimate, due to threading. prefer loss to lock
+     */
+    public int getRecordsSent();
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,44 +17,48 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import flens.core.Record;
 import flens.core.Tagger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 public class StreamPump extends AbstractActiveInput implements Runnable {
 
-	private BufferedReader reader;
+    private BufferedReader reader;
 
-	public StreamPump(String name, String plugin, Tagger tagger, BufferedReader s) {
-		super(name,plugin, tagger);
-		this.reader = s;
-	}
+    public StreamPump(String name, String plugin, Tagger tagger, BufferedReader stream) {
+        super(name, plugin, tagger);
+        this.reader = stream;
+    }
 
-	@Override
-	public void run() {
-		try {
-			while (running) {
-				String r = reader.readLine();
-				if (r == null)
-					running = false;
-				else
-					dispatch(r);
-			}
-		} catch (IOException e) {
-			err("stream failed", e);
-		}
-		running = false;
-	}
+    @Override
+    public void run() {
+        try {
+            while (running) {
+                String line = reader.readLine();
+                if (line == null) {
+                    running = false;
+                } else {
+                    dispatch(line);
+                }
+            }
+        } catch (IOException e) {
+            err("stream failed", e);
+        }
+        running = false;
+    }
 
-	protected void dispatch(String s) {
-		dispatch(new Record(s));
-	}
+    protected void dispatch(String line) {
+        dispatch(Record.forLog(line));
+    }
 
-	protected void dispatch(Record r) {
-		if (tagger != null)
-			super.dispatch(r);
-	}
+    protected void dispatch(Record rec) {
+        if (tagger != null) {
+            super.dispatch(rec);
+        }
+    }
 }

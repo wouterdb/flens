@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,50 +17,50 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.config;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+package flens.config;
 
 import flens.config.util.AbstractConfig;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+
 public class SpecInput extends AbstractConfig {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	protected void construct() {
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void construct() {
 
-		int interval = getInt("interval",10000);
-		List<String> specs = getArray("tests", Arrays.asList("write","read","cpu","exec","sleep"));
-		
-		engine.addInput(new flens.input.SpecInput(name, plugin, tagger,interval,specs));
-	}
+        int interval = getInt("interval", 10000);
+        List<String> specs = getArray("tests", Collections.emptyList());
 
-	
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+        engine.addInput(new flens.input.SpecInput(name, plugin, tagger, interval, specs));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("interval", "int", "10", "interval between specs tests in ms"));
-		out.add(new Option("tests", "[String]", "[\"disk\"]", "test suites to run"));
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-		return out;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("interval", "int", "10000", "interval between specs tests in ms"));
+        out.add(new Option("tests", "[String]", "[]", "test suites to run"));
 
-	@Override
-	public String getDescription() {
-		return "Runs small tests to estimate machine performance";
-	}
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Runs small tests to estimate machine performance";
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,80 +17,94 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
+package flens.input;
 
 import flens.core.Tagger;
 import flens.input.util.AbstractInput;
 import flens.input.util.StreamPump;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.List;
+
 
 public class ProcessTailer extends AbstractInput {
 
-	private String cmd;
-	private Process proc;
-	private StreamPump out;
-	private StreamPump err;
-	private Tagger outT;
-	private Tagger errT;
-	private List<String> args;
+    private String cmd;
+    private Process proc;
+    private StreamPump out;
+    private StreamPump err;
+    private Tagger outT;
+    private Tagger errT;
+    private List<String> args;
 
-	public ProcessTailer(String name,String plugin, Tagger out,Tagger err, String cmd,List<String> args) {
-		super(name,plugin, null);
-		this.cmd=cmd;
-		this.args = args;
-		this.outT = out;
-		this.errT = err;
-	}
+    /**
+      * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param out
+     *            tagger used to mark output records (one line becomes one record)
+     * @param err
+     *            tagger used to mark records of the error stream
+     * @param cmd
+     *            command to execute
+     * @param args
+     *            arguments to the command
+     */
+    public ProcessTailer(String name, String plugin, Tagger out, Tagger err, String cmd, List<String> args) {
+        super(name, plugin, null);
+        this.cmd = cmd;
+        this.args = args;
+        this.outT = out;
+        this.errT = err;
+    }
 
-	@Override
-	public void start() {
-		args.add(0, cmd);
-		ProcessBuilder pb = new ProcessBuilder(args);
-		try {
-			proc = pb.start();
-		} catch (IOException e) {
-			err("could not start process", e);
-			return;
-		}
-		
-	/*	new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					proc.waitFor();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println("failed");
-				stop();
-			}
-		}).start();*/
-		
-		out = new StreamPump(getName()+".out",getPlugin(),outT,new BufferedReader(new InputStreamReader(proc.getInputStream()))) ;
-		err = new StreamPump(getName()+".err",getPlugin(),errT,new BufferedReader(new InputStreamReader(proc.getErrorStream()))) ;
-		out.setInputQueue(in);
-		err.setInputQueue(in);
-		out.start();
-		err.start();
-	}
+    @Override
+    public void start() {
+        args.add(0, cmd);
+        ProcessBuilder pb = new ProcessBuilder(args);
+        try {
+            proc = pb.start();
+        } catch (IOException e) {
+            err("could not start process", e);
+            return;
+        }
 
-	public void stop() {
-		proc.destroy();
-		out.stop();
-		err.stop();
-	}
+        /*
+         * new Thread(new Runnable() {
+         * 
+         * @Override public void run() { try { proc.waitFor(); } catch
+         * (InterruptedException e) { // TODO Auto-generated catch block
+         * e.printStackTrace(); } System.out.println("failed"); stop(); }
+         * }).start();
+         */
 
-	public void join() throws InterruptedException {
-		proc.waitFor();
-		err.join();
-		out.join();
-	}
+        out = new StreamPump(getName() + ".out", getPlugin(), outT, new BufferedReader(new InputStreamReader(
+                proc.getInputStream())));
+        err = new StreamPump(getName() + ".err", getPlugin(), errT, new BufferedReader(new InputStreamReader(
+                proc.getErrorStream())));
+        out.setInputQueue(in);
+        err.setInputQueue(in);
+        out.start();
+        err.start();
+    }
+
+    @Override
+    public void stop() {
+        proc.destroy();
+        out.stop();
+        err.stop();
+    }
+
+    @Override
+    public void join() throws InterruptedException {
+        proc.waitFor();
+        err.join();
+        out.join();
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,31 +17,33 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core.util;
 
-import java.util.Map;
+package flens.core.util;
 
 import flens.core.Record;
 import flens.core.Tagger;
 
+import java.util.Map;
+
+
 public class TypeTagger implements Tagger {
 
-	private final String type;
-	
-	private final String configprefix; 
+    private final String type;
 
-	public TypeTagger(String prefix, String stype) {
-		this.type=stype;
-		this.configprefix = prefix;
-	}
+    private final String configprefix;
 
-	@Override
-	public void adapt(Record r) {
-		r.setType(type);
-	}
+    public TypeTagger(String prefix, String stype) {
+        this.type = stype;
+        this.configprefix = prefix;
+    }
 
-	@Override
-	public void outputConfig(Map<String, Object> tree) {
-		tree.put(configprefix+"type", type);
-	}
+    @Override
+    public void adapt(Record rec) {
+        rec.setType(type);
+    }
+
+    @Override
+    public void outputConfig(Map<String, Object> tree) {
+        tree.put(configprefix + "type", type);
+    }
 }

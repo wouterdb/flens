@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,54 +17,56 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core.util;
+
+import flens.config.util.Reflector;
+import flens.core.Flengine;
 
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import flens.config.util.Reflector;
-import flens.core.Flengine;
-
 public abstract class AbstractPlugin {
-	
-	public void warn(String line) {
-		Logger.getLogger(getClass().getName()).log(Level.WARNING,
-				getName() + ": " + line  + "");
-		
-	}
-	
-	protected void err(String msg, Throwable e) {
-		Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg,e);
-	}
-	
-	protected void err(String msg) {
-		Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg);
-	}
 
-	protected void warn(String msg, Exception e) {
-		Logger.getLogger(getClass().getName()).log(Level.WARNING, msg,e);
-		
-	}
-	
-	protected void info(String msg) {
-		Logger.getLogger(getClass().getName()).log(Level.INFO, msg);
-		
-	}
+    public void warn(String line) {
+        Logger.getLogger(getClass().getName()).log(Level.WARNING, getName() + ": " + line + "");
+    }
 
-	public abstract String getName();
-	public abstract String getPlugin();
-	
-	public void writeConfig(Flengine engine, Map<String,Object> tree){
-		String plug = getPlugin();
-		if(plug==null)
-			return;
-		Map<String,Object> subtree = Reflector.store(this, engine.getPluginRepo().get(plug));
-		tree.put(getName(),subtree);
-		
-		
-	}
-	
-	
+    protected void warn(String msg, Exception exc) {
+        Logger.getLogger(getClass().getName()).log(Level.WARNING, msg, exc);
+    }
+
+    protected void err(String msg, Throwable exc) {
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg, exc);
+    }
+
+    protected void err(String msg) {
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg);
+    }
+
+    protected void info(String msg) {
+        Logger.getLogger(getClass().getName()).log(Level.INFO, msg);
+    }
+
+    public abstract String getName();
+
+    public abstract String getPlugin();
+
+    /**
+     * Write back the running config for given engine to the given tree. Each
+     * plugin is expected to add one entry of the form:
+     * <code> tree.put(getName(), subtree); </code>
+     * 
+     */
+    public void writeConfig(Flengine engine, Map<String, Object> tree) {
+        String plug = getPlugin();
+        if (plug == null) {
+            return;
+        }
+        Map<String, Object> subtree = Reflector.store(this, engine.getPluginRepo().get(plug));
+        tree.put(getName(), subtree);
+
+    }
 
 }

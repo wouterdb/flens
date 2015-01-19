@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.filter;
 
 import flens.core.Constants;
@@ -25,38 +26,59 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class RenameFilter extends AbstractFilter {
-	private List<Pair<String, String>> names = new LinkedList<>();
+    private List<Pair<String, String>> names = new LinkedList<>();
 
-	public RenameFilter(String name, String plugin, Tagger tagger, Matcher matcher,int prio,
-			List<String> f, List<String> t) {
-		super(name, plugin, tagger, matcher,prio);
-		for (int i = 0; i < f.size(); i++)
-			this.names.add(Pair.of(f.get(i), t.get(i)));
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param matcher
+     *            matcher this filter should used to select recrods
+     * @param prio
+     *            plugin priority
+     * @param from
+     *            fields to rename
+     * @param to
+     *            new names for fields
+     */
+    public RenameFilter(String name, String plugin, Tagger tagger, Matcher matcher, int prio, List<String> from,
+            List<String> to) {
+        super(name, plugin, tagger, matcher, prio);
+        for (int i = 0; i < from.size(); i++) {
+            this.names.add(Pair.of(from.get(i), to.get(i)));
+        }
+    }
 
-	public Collection<Record> process(Record in) {
-		Map<String,Object> vals = in.getValues();
-		for (Pair<String,String> ren : this.names) {
-			Object val = vals.remove(ren.getKey());
-			if (val != null) {
-				if(!(ren.getRight()).isEmpty())
-					vals.put(ren.getRight(), val);
-				if(ren.getRight().equals(Constants.TIME)){
-					
-					vals.put(Constants.TIME, in.getTimestamp());
-				}
-			}
-		}
-		
-		tag(in);
-		return Collections.emptyList();
-	}
+    @Override
+    public Collection<Record> process(Record in) {
+        Map<String, Object> vals = in.getValues();
+        for (Pair<String, String> ren : this.names) {
+            Object val = vals.remove(ren.getKey());
+            if (val != null) {
+                if (!(ren.getRight()).isEmpty()) {
+                    vals.put(ren.getRight(), val);
+                }
+                if (ren.getRight().equals(Constants.TIME)) {
+
+                    vals.put(Constants.TIME, in.getTimestamp());
+                }
+            }
+        }
+
+        tag(in);
+        return Collections.emptyList();
+    }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,35 +17,32 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input.util;
 
 import flens.core.Tagger;
 
 public abstract class AbstractActiveInput extends AbstractInput implements Runnable {
 
-	public AbstractActiveInput(String name, String plugin, Tagger tagger) {
-		super(name, plugin, tagger);
-	}
+    public AbstractActiveInput(String name, String plugin, Tagger tagger) {
+        super(name, plugin, tagger);
+    }
 
-	protected Thread runner = new Thread(this);
-	protected volatile boolean running;
+    protected Thread runner = new Thread(this);
+    protected volatile boolean running;
 
-	
+    public void start() {
+        running = true;
+        runner.start();
+    }
 
-	public void start() {
-		running = true;
-		runner.start();
-	}
+    public void stop() {
+        running = false;
+        runner.interrupt();
+    }
 
-	public void stop() {
-		running = false;
-		runner.interrupt();
-	}
-
-	public void join() throws InterruptedException {
-		runner.join();
-	}
-	
-
+    public void join() throws InterruptedException {
+        runner.join();
+    }
 
 }

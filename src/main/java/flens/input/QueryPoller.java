@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,14 +17,8 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
-
-import com.google.gson.Gson;
 
 import flens.core.Flengine;
 import flens.core.Query;
@@ -33,65 +27,88 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractPeriodicInput;
 
+import com.google.gson.Gson;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TimerTask;
+
 public class QueryPoller extends AbstractPeriodicInput {
 
-	@SuppressWarnings("unchecked")
-	public QueryPoller(Flengine engine, String name, String plugin, Tagger tagger, int interval,String query, String metric) {
-		super(name,plugin, tagger, interval);
-		this.engine = engine;
-		this.metric = metric;
-		this.myquery = new QueryToRecordPump(query, Collections.EMPTY_MAP);
-	}
+    /**
+     * @param engine
+     *            engine used to execute the queries
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param query
+     *            query to execute periodically
+     * @param metric
+     *            name to give to the result
+     */
+    @SuppressWarnings("unchecked")
+    public QueryPoller(Flengine engine, String name, String plugin, Tagger tagger, int interval, String query,
+            String metric) {
+        super(name, plugin, tagger, interval);
+        this.engine = engine;
+        this.metric = metric;
+        this.myquery = new QueryToRecordPump(query, Collections.EMPTY_MAP);
+    }
 
-	private Flengine engine;
-	private Query myquery;
-	private String metric;
+    private Flengine engine;
+    private Query myquery;
+    private String metric;
 
-	@Override
-	protected TimerTask getWorker() {
-		return new TimerTask() {
+    @Override
+    protected TimerTask getWorker() {
+        return new TimerTask() {
 
-			@Override
-			public void run() {
-				List<QueryHandler> qhs = engine.getHandler(myquery);
-				for (QueryHandler qh : qhs) {
-					qh.handle(myquery);
-				}
-			}
-		};
-	}
-	
-	private class QueryToRecordPump extends Query{
+            @Override
+            public void run() {
+                List<QueryHandler> qhs = engine.getHandler(myquery);
+                for (QueryHandler qh : qhs) {
+                    qh.handle(myquery);
+                }
+            }
+        };
+    }
 
-		public QueryToRecordPump(String query, Map<String, Object> payload) {
-			super(query, payload);
-		}
+    private class QueryToRecordPump extends Query {
 
-		@Override
-		public void respond(byte[] payload) {
-			dispatch(Record.createWithValue(metric,payload));		
-		}
+        public QueryToRecordPump(String query, Map<String, Object> payload) {
+            super(query, payload);
+        }
 
-		@Override
-		public void respond(String payload) {
-			dispatch(Record.createWithValue(metric,payload));		
-		}
+        @Override
+        public void respond(byte[] payload) {
+            dispatch(Record.forBlob(metric, payload));
+        }
 
-		public void respond(Map<String,Object> payload){
-			dispatch(Record.createWithValues(payload));
-		}
-		
-		//FIXME: better way to pack objects
-		public void respond(Object payload){
-			Gson gson = new Gson();
-			respond(gson.toJson(payload));
-		}
-		
-		@Override
-		public void fail(int code, String payload) {
-			warn("failed to execute "+ getQuery() + " : "+ payload);
-		}
-		
-	}
+        @Override
+        public void respond(String payload) {
+            dispatch(Record.forLog(metric, payload));
+        }
+
+        public void respond(Map<String, Object> payload) {
+            dispatch(Record.createWithValues(payload));
+        }
+
+        // FIXME: better way to pack objects
+        public void respond(Object payload) {
+            Gson gson = new Gson();
+            respond(gson.toJson(payload));
+        }
+
+        @Override
+        public void fail(int code, String payload) {
+            warn("failed to execute " + getQuery() + " : " + payload);
+        }
+
+    }
 
 }

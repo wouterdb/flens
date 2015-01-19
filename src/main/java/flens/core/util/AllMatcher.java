@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,23 +17,23 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core.util;
 
-import java.util.Map;
+package flens.core.util;
 
 import flens.core.Matcher;
 import flens.core.Record;
 
+import java.util.Map;
+
 public class AllMatcher implements Matcher {
 
-	public boolean matches(Record r) {
-		return true;
-	}
+    public boolean matches(Record rec) {
+        return true;
+    }
 
-	@Override
-	public void outputConfig(Map<String, Object> tree) {
-		//defaults
-		
-	}
+    @Override
+    public void outputConfig(Map<String, Object> tree) {
+        // defaults
+    }
 
 }

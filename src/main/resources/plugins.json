@@ -1,42 +1,58 @@
 {
- "system-in" : "flens.config.SystemIn",
- "self" : "flens.config.Self",
- "system-out" : "flens.config.SystemOut",
- "tsdb-in" : "flens.config.OpenTsdbIn",
- "tsdb-out" : "flens.config.OpenTsdbOut",
+ "amqp-in" : "flens.config.AmqpInput",
+ "amqp-out" : "flens.config.AmqpOutput",
+ 
+ "batching":"flens.config.BatchPlugin",
+  
+ "collectd-in" : "flens.config.CollectdIn",
+ "cookbook":"flens.config.CookbookConfig",
+ 
+ "decoder" : "flens.config.CharacterDecoder",
+ 
+ "file-out":"flens.config.FileOutput",
+ 
+ 
+ "grep":"flens.config.GrepIn",
  "graphite-in" : "flens.config.GraphiteIn",
  "graphite-out" : "flens.config.GraphiteOut",
- "influxdb-out" : "flens.config.InfluxDBOutput",
- "unpacker" : "flens.config.ValuesUnpacker",
- "mvel" : "flens.config.MvelFilter",
  "grok" : "flens.config.GrokFilter",
- "template" : "flens.config.MvelTemplate",
- "amqp-in" : "flens.config.AMQPInput",
- "amqp-out" : "flens.config.AMQPOutput",
- "decoder" : "flens.config.CharacterDecoder",
+ 
+ "heartbeat":"flens.config.HeartBeatInput",
+ "http-poll":"flens.config.HttpPollerInput",
+ 
+ "influxdb-out" : "flens.config.InfluxDbOutput",
+ 
  "json-decoder" : "flens.config.JSonDecoder",
  "json-encoder" : "flens.config.JsonEncoder",
- "collectd-in" : "flens.config.CollectdIn",
- "rename":"flens.config.RenameFilter",
- "heartbeat":"flens.config.HeartBeatInput",
- "grep":"flens.config.GrepIn",
- "tag":"flens.config.TagFilter",
- "set":"flens.config.SetFilter",
+ 
+ "LZ4-compress":"flens.config.LZ4CompressionFilter",
+ "LZ4-decompress":"flens.config.LZ4DecompressionFilter",
+ 
+ "mvel" : "flens.config.MvelFilter",
+ 
  "proc":"flens.config.ProcInput",
  "proc-poll":"flens.config.ProcPollerInput",
- "nagios":"flens.config.NagiosInput",
+ 
  "query-ping":"flens.config.PingQuery",
- "spec":"flens.config.SpecInput",
- "socket-out":"flens.config.SocketOutput",
+ 
+ "rename":"flens.config.RenameFilter",
+ 
+ "self" : "flens.config.Self",
+ "set":"flens.config.SetFilter",
  "socket-in":"flens.config.SocketInput",
  "socket-line-in":"flens.config.SocketLineIn",
- "cookbook":"flens.config.CookbookConfig",
- "http-poll":"flens.config.HttpPollerInput",
- "splitter":"flens.config.Splitter",
- "alert":"flens.config.AlertPlugin",
- "batching":"flens.config.BatchPlugin",
- "unbatching":"flens.config.UnBatchPlugin",
- "LZ4-compress":"flens.config.LZ4Filter"
+ "socket-out":"flens.config.SocketOutput",
+ "spec":"flens.config.SpecInput",
+ "system-in" : "flens.config.SystemIn",
+ "system-out" : "flens.config.SystemOut",
+ 
+ 
+ "tag":"flens.config.TagFilter",
+ "template" : "flens.config.MvelTemplate",
+ "tsdb-in" : "flens.config.OpenTsdbIn",
+ "tsdb-out" : "flens.config.OpenTsdbOut",
+  
+ "unbatching":"flens.config.UnBatchPlugin"
 }
  
  

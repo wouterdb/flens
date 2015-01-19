@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,55 +17,57 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+
+import flens.config.util.AbstractConfig;
+import flens.input.FlensLogHandler;
+import flens.input.util.InputQueueExposer;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
-import flens.config.util.AbstractConfig;
-import flens.input.FlensLogHandler;
-import flens.input.util.InputQueueExposer;
+public class LogIn extends AbstractConfig {
 
-public class LogIn extends AbstractConfig{
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+    @Override
+    protected void construct() {
+        String level = get("level", Level.INFO.toString());
+        // String filter = get("filter",".*");
 
-	@Override
-	protected void construct() {
-		String level = get("level", Level.INFO.toString());
-		//String filter = get("filter",".*");
-		
-		InputQueueExposer exp = new InputQueueExposer(name, plugin,tagger);
-		FlensLogHandler lh = new flens.input.FlensLogHandler(exp);
-		
-		lh.setLevel(Level.parse(level));
-		//lh.setFilter(Filter.);
-		
-		LogManager.getLogManager().getLogger("").addHandler(lh);
-		
-		engine.addInput(exp);
-	}
+        InputQueueExposer exp = new InputQueueExposer(name, plugin, tagger);
+        FlensLogHandler lh = new flens.input.FlensLogHandler(exp);
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+        lh.setLevel(Level.parse(level));
+        // lh.setFilter(Filter.);
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("level", "String", "http://www.merriam-webster.com/dictionary/pusillanimous", "log level"));
-		return out;
-	}
+        LogManager.getLogManager().getLogger("").addHandler(lh);
 
-	@Override
-	public String getDescription() {
-		return "log tailer with regex support";
-	}
+        engine.addInput(exp);
+    }
+
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("level", "String", Level.INFO.toString(), "log level"));
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "connect the java root logger to flens";
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,13 +17,23 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input;
+
+import flens.core.Flengine;
+import flens.core.Record;
+import flens.core.Tagger;
+import flens.input.util.AbstractPeriodicInput;
+import flens.typing.MetricForm;
+import flens.typing.MetricType;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,261 +41,287 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 
-import org.apache.commons.io.IOUtils;
-
-import flens.core.Flengine;
-import flens.core.Record;
-import flens.core.Tagger;
-import flens.input.util.AbstractPeriodicInput;
-
 public class SpecInput extends AbstractPeriodicInput {
 
-	private Map<String, Spec> allspecs = new HashMap<>();
-	private List<Spec> specs;
+    private Map<String, Spec> allspecs = new HashMap<>();
+    private List<Spec> specs;
 
-	public SpecInput(String name, String plugin, Tagger tagger, int interval, List<String> specs) {
-		super(name, plugin, tagger, interval);
-		if (interval < 1000)
-			throw new IllegalArgumentException("time under 1000ms is too short to run all tests");
-		List<Spec> allspecs = collectAllSpecs();
-		for (Spec s : allspecs) {
-			this.allspecs.put(s.getName(), s);
-		}
-		activate(specs);
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param interval
+     *            samlping interval in ms
+     * @param specs
+     *            which micro benchmarks to run, empty for all
+     */
+    public SpecInput(String name, String plugin, Tagger tagger, int interval, List<String> specs) {
+        super(name, plugin, tagger, interval);
+        if (interval < 1000) {
+            throw new IllegalArgumentException("time under 1000ms is too short to run all tests");
+        }
+        List<Spec> allspecs = collectAllSpecs();
+        for (Spec s : allspecs) {
+            this.allspecs.put(s.getName(), s);
+        }
+        activate(specs);
+    }
 
-	/**
-	 * extend here!
-	 * 
-	 * @return
-	 */
-	protected List<Spec> collectAllSpecs() {
-		List<Spec> specs = new LinkedList<Spec>();
-		specs.add(new SpecDisk());
-		specs.add(new SpecDiskRead());
-		specs.add(new SpecCPU());
-		specs.add(new SpecExec());
-		specs.add(new SpecSleep());
-		return specs;
+    /**
+     * extend here!.
+     *
+     */
+    protected List<Spec> collectAllSpecs() {
+        List<Spec> specs = new LinkedList<Spec>();
+        specs.add(new SpecDisk());
+        specs.add(new SpecDiskRead());
+        specs.add(new SpecCpu());
+        specs.add(new SpecExec());
+        specs.add(new SpecSleep());
+        return specs;
 
-	}
+    }
 
-	private void activate(List<String> specs) {
-		this.specs = new LinkedList<Spec>();
-		for (String name : specs) {
-			Spec s = this.allspecs.get(name);
-			if (s == null)
-				warn(String.format("spec %s not found, options are %s", name, allspecs.keySet().toString()));
-			else
-				this.specs.add(s);
-		}
-	}
+    private void activate(List<String> specs) {
+        this.specs = new LinkedList<Spec>();
 
-	public interface Spec {
-		public void run() throws Exception;
+        if (specs.isEmpty()) {
+            this.specs.addAll(allspecs.values());
+        } else {
 
-		public String getName();
-	}
+            for (String name : specs) {
+                Spec current = this.allspecs.get(name);
+                if (current == null) {
+                    warn(String.format("spec %s not found, options are %s", name, allspecs.keySet().toString()));
+                } else {
+                    this.specs.add(current);
+                }
+            }
+        }
+    }
 
-	public class SpecDisk implements Spec {
+    public interface Spec {
+        public void run() throws Exception;
 
-		private static final int DISK_BYTES = 1000;
-		private String metric = SpecInput.this.getName() + "." + getName();
+        public String getName();
+    }
 
-		@Override
-		public void run() throws IOException {
-			long now = System.nanoTime();
-			File f = File.createTempFile("flens-spec", "test");
-			OutputStream out = new FileOutputStream(f);
-			for (int i = 0; i < DISK_BYTES; i++)
-				out.write(i);
-			out.flush();
-			out.close();
-			long delta = System.nanoTime() - now;
-			f.delete();
-			dispatch(Record.createWithValue(metric, delta));
-		}
+    public class SpecDisk implements Spec {
 
-		@Override
-		public String getName() {
-			return "write";
-		}
+        private static final int DISK_BYTES = 1000;
+        private String metric = SpecInput.this.getName() + "." + getName();
+        private MetricType mytype = new MetricType(metric, "ns", "disk", MetricForm.Absolute, 0, Integer.MAX_VALUE,
+                true);
 
-		@Override
-		public String toString() {
-			return getName();
-		}
-	}
+        @Override
+        public void run() throws IOException {
+            final long now = System.nanoTime();
+            File file = File.createTempFile("flens-spec", "test");
+            OutputStream out = new FileOutputStream(file);
+            for (int i = 0; i < DISK_BYTES; i++) {
+                out.write(i);
+            }
+            out.flush();
+            out.close();
+            long delta = System.nanoTime() - now;
+            file.delete();
+            dispatch(Record.forMetric(delta, mytype));
+        }
 
-	public class SpecDiskRead implements Spec {
+        @Override
+        public String getName() {
+            return "write";
+        }
 
-		private static final int DISK_BYTES = 1000;
-		private final String metric = SpecInput.this.getName() + "." + getName();
-		private final String file;
+        @Override
+        public String toString() {
+            return getName();
+        }
+    }
 
-		public SpecDiskRead() {
-			String[] files = System.getProperty("sun.boot.class.path").split(":");
-			int i = 0;
-			for (; i < files.length; i++) {
-				File f = new File(files[i]);
-				if (f.canRead())
-					break;
-			}
-			this.file = files[i];
+    public class SpecDiskRead implements Spec {
 
-		}
+        private static final int DISK_BYTES = 1000;
+        private final String metric = SpecInput.this.getName() + "." + getName();
+        private MetricType mytype = new MetricType(metric, "ns", "disk", MetricForm.Absolute, 0, Integer.MAX_VALUE,
+                true);
+        private final String file;
 
-		@Override
-		public void run() throws IOException {
-			long now = System.nanoTime();
-			File f = new File(file);
-			InputStream in = new FileInputStream(f);
-			byte[] bytes = new byte[DISK_BYTES];
-			IOUtils.read(in, bytes);
-			in.close();
-			long delta = System.nanoTime() - now;
-			dispatch(Record.createWithValue(metric, delta));
-		}
+        protected SpecDiskRead() {
+            String[] files = System.getProperty("sun.boot.class.path").split(":");
+            int index = 0;
+            for (; index < files.length; index++) {
+                File file = new File(files[index]);
+                if (file.canRead()) {
+                    break;
+                }
+            }
+            this.file = files[index];
 
-		@Override
-		public String getName() {
-			return "read";
-		}
+        }
 
-		@Override
-		public String toString() {
-			return getName();
-		}
-	}
+        @Override
+        public void run() throws IOException {
+            long now = System.nanoTime();
+            File fh = new File(file);
+            InputStream in = new FileInputStream(fh);
+            byte[] bytes = new byte[DISK_BYTES];
+            IOUtils.read(in, bytes);
+            in.close();
+            long delta = System.nanoTime() - now;
+            dispatch(Record.forMetric(delta, mytype));
+        }
 
-	public class SpecExec implements Spec {
+        @Override
+        public String getName() {
+            return "read";
+        }
 
-		private static final String CMD = "/usr/bin/true";
-		private String metric = SpecInput.this.getName() + "." + getName();
+        @Override
+        public String toString() {
+            return getName();
+        }
+    }
 
-		@Override
-		public void run() throws IOException, InterruptedException {
-			ProcessBuilder pb = new ProcessBuilder(CMD);
-			long now = System.nanoTime();
-			pb.inheritIO();
-			Process p = pb.start();
-			p.waitFor();
-			long delta = System.nanoTime() - now;
-			dispatch(Record.createWithValue(metric, delta));
-		}
+    public class SpecExec implements Spec {
 
-		@Override
-		public String getName() {
-			return "exec";
-		}
+        private static final String CMD = "/usr/bin/true";
+        private String metric = SpecInput.this.getName() + "." + getName();
+        private MetricType mytype = 
+                new MetricType(metric, "ns", "cpu", MetricForm.Absolute, 0, Integer.MAX_VALUE, true);
 
-		@Override
-		public String toString() {
-			return getName();
-		}
-	}
+        @Override
+        public void run() throws IOException, InterruptedException {
+            ProcessBuilder pb = new ProcessBuilder(CMD);
+            long now = System.nanoTime();
+            pb.inheritIO();
+            Process proc = pb.start();
+            proc.waitFor();
+            long delta = System.nanoTime() - now;
+            dispatch(Record.forMetric(delta, mytype));
+        }
 
-	public class SpecSleep implements Spec {
+        @Override
+        public String getName() {
+            return "exec";
+        }
 
-		private static final int interval = 100;
-		private String metric = SpecInput.this.getName() + "." + getName();
+        @Override
+        public String toString() {
+            return getName();
+        }
+    }
 
-		@Override
-		public void run() throws IOException, InterruptedException {
+    public class SpecSleep implements Spec {
 
-			long now = System.nanoTime();
-			Thread.sleep(interval);
-			long delta = System.nanoTime() - now - (interval * 1000000);
-			dispatch(Record.createWithValue(metric, delta));
-		}
+        private static final int interval = 100;
+        private String metric = SpecInput.this.getName() + "." + getName();
+        private MetricType mytype = new MetricType(metric, "ns", "cpu", MetricForm.Absolute, 0, interval * 1000000,
+                true);
 
-		@Override
-		public String getName() {
-			return "sleep";
-		}
+        @Override
+        public void run() throws IOException, InterruptedException {
 
-		@Override
-		public String toString() {
-			return getName();
-		}
-	}
+            long now = System.nanoTime();
+            Thread.sleep(interval);
+            long delta = System.nanoTime() - now - (interval * 1000000);
+            dispatch(Record.forMetric(delta, mytype));
+        }
 
-	public class SpecCPU implements Spec {
+        @Override
+        public String getName() {
+            return "sleep";
+        }
 
-		private static final int CPU_NUMBER = 66667;
-		private String metric = SpecInput.this.getName() + "." + getName();
+        @Override
+        public String toString() {
+            return getName();
+        }
+    }
 
-		@Override
-		public void run() throws IOException {
-			long now = System.nanoTime();
-			@SuppressWarnings("unused")
-			long x = factor(CPU_NUMBER);
-			long delta = System.nanoTime() - now;
+    public class SpecCpu implements Spec {
 
-			dispatch(Record.createWithValue(metric, delta));
-		}
+        private static final int CPU_NUMBER = 66667;
+        private String metric = SpecInput.this.getName() + "." + getName();
+        private MetricType mytype = new MetricType(metric, "ns", "cpu", MetricForm.Absolute, 0, 100000, true);
+        private long keeper;
 
-		@Override
-		public String getName() {
-			return "cpu";
-		}
+        @Override
+        public void run() throws IOException {
+            keeper++;
+            long now = System.nanoTime();
+            keeper = factor(CPU_NUMBER);
+            long delta = System.nanoTime() - now;
+            dispatch(Record.forMetric(delta, mytype));
+            delta = keeper;
+        }
 
-		@Override
-		public String toString() {
-			return getName();
-		}
+        @Override
+        public String getName() {
+            return "cpu";
+        }
 
-		public long factor(long n) {
-			long out = 0;
+        @Override
+        public String toString() {
+            return getName();
+        }
 
-			// for each potential factor i
-			for (long i = 2; i <= n / i; i++) {
+        private long factor(long number) {
+            long out = 0;
 
-				// if i is a factor of N, repeatedly divide it out
-				while (n % i == 0) {
-					out += i;
-					n = n / i;
-				}
-			}
+            // for each potential factor i
+            for (long i = 2; i <= number / i; i++) {
 
-			// if biggest factor occurs only once, n > 1
-			if (n > 1)
-				out += n;
+                // if i is a factor of N, repeatedly divide it out
+                while (number % i == 0) {
+                    out += i;
+                    number = number / i;
+                }
+            }
 
-			return out;
-		}
+            // if biggest factor occurs only once, n > 1
+            if (number > 1) {
+                out += number;
+            }
 
-	}
+            return out;
+        }
 
-	@Override
-	protected TimerTask getWorker() {
-		return new TimerTask() {
+    }
 
-			@Override
-			public void run() {
-				for (Spec spec : specs) {
-					try {
-						spec.run();
-					} catch (Exception e) {
-						err("spec test failed ", e);
-					}
-				}
+    @Override
+    protected TimerTask getWorker() {
+        return new TimerTask() {
 
-			}
-		};
-	}
-	
-	@Override
-	public void writeConfig(Flengine engine, Map<String, Object> tree) {
-		Map<String,Object> subtree = new HashMap<String, Object>();
-		tree.put(getName(),subtree);
-		subtree.put("interval", interval);
-		tagger.outputConfig(subtree);
-		List<String> currentspecs = new LinkedList<>();
-		for(Spec spec:specs){
-			currentspecs.add(spec.getName());
-		}
-		subtree.put("tests", currentspecs);
-	}
+            @Override
+            public void run() {
+                for (Spec spec : specs) {
+                    try {
+                        spec.run();
+                    } catch (Exception e) {
+                        err("spec test failed ", e);
+                    }
+                }
+
+            }
+        };
+    }
+
+    @Override
+    public void writeConfig(Flengine engine, Map<String, Object> tree) {
+        Map<String, Object> subtree = new HashMap<String, Object>();
+        tree.put(getName(), subtree);
+        subtree.put("interval", interval);
+        tagger.outputConfig(subtree);
+        List<String> currentspecs = new LinkedList<>();
+        for (Spec spec : specs) {
+            currentspecs.add(spec.getName());
+        }
+        subtree.put("tests", currentspecs);
+    }
 
 }

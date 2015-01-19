@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,56 +17,63 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.output.util;
 
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+package flens.output.util;
 
 import flens.core.Matcher;
 import flens.core.Output;
 import flens.core.Record;
 
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public abstract class StreamPump implements Output, Runnable {
-	
-	public StreamPump(String name, Matcher matcher) {
-		super();
-		this.name = name;
-		this.matcher = matcher;
-	}
 
-	private String name;
-	private Matcher matcher;
-	protected BlockingQueue<Record> queue = new LinkedBlockingQueue<>();
-	private Thread thread;
-	protected volatile boolean running;
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine.
+     * @param matcher
+     *            matcher this output should used to select records
+     */
+    public StreamPump(String name, Matcher matcher) {
+        super();
+        this.name = name;
+        this.matcher = matcher;
+    }
 
-	@Override
-	public Matcher getMatcher() {
-		return matcher;
-	}
+    private String name;
+    private Matcher matcher;
+    protected BlockingQueue<Record> queue = new LinkedBlockingQueue<>();
+    private Thread thread;
+    protected volatile boolean running;
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public Matcher getMatcher() {
+        return matcher;
+    }
 
-	@Override
-	public Queue<Record> getOutputQueue() {
-		return queue ;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void start() {
-		thread = new Thread(this);
-		running = true;
-		thread.start();
-	}
+    @Override
+    public Queue<Record> getOutputQueue() {
+        return queue;
+    }
 
-	@Override
-	public void stop() {
-		running = false;
-		thread.interrupt();
-	}
+    @Override
+    public void start() {
+        thread = new Thread(this);
+        running = true;
+        thread.start();
+    }
+
+    @Override
+    public void stop() {
+        running = false;
+        thread.interrupt();
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,32 +17,33 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.filter;
 
-import java.util.Collection;
-import java.util.Collections;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
 
+import java.util.Collection;
+import java.util.Collections;
+
+
 public class CharacterDecoder extends AbstractFilter {
 
-	public CharacterDecoder(String name,String plugin, Tagger tagger, Matcher matcher,int prio) {
-		super(name,plugin, tagger, matcher,prio);
-	}
+    public CharacterDecoder(String name, String plugin, Tagger tagger, Matcher matcher, int prio) {
+        super(name, plugin, tagger, matcher, prio);
+    }
 
-	@Override
-	public Collection<Record> process(Record in) {
-		//TODO config
-		//String encoding = (String) in.getValues().get("encoding");
-		//TODO encoding
-		String s = new String((byte[])in.getValues().get("body"));
-		in.getValues().put("message", s);
-		tag(in);
-		return Collections.emptyList();
-	}
-
-	
+    @Override
+    public Collection<Record> process(Record in) {
+        // TODO config
+        // String encoding = (String) in.getValues().get("encoding");
+        // TODO encoding
+        String massage = new String((byte[]) in.getValues().get("body"));
+        in.getValues().put("message", massage);
+        tag(in);
+        return Collections.emptyList();
+    }
 
 }

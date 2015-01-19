@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,46 +17,45 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
-
 public class HeartBeatInput extends AbstractConfig {
 
-	@Override
-	protected void construct() {
+    @Override
+    protected void construct() {
 
-		int interval = getInt("interval",10000);
-		
-		engine.addInput(new flens.input.HeartBeat(name,plugin,tagger,interval));
-	}
+        int interval = getInt("interval", 10000);
 
-	
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+        engine.addInput(new flens.input.HeartBeat(name, plugin, tagger, interval));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("interval", "int", "10", "interval between heartbeats"));
-		
-		return out;
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "Regualarly sends packets";
-	}
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("interval", "int", "10", "interval between heartbeats"));
+
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Regualarly sends packets";
+    }
 
 }

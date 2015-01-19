@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,45 +17,49 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core;
 
-import java.util.Map;
+package flens.core;
 
 import com.google.gson.Gson;
 
-public abstract class Query {
-	
-	private String query;
-	private Map<String,Object> payload;
-	
+import java.util.Map;
 
-	public abstract void respond(byte[] payload);
-	public abstract void respond(String payload);
-	
-	public void respond(Map<String,Object> payload){
-		Gson gson = new Gson();
-		respond(gson.toJson(payload));
-	}
-	
-	public void respond(Object payload){
-		Gson gson = new Gson();
-		respond(gson.toJson(payload));
-	}
-	
-	public abstract void fail(int code, String payload);
-		
-	public Query(String query, Map<String, Object> payload) {
-		super();
-		this.query = query;
-		this.payload = payload;
-	}
-	
-	public String getQuery() {
-		return query;
-	}
-	
-	public Map<String, Object> getPayload() {
-		return payload;
-	}
-	
+public abstract class Query {
+
+    private String query;
+    private Map<String, Object> payload;
+
+    public abstract void respond(byte[] payload);
+
+    public abstract void respond(String payload);
+
+    public void respond(Map<String, Object> payload) {
+        Gson gson = new Gson();
+        respond(gson.toJson(payload));
+    }
+
+    public void respond(Object payload) {
+        Gson gson = new Gson();
+        respond(gson.toJson(payload));
+    }
+
+    public abstract void fail(int code, String payload);
+
+    /**
+     *  Construct a query with given query string qnd payload.
+     */
+    public Query(String query, Map<String, Object> payload) {
+        super();
+        this.query = query;
+        this.payload = payload;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public Map<String, Object> getPayload() {
+        return payload;
+    }
+
 }

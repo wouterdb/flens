@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,16 +17,18 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import java.util.Map;
 
 public interface Plugin {
-	
-	
-	public String getName();
-	
-	public boolean canUpdateConfig();
-	public void updateConfig(Flengine engine, Map<String,Object> tree);
-	public void writeConfig(Flengine engine, Map<String,Object> tree);
+
+    public String getName();
+
+    public boolean canUpdateConfig();
+
+    public void updateConfig(Flengine engine, Map<String, Object> tree);
+
+    public void writeConfig(Flengine engine, Map<String, Object> tree);
 }

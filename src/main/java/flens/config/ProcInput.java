@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,56 +17,56 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
+import flens.core.Tagger;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
-import flens.core.Tagger;
-
 public class ProcInput extends AbstractConfig {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	protected void construct() {
-		if(tagger==Tagger.empty)
-			tagger = null;
-		Tagger err = readTagger("err-");
-		if(err==Tagger.empty)
-			err = null;
-		String cmd = get("cmd", "");
-		List<String> args = getArray("args", Collections.EMPTY_LIST);
-		engine.addInput(new flens.input.ProcessTailer(name, plugin,tagger, err, cmd,args));
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void construct() {
+        if (tagger == Tagger.empty) {
+            tagger = null;
+        }
+        Tagger err = readTagger("err-");
+        if (err == Tagger.empty) {
+            err = null;
+        }
+        String cmd = get("cmd", "");
+        List<String> args = getArray("args", Collections.EMPTY_LIST);
+        engine.addInput(new flens.input.ProcessTailer(name, plugin, tagger, err, cmd, args));
+    }
 
-	
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("err-add-tags", "[String]","[]", "add following tags to err stream"));
-		out.add(new Option("err-remove-tags", "[String]","[]", "remove following tags to err stream"));
-		out.add(new Option("err-type", "String", "" ,"type to apply to the records to err stream"));
-		out.add(new Option("cmd", "String", "" ,"command to run"));
-		out.add(new Option("args", "String", "" ,"arguments"));
-		return out;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("err-add-tags", "[String]", "[]", "add following tags to err stream"));
+        out.add(new Option("err-type", "String", "", "type to apply to the records to err stream"));
+        out.add(new Option("cmd", "String", "", "command to run"));
+        out.add(new Option("args", "String", "", "arguments"));
+        return out;
+    }
 
-	@Override
-	public String getDescription() {
-		return "Spawn process and read lines form std.err and std.out";
-	}
+    @Override
+    public String getDescription() {
+        return "Spawn process and read lines form std.err and std.out";
+    }
 
 }

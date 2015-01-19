@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,30 +17,31 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class SystemIn extends AbstractConfig{
+public class SystemIn extends AbstractConfig {
 
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	protected void construct() {
-		engine.addInput(new flens.input.SystemIn(name,plugin,tagger));
-	}
+    @Override
+    protected void construct() {
+        engine.addInput(new flens.input.SystemIn(name, plugin, tagger));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "Add lines from system in as records";
-	}
+    @Override
+    public String getDescription() {
+        return "Add lines from system in as records";
+    }
 
 }

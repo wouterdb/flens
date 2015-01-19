@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,89 +17,75 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import flens.core.util.AllMatcher;
 
-/**
- * @author wouterdb
- *
- */
 public class Constants {
-	
-	//obligatory fields
-	/**
-	 * obligatory field
-	 * 
-	 * time in ms since epoch (unix timestamp) 
-	 */
-	public static final String TIME = "time";
-	/**
-	 * obligatory field
-	 * 
-	 * hostname of machine to which the record appertains
-	 */
-	public static final String SOURCE = "source";
-	/**
-	 * obligatory field for metrics
-	 * 
-	 * primary name of the metric
-	 */
-	public static final String METRIC = "metric";
-	
-	/**
-	 * field for logs
-	 * 
-	 * primary name of the metric
-	 */
-	public static final String LOG_FILE = "file";
-	
-	//primary value fields
-	
-	/**
-	 * primary value field
-	 * 
-	 * text message
-	 */
-	public static final String L_MESSAGE = "message";
-	public static final String MESSAGE = "message";
-	
-	/**
-	 * primary value field
-	 * 
-	 * binary message
-	 */
-	public static final String BINARY_MESSAGE = "body";
-	public static final String BODY = "body";
-	
-	/**
-	 * primary value field
-	 * 
-	 * numerical value message
-	 */
-	public static final String VALUE = "value";
-	
-	
-	
-	
-	
-	public static final Matcher ALLMATCHER = new AllMatcher();
-	
-	
-	
-	
-	public static final String INTERVAL = "interval";
-	public static final String SEVERITY = "severity";
-	
 
-	public static final String SUBRECORDS = "subrecords";
-	public static final String UNIT = "unit";
-	public static final String TYPE = "type";
-	public static final String INSTANCE = "instance";
-	
-	
+    // obligatory fields
+    /**
+     * time in ms since epoch (unix timestamp).
+     * <p/><b>Obligatory</b>
+     */
+    public static final String TIME = "time";
+    
+    /**
+     * Hostname of machine to which the record appertains.
+     * <p/><b>Obligatory</b>
+     */
+    public static final String SOURCE = "source";
+    /** 
+     * primary name of the metric.
+     * <p/><b>Obligatory for metrics</b>
+     */
+    public static final String METRIC = "metric";
 
-	public static final String TAGS = "tags";
-	
+    /** 
+     * Primary name of the metric.
+     * 
+     * <p/><b>Optional for logs</b>
+     */
+    public static final String LOG_FILE = "file";
+
+    // primary value fields
+
+    /**
+     * text message.
+     * 
+     * <p/><b>Primary value field for logs</b>
+     * 
+     * 
+     */
+    public static final String L_MESSAGE = "message";
+    public static final String MESSAGE = "message";
+
+    /**
+     * binary message.
+     * 
+     * <p/><b>Primary value field for binary messages</b>
+     */
+    public static final String BINARY_MESSAGE = "body";
+    public static final String BODY = "body";
+
+    /**
+     * numerical value message.
+     * 
+     * <p/><b>Primary value field for metrics</b>
+     */
+    public static final String VALUE = "value";
+
+    public static final Matcher ALLMATCHER = new AllMatcher();
+
+    public static final String INTERVAL = "interval";
+    public static final String SEVERITY = "severity";
+
+    public static final String SUBRECORDS = "subrecords";
+    public static final String UNIT = "unit";
+    public static final String TYPE = "type";
+    public static final String INSTANCE = "instance";
+
+    public static final String TAGS = "tags";
 
 }

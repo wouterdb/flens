@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,58 +17,72 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import flens.core.Flengine;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+
 //TODO make timer/executor based
-public class SelfMonitor extends AbstractActiveInput{
-	
-	public static final String type = "flens";
-	
-	private Flengine engine;
+public class SelfMonitor extends AbstractActiveInput {
 
-	private long interval;
+    public static final String type = "flens";
 
-	public SelfMonitor(String name,String plugin, Tagger tagger, Flengine e, int interval) {
-		super(name,plugin, tagger);
-		this.engine = e;
-		this.interval = interval;
-	}
+    private Flengine engine;
 
-	// TODO make configurable
-	public void run() {
-		try {
-			while (running) {
-				Set<Record> out = new HashSet<>();
-				engine.report(out);
-				for (Record r : out) {
-					dispatch(r);
-				}
-				Thread.sleep(interval);
+    private long interval;
 
-			}
-		} catch (InterruptedException e) {
-			// normal
-		}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param eengine engine to report on
+     * @param interval reporting interval
+     */
+    public SelfMonitor(String name, String plugin, Tagger tagger, Flengine eengine, int interval) {
+        super(name, plugin, tagger);
+        this.engine = eengine;
+        this.interval = interval;
+    }
 
-	}
+    @Override
+    public void run() {
+        try {
+            while (running) {
+                Set<Record> out = new HashSet<>();
+                engine.report(out);
+                for (Record r : out) {
+                    dispatch(r);
+                }
+                Thread.sleep(interval);
 
-	@Override
-	public boolean canUpdateConfig() {
-		return false;
-	}
+            }
+        } catch (InterruptedException e) {
+            // normal
+        }
 
-	@Override
-	public void updateConfig(Flengine engine, Map<String, Object> tree) {
-		throw new UnsupportedOperationException();
-		
-	}
+    }
+
+    @Override
+    public boolean canUpdateConfig() {
+        return false;
+    }
+
+    @Override
+    public void updateConfig(Flengine engine, Map<String, Object> tree) {
+        throw new UnsupportedOperationException();
+
+    }
 
 }

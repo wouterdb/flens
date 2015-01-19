@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,30 +17,31 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class JSonDecoder extends AbstractConfig{
+public class JSonDecoder extends AbstractConfig {
 
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected void construct() {
-		engine.addFilter(new flens.filter.JSonDecoder(name,plugin,tagger,matcher,prio));
-	}
+    @Override
+    protected void construct() {
+        engine.addFilter(new flens.filter.JSonDecoder(name, plugin, tagger, matcher, prio));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "decode json messages";
-	}
+    @Override
+    public String getDescription() {
+        return "decode json messages, take input from the message field";
+    }
 
 }

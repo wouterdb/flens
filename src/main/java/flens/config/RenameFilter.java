@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
@@ -26,40 +27,38 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RenameFilter extends AbstractConfig
-{
-  protected boolean isIn()
-  {
-    return false;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected void construct()
-  {
-    List<String> f = getArray("from", Collections.EMPTY_LIST);
-    List<String> t = getArray("to", Collections.EMPTY_LIST);
-    if (f.size() != t.size()) {
-      throw new IllegalArgumentException("to and from must be same size");
+public class RenameFilter extends AbstractConfig {
+    protected boolean isIn() {
+        return false;
     }
-    this.engine.addFilter(new flens.filter.RenameFilter(this.name, plugin,this.tagger, this.matcher,prio, f, t));
-  }
 
-  protected boolean isOut()
-  {
-    return false;
-  }
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void construct() {
+        List<String> from = getArray("from", Collections.EMPTY_LIST);
+        List<String> to = getArray("to", Collections.EMPTY_LIST);
+        if (from.size() != to.size()) {
+            throw new IllegalArgumentException("to and from must be same size");
+        }
+        this.engine.addFilter(
+                new flens.filter.RenameFilter(this.name, plugin, this.tagger, this.matcher, prio, from, to));
+    }
 
-  public String getDescription()
-  {
-    return "rrename fields";
-  }
+    protected boolean isOut() {
+        return false;
+    }
 
-  public List<Config.Option> getOptions()
-  {
-    LinkedList<Option> out = new LinkedList<Option>(super.getOptions());
-    out.add(new Config.Option("from", "List", "[]", "field names to change"));
-    out.add(new Config.Option("to", "List", "[]", "names to change to"));
-    return out;
-  }
+    public String getDescription() {
+        return "rrename fields";
+    }
+
+    /**
+     * @see flens.config.util.AbstractConfig#getOptions()
+     */
+    public List<Config.Option> getOptions() {
+        LinkedList<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Config.Option("from", "List", "[]", "field names to change"));
+        out.add(new Config.Option("to", "List", "[]", "names to change to"));
+        return out;
+    }
 }

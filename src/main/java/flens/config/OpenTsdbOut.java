@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,50 +17,50 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.config;
 
-import java.util.LinkedList;
-import java.util.List;
+package flens.config;
 
 import flens.config.util.AbstractConfig;
 import flens.output.OpenTsdbOutput;
 
-public class OpenTsdbOut extends AbstractConfig{
-	
-	
+import java.util.LinkedList;
+import java.util.List;
 
-	@Override
-	protected boolean isIn() {
-		
-		return false;
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	protected void construct() {
-		String host = get("host", "localhost");
-		int port = getInt("port", 4242);
-		List<String> stags = getArray("send-tags",new LinkedList<String>());
-		engine.addOutput(new OpenTsdbOutput(name,plugin,matcher,host,port,(stags)));
-	}
+public class OpenTsdbOut extends AbstractConfig {
 
-	@Override
-	protected boolean isOut() {
-		return true;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("port", "int", "4242", "port to which to connect"));
-		out.add(new Option("host", "String", "localhost", "host to which to connect"));
-		out.add(new Option("send-tags", "[String]", "[]", "field to append as tags, use [fliedname:tag-name] to rename"));
-		return out;
-	}
-	
-	@Override
-	public String getDescription() {
-		return "send out records to an opentsdb server \n send out messages of the form \n put ${metric} ${timestamp/1000} ${value} host=${source}";
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void construct() {
+        String host = get("host", "localhost");
+        int port = getInt("port", 4242);
+        List<String> stags = getArray("send-tags", new LinkedList<String>());
+        engine.addOutput(new OpenTsdbOutput(name, plugin, matcher, host, port, (stags)));
+    }
+
+    @Override
+    protected boolean isOut() {
+        return true;
+    }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("port", "int", "4242", "port to which to connect"));
+        out.add(new Option("host", "String", "localhost", "host to which to connect"));
+        out.add(new Option("send-tags", "[String]", "[]", 
+                "field to append as tags, use [fliedname:tag-name] to rename"));
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "send out records to an opentsdb server\n"
+                + "send out messages of the form \n put ${metric} ${timestamp/1000} ${value} host=${source}";
+    }
 
 }

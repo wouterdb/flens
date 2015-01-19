@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,46 +17,45 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
+public class MvelTemplate extends AbstractConfig {
 
-public class MvelTemplate extends AbstractConfig{
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	protected void construct() {
-		List<String> temp = getArray("template", null);
-		List<String> field = getArray("field", null);
-		engine.addFilter(new flens.filter.MVELTemplate(name,plugin,tagger,matcher,prio,field,temp));
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void construct() {
+        List<String> temp = getArray("template", null);
+        List<String> field = getArray("field", null);
+        engine.addFilter(new flens.filter.MvelTemplate(name, plugin, tagger, matcher, prio, field, temp));
 
-	
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "run mvel template on fields, place result in field";
-	}
+    @Override
+    public String getDescription() {
+        return "run mvel template on fields, place result in field";
+    }
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("template", "String", null, "template to execute"));
-		out.add(new Option("field", "String", null, "field to place result in"));
-		return out;
-	}
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("template", "String", null, "template to execute"));
+        out.add(new Option("field", "String", null, "field to place result in"));
+        return out;
+    }
 }

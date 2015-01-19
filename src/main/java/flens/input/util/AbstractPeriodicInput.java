@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,40 +17,40 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input.util;
+
+import flens.core.Tagger;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import flens.core.Tagger;
-
 public abstract class AbstractPeriodicInput extends AbstractInput {
 
-	protected Timer t;
-	protected int interval;
+    protected Timer timer;
+    protected int interval;
 
-	public AbstractPeriodicInput(String name, String plugin,Tagger tagger,int interval) {
-		super(name,plugin, tagger);
-		this.interval = interval;
-	}
+    public AbstractPeriodicInput(String name, String plugin, Tagger tagger, int interval) {
+        super(name, plugin, tagger);
+        this.interval = interval;
+    }
 
-	@Override
-	public void start() {
-		t = new Timer(true);
-		t.scheduleAtFixedRate(getWorker(), 0, interval);
-	}
+    @Override
+    public void start() {
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(getWorker(), 0, interval);
+    }
 
-	protected abstract TimerTask getWorker() ;
+    protected abstract TimerTask getWorker();
 
-	@Override
-	public void stop() {
-		t.cancel();
-	}
+    @Override
+    public void stop() {
+        timer.cancel();
+    }
 
-	@Override
-	public void join() throws InterruptedException {
-		
-		
-	}
+    @Override
+    public void join() throws InterruptedException {
+
+    }
 
 }

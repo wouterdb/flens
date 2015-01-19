@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,47 +17,46 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
-
 public class SocketOutput extends AbstractConfig {
 
-	@Override
-	protected void construct() {
-		int port = getInt("port",19850);
-		String host = get("host", "localhost");
-		String field = get("field", "body");
-		engine.addOutput(new flens.output.SocketOutput(name, plugin, matcher,host,port,field));
-	}
+    @Override
+    protected void construct() {
+        int port = getInt("port", 19850);
+        String host = get("host", "localhost");
+        String field = get("field", "body");
+        engine.addOutput(new flens.output.SocketOutput(name, plugin, matcher, host, port, field));
+    }
 
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return true;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("port", "int", "19850", "port to connect to"));
-		out.add(new Option("host", "String", "localhost", "host to connect to"));
-		out.add(new Option("field", "String", "body", "field to get data from"));
-		return out;
-	}
+    @Override
+    protected boolean isOut() {
+        return true;
+    }
 
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("port", "int", "19850", "port to connect to"));
+        out.add(new Option("host", "String", "localhost", "host to connect to"));
+        out.add(new Option("field", "String", "body", "field to get data from"));
+        return out;
+    }
 
-	@Override
-	public String getDescription() {
-		return "Listen on TCP socket for opentsdb messages";
-	}
+    @Override
+    public String getDescription() {
+        return "Listen on TCP socket for opentsdb messages";
+    }
 
 }

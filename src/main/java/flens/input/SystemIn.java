@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,57 +17,60 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+package flens.input;
 
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 public class SystemIn extends AbstractActiveInput {
 
-	private BufferedReader inr;
+    private BufferedReader inr;
 
-	public SystemIn(String name,String plugin,Tagger tagger) {
-		super(name, plugin,tagger);
-	}
+    public SystemIn(String name, String plugin, Tagger tagger) {
+        super(name, plugin, tagger);
+    }
 
-	public void start() {
-		this.inr = new BufferedReader(new InputStreamReader(System.in));
-		super.start();
-	}
+    public void start() {
+        this.inr = new BufferedReader(new InputStreamReader(System.in));
+        super.start();
+    }
 
-	public void stop() {
-		super.stop();
+    @Override
+    public void stop() {
+        super.stop();
 
-		try {
-			inr.close();
-		} catch (IOException e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"cloud not close", e);
-		}
+        try {
+            inr.close();
+        } catch (IOException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "cloud not close", e);
+        }
 
-	}
+    }
 
-	public void run() {
-		try {
-			while (running) {
-				String line;
+    @Override
+    public void run() {
+        try {
+            while (running) {
+                String line;
 
-				line = inr.readLine();
+                line = inr.readLine();
 
-				dispatch(new Record(line));
-			}
+                dispatch(Record.forLog(line));
+            }
 
-		} catch (IOException e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"system in failed", e);
-		}
-	}
+        } catch (IOException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "system in failed", e);
+        }
+    }
 
 }

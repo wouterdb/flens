@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,43 +17,51 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.core.util;
 
-import java.util.List;
-import java.util.Map;
+package flens.core.util;
 
 import flens.core.Record;
 import flens.core.Tagger;
 
+import java.util.List;
+import java.util.Map;
+
 public class StandardTagger implements Tagger {
-	private List<String> tags;
-	private List<?> rtags;
-	private String type;
+    private List<String> tags;
+    private List<?> rtags;
+    private String type;
 
-	private final String configprefix;
+    private final String configprefix;
 
-	public StandardTagger(String prefix, String type, List<String> tags,
-			List<?> rtags) {
-		this.tags = tags;
-		this.rtags = rtags;
-		this.type = type;
+    /**
+     * Construct a full featured tagger. For input plugins,  input taggers are preferred. 
+     * @param prefix this prefix is used when writing out the config for this tagger
+     * @param type add the give type to records. If null, the old tpye is retained
+     * @param tags  add the given tags
+     * @param rtags remove the given tags (if present)
+     */
+    public StandardTagger(String prefix, String type, List<String> tags, List<?> rtags) {
+        this.tags = tags;
+        this.rtags = rtags;
+        this.type = type;
 
-		this.configprefix = prefix;
-	}
+        this.configprefix = prefix;
+    }
 
-	@Override
-	public void adapt(Record r) {
-		r.getTags().addAll(tags);
-		r.getTags().removeAll(rtags);
-		if (type != null)
-			r.setType(type);
-	}
+    @Override
+    public void adapt(Record record) {
+        record.getTags().addAll(tags);
+        record.getTags().removeAll(rtags);
+        if (type != null) {
+            record.setType(type);
+        }
+    }
 
-	@Override
-	public void outputConfig(Map<String, Object> tree) {
-		tree.put(configprefix + "add-tag", tags);
-		tree.put(configprefix + "type", type);	
-		tree.put(configprefix+"remove-tag",rtags);
-	}
+    @Override
+    public void outputConfig(Map<String, Object> tree) {
+        tree.put(configprefix + "add-tag", tags);
+        tree.put(configprefix + "type", type);
+        tree.put(configprefix + "remove-tag", rtags);
+    }
 
 }

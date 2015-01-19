@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,12 +17,13 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.core;
 
 import flens.config.util.ConfigWriteable;
 
-public interface Matcher extends ConfigWriteable{
-	
-	public boolean matches(Record r);
+public interface Matcher extends ConfigWriteable {
+
+    public boolean matches(Record record);
 
 }

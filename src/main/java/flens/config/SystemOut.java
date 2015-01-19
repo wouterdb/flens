@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,31 +17,31 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class SystemOut extends AbstractConfig{
+public class SystemOut extends AbstractConfig {
 
-	@Override
-	protected boolean isIn() {
-		
-		return false;
-	}
-	
-	@Override
-	protected void construct() {
-		engine.addOutput(new flens.output.SystemOut(name,plugin,matcher));
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return true;
-	}
+    @Override
+    protected void construct() {
+        engine.addOutput(new flens.output.SystemOut(name, plugin, matcher));
+    }
 
-	@Override
-	public String getDescription() {
-		return "send logs to system out" ;
-	}
+    @Override
+    protected boolean isOut() {
+        return true;
+    }
+
+    @Override
+    public String getDescription() {
+        return "send logs to system out";
+    }
 
 }

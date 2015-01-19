@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,61 +17,60 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
-import org.apache.commons.lang3.tuple.Pair;
+package flens.input;
 
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractListenerInput;
 
-public class SocketLineInput extends AbstractListenerInput<Pair<String,BufferedReader>> {
+import org.apache.commons.lang3.tuple.Pair;
 
-	private int port;
-	
-	
-	public SocketLineInput(String name,String plugin, Tagger tagger, int port) {
-		super(name,plugin,tagger);
-		this.port = port;
-	}
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-	@Override
-	protected ServerSocket makeListener() throws IOException {
-		return new ServerSocket(port);
-	}
+public class SocketLineInput extends AbstractListenerInput<Pair<String, BufferedReader>> {
 
-	@Override
-	public Pair<String,BufferedReader> getStream(Socket newSocket) throws IOException {
-		String hostname = newSocket.getInetAddress().getHostName();
-		return Pair.of(hostname,new BufferedReader(new InputStreamReader(
-				newSocket.getInputStream())));
-	}
+    private int port;
 
-	@Override
-	//metric_path value timestamp\n  
-	//http://graphite.wikidot.com/getting-your-data-into-graphite
-	public void readAndProcess(Pair<String,BufferedReader> inx) throws IOException {
-		BufferedReader in = inx.getRight();
-		String host = inx.getLeft();
-		String line = in.readLine();
-		if(line==null)
-			throw new IOException("connection lost");
-		
-		
-		Record r = Record.createWithHostAndMessage(host,line);
-			dispatch(r);
-		
-	}
+    public SocketLineInput(String name, String plugin, Tagger tagger, int port) {
+        super(name, plugin, tagger);
+        this.port = port;
+    }
 
+    @Override
+    protected ServerSocket makeListener() throws IOException {
+        return new ServerSocket(port);
+    }
 
-	@Override
-	public void tearDown(Pair<String,BufferedReader> in2) throws IOException {
-		in2.getRight().close();
-	}
+    @Override
+    public Pair<String, BufferedReader> getStream(Socket newSocket) throws IOException {
+        String hostname = newSocket.getInetAddress().getHostName();
+        return Pair.of(hostname, new BufferedReader(new InputStreamReader(newSocket.getInputStream())));
+    }
+
+    @Override
+    // metric_path value timestamp\n
+    // http://graphite.wikidot.com/getting-your-data-into-graphite
+    public void readAndProcess(Pair<String, BufferedReader> inx) throws IOException {
+        BufferedReader in = inx.getRight();
+        String host = inx.getLeft();
+        String line = in.readLine();
+        if (line == null) {
+            throw new IOException("connection lost");
+        }
+
+        Record out = Record.createWithHostAndMessage(host, line);
+        dispatch(out);
+
+    }
+
+    @Override
+    public void tearDown(Pair<String, BufferedReader> in2) throws IOException {
+        in2.getRight().close();
+    }
 
 }

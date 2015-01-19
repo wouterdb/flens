@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,49 +17,42 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.config;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class UnBatchPlugin extends AbstractConfig{
-	
-	@Override
-	public String getDescription() {
-		return "split a batch record into its constituent sub records";
-	}
+import java.util.LinkedList;
+import java.util.List;
 
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
-	
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+public class UnBatchPlugin extends AbstractConfig {
 
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	protected void construct() {
-		boolean keep = getBool("keep", false);
-		engine.addFilter(new flens.filter.UnBatchingFilter(name,plugin,tagger,matcher,prio,keep));
+    @Override
+    public String getDescription() {
+        return "split a batch record into its constituent sub records";
+    }
 
-	}
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
+    @Override
+    protected void construct() {
+        boolean keep = getBool("keep", false);
+        engine.addFilter(new flens.filter.UnBatchingFilter(name, plugin, tagger, matcher, prio, keep));
 
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("keep", "Boolean", "false", "keep super record after extraction of sub records"));
-		return out;
-	}
+    }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("keep", "Boolean", "false", "keep super record after extraction of sub records"));
+        return out;
+    }
 }

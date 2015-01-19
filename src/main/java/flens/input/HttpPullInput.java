@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,71 +17,87 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.TimerTask;
-import org.mvel2.templates.CompiledTemplate;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractPeriodicInput;
 
+import org.mvel2.templates.CompiledTemplate;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.TimerTask;
+
 public class HttpPullInput extends AbstractPeriodicInput {
 
-	protected URL myUrl;
+    protected URL myUrl;
 
-	protected String[] collumnNames;
-	protected CompiledTemplate[] collumnTemplates;
+    protected String[] collumnNames;
+    protected CompiledTemplate[] collumnTemplates;
 
-	protected String url;
+    protected String url;
 
-	public HttpPullInput(String name,String plugin, Tagger tagger, int interval, String url)
-			throws MalformedURLException {
-		super(name,plugin, tagger, interval);
-		this.url = url;
-		this.myUrl = new URL(url);
-	}
+    /**
+     * @param name
+     *            name under which this plugin is registered with the engine
+     * @param plugin
+     *            name of config that loaded this plugin (as registered in
+     *            plugins.json)
+     * @param tagger
+     *            tagger used to mark output records
+     * @param interval
+     *            polling interval
+     * @param url
+     *            url to read 
+     * @throws MalformedURLException
+     *            url is bad
+     */
+    public HttpPullInput(String name, String plugin, Tagger tagger, int interval, String url)
+            throws MalformedURLException {
+        super(name, plugin, tagger, interval);
+        this.url = url;
+        this.myUrl = new URL(url);
+    }
 
-	public void poll() throws IOException {
-		HttpURLConnection con = (HttpURLConnection) myUrl.openConnection();
-		
-		//int responseCode = con.getResponseCode();
-		
- 
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
- 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
- 
-		Record r = Record.createWithMessage(response.toString());
+    protected void poll() throws IOException {
+        HttpURLConnection con = (HttpURLConnection) myUrl.openConnection();
 
-		dispatch(r);
+        // int responseCode = con.getResponseCode();
 
-	}
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
 
-	@Override
-	protected TimerTask getWorker() {
-		return new TimerTask() {
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
 
-			@Override
-			public void run() {
-				try {
-					poll();
-				} catch (IOException e) {
-					err("failed http pull", e);
-				}
-			}
-		};
-	}
+        Record out = Record.createWithMessage(response.toString());
+
+        dispatch(out);
+
+    }
+
+    @Override
+    protected TimerTask getWorker() {
+        return new TimerTask() {
+
+            @Override
+            public void run() {
+                try {
+                    poll();
+                } catch (IOException e) {
+                    err("failed http pull", e);
+                }
+            }
+        };
+    }
 
 }

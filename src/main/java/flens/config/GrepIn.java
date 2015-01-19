@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,45 +17,48 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import flens.config.util.AbstractConfig;
 
-public class GrepIn extends AbstractConfig{
 
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+public class GrepIn extends AbstractConfig {
 
-	@Override
-	protected void construct() {
-		String file = get("file", null);
-		String regex = get("regex",".*");
-		boolean tail = getBool("tail", true);
-		engine.addInput(new flens.input.GrepInput(name,plugin,tagger,file,regex,tail));
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected void construct() {
+        String file = get("file", null);
+        String regex = get("regex", ".*");
+        boolean tail = getBool("tail", true);
+        engine.addInput(new flens.input.GrepInput(name, plugin, tagger, file, regex, tail));
+    }
 
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("file", "String", "", "file to tail"));
-		out.add(new Option("regex", "String", ".*", "regex to filter results"));
-		out.add(new Option("tail", "Boolean", "true", "tail from the end of the file?"));
-		return out;
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
 
-	@Override
-	public String getDescription() {
-		return "log tailer with regex support";
-	}
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("file", "String", "", "file to tail"));
+        out.add(new Option("regex", "String", ".*", "regex to filter results"));
+        out.add(new Option("tail", "Boolean", "true", "tail from the end of the file?"));
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "log tailer with regex support";
+    }
 
 }

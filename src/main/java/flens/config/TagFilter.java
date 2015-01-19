@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,32 +17,31 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
 
 import flens.config.util.AbstractConfig;
 
-public class TagFilter extends AbstractConfig{
-	
-	@Override
-	protected boolean isIn() {
-		return false;
-	}
-	
-	@Override
-	protected void construct() {
-		engine.addFilter(new flens.filter.TagFilter(name,plugin,tagger,matcher,prio,engine.getTags()));
-	}
+public class TagFilter extends AbstractConfig {
 
-	
+    @Override
+    protected boolean isIn() {
+        return false;
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
+    @Override
+    protected void construct() {
+        engine.addFilter(new flens.filter.TagFilter(name, plugin, tagger, matcher, prio, engine.getTags()));
+    }
 
-	@Override
-	public String getDescription() {
-		return "add tags to records";
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
+
+    @Override
+    public String getDescription() {
+        return "add tags to records";
+    }
 
 }

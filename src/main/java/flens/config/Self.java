@@ -1,4 +1,4 @@
-/**
+/*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
  *
@@ -17,43 +17,43 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-package flens.config;
 
-import java.util.LinkedList;
-import java.util.List;
+package flens.config;
 
 import flens.config.util.AbstractConfig;
 import flens.input.SelfMonitor;
 
-public class Self extends AbstractConfig{
+import java.util.LinkedList;
+import java.util.List;
 
-	@Override
-	protected void construct() {
-		int interval = getInt("interval", 60000);
-		engine.addInput(new SelfMonitor(name,plugin,tagger,engine,interval));
-		
-	}
+public class Self extends AbstractConfig {
 
-	@Override
-	protected boolean isIn() {
-		return true;
-	}
+    @Override
+    protected void construct() {
+        int interval = getInt("interval", 60000);
+        engine.addInput(new SelfMonitor(name, plugin, tagger, engine, interval));
+    }
 
-	@Override
-	protected boolean isOut() {
-		return false;
-	}
-	
-	@Override
-	public List<Option> getOptions() {
-		List<Option>  out = new LinkedList<Option>(super.getOptions());
-		out.add(new Option("interval", "int", "60000", "interval (in ms) between subsequent reports"));
-		return out;
-	}
+    @Override
+    protected boolean isIn() {
+        return true;
+    }
 
-	@Override
-	public String getDescription() {
-		return "send out records packed with self diagnostics";
-	}
+    @Override
+    protected boolean isOut() {
+        return false;
+    }
+
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("interval", "int", "60000", "interval (in ms) between subsequent reports"));
+        return out;
+    }
+
+    @Override
+    public String getDescription() {
+        return "send out records packed with self diagnostics";
+    }
 
 }
