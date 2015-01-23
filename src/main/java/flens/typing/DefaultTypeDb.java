@@ -3,11 +3,11 @@ package flens.typing;
 import flens.util.FileUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-
 
 public class DefaultTypeDb extends TypeDb {
 
@@ -20,6 +20,10 @@ public class DefaultTypeDb extends TypeDb {
         } catch (IOException e) {
             warn("failed to read types database", e);
         }
+    }
+
+    public DefaultTypeDb(String dir) {
+        loadDir(new File(dir));
     }
 
 }

@@ -24,7 +24,9 @@
 			 "add-tags":"typed",
 			 "unknown-add-tags":"unknown",
 		//	 "untyped-add-tags":"untyped",
-			 "prio":"1"
+			 "prio":"1",
+			 "dir":"src/main/resources/",
+			 "refresh":"true"
 		 },"template":{
 		 //filter out all typed record that are not in the types database
 		 	"type":"metrics",

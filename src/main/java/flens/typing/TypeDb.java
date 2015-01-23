@@ -35,22 +35,39 @@ import static flens.util.ParseUtil.nrLow;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import flens.util.FileUtil;
+
 public class TypeDb {
 
-    private Map<String, MetricType> types = new HashMap<>();
+    protected static final IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(),
+            FileFilterUtils.suffixFileFilter(".db"));
+    protected static final IOFileFilter filter = FileFilterUtils.or(FileFilterUtils.directoryFileFilter(), files);
+
+    protected Map<String, MetricType> types = new HashMap<>();
 
     /**
      * @throws IllegalArgumentException
      *             when type collides with existing type
      */
-    public void add(MetricType type) {
+    public synchronized void add(MetricType type) {
         if (types.containsKey(type.getName())) {
             MetricType other = types.get(type.getName());
             if (!other.equals(type)) {
@@ -61,7 +78,7 @@ public class TypeDb {
         }
     }
 
-    public MetricType get(String metric) {
+    public synchronized MetricType get(String metric) {
         return types.get(metric);
     }
 
@@ -94,6 +111,39 @@ public class TypeDb {
 
     }
 
+    public void load(File file) throws FileNotFoundException, IOException {
+        try (InputStream in = new FileInputStream(file)) {
+            parse(new BufferedReader(new InputStreamReader(in)), file.getPath());
+        }
+    }
+
+    protected void loadDir(File directory) {
+        if (!directory.exists()) {
+            warn("file does not exist ", directory.toString());
+            return;
+        }
+        if (directory.isFile()) {
+            try {
+                load(directory);
+                return;
+            } catch (FileNotFoundException e) {
+                warn("file vanished before reading started " + directory, e);
+            } catch (IOException e) {
+                warn("failed to read types database " + directory, e);
+            }
+        }
+
+        for (File f : FileUtils.listFiles(directory, files, TrueFileFilter.INSTANCE)) {
+            try {
+                load(f);
+            } catch (FileNotFoundException e) {
+                warn("file vanished before reading started " + f, e);
+            } catch (IOException e) {
+                warn("failed to read types database " + f, e);
+            }
+        }
+    }
+
     protected void warn(String msg, String extra) {
         Logger.getLogger(getClass().getName()).warning(msg + " : " + extra);
     }
@@ -101,6 +151,14 @@ public class TypeDb {
     protected void warn(String msg, Exception excn) {
         Logger.getLogger(getClass().getName()).log(Level.WARNING, msg, excn);
 
+    }
+
+    protected void info(String msg) {
+        Logger.getLogger(getClass().getName()).info(msg);
+    }
+
+    public Collection<MetricType> getAll() {
+        return types.values();
     }
 
 }

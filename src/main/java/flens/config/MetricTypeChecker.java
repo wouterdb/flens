@@ -17,15 +17,16 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.config;
+
+import flens.config.util.AbstractConfig;
+import flens.core.Tagger;
+import flens.typing.DefaultTypeDb;
+import flens.typing.UpdatingTypeDb;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
-import flens.core.Tagger;
-import flens.typing.DefaultTypeDb;
 
 public class MetricTypeChecker extends AbstractConfig {
     @Override
@@ -58,8 +59,22 @@ public class MetricTypeChecker extends AbstractConfig {
 
         boolean checkall = getBool("checkall", false);
 
-        engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped, unknown,
-                new DefaultTypeDb(), checkall));
+        String dir = get("dir", "");
+        boolean refresh = getBool("refresh", false);
+
+        if (!refresh) {
+            if (dir.isEmpty()) {
+                engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped,
+                        unknown, new DefaultTypeDb(), checkall));
+            } else {
+                engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped,
+                        unknown, new DefaultTypeDb(dir), checkall));
+            }
+
+        } else {
+            engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped, unknown,
+                    new UpdatingTypeDb(dir), checkall));
+        }
 
     }
 
@@ -81,12 +96,10 @@ public class MetricTypeChecker extends AbstractConfig {
         out.add(new Option("untyped-set-type", "String", "",
                 "add following type to records wich have no or incomplete type information after processing"));
 
-        out.add(new Option("unknown-add-tags", "[String]", "[]",
-                "add following tags to records with unknown type"));
-        out.add(new Option("unknown-remove-tags", "[String]", "[]", 
+        out.add(new Option("unknown-add-tags", "[String]", "[]", "add following tags to records with unknown type"));
+        out.add(new Option("unknown-remove-tags", "[String]", "[]",
                 "add following tags from records with unknown type"));
-        out.add(new Option("unknown-set-type", "String", "", 
-                "add following type to records with unknown type"));
+        out.add(new Option("unknown-set-type", "String", "", "add following type to records with unknown type"));
 
         out.add(new Option("bad-add-tags", "[String]", "[]",
                 "add following tags to records which come into the system with a bad type"));
@@ -96,6 +109,8 @@ public class MetricTypeChecker extends AbstractConfig {
                 "add following type to records which come into the system with a bad type"));
 
         out.add(new Option("checkall", "boolean", "false", "check all records, also if they have no metric field"));
+        out.add(new Option("dir", "String", "", "directory to from which to read .db files"));
+        out.add(new Option("refresh", "boolean", "false", "scan for file updates continuously"));
 
         return out;
     }
