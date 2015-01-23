@@ -131,7 +131,9 @@ public abstract class AbstractConfig implements Config {
         return new StandardTagger(prefix, stype, tags, rtags);
 
     }
-
+    
+    
+    
     protected Matcher readMatcher() {
         tags = getArray("tags", Collections.EMPTY_LIST);
         String type = get("type", null);

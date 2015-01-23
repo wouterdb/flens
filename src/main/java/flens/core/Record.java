@@ -20,6 +20,7 @@
 
 package flens.core;
 
+import flens.typing.MetricForm;
 import flens.typing.MetricType;
 
 import java.io.UnsupportedEncodingException;
@@ -85,8 +86,6 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    
-    
     /* ************************
      * BLOB.***********************
      */
@@ -121,7 +120,6 @@ public class Record {
         values.put(Constants.METRIC, metric);
         return new Record(null, values, new HashSet<String>());
     }
-    
 
     @Deprecated
     public static Record createWithValue(String metric, long delta) {
@@ -132,7 +130,7 @@ public class Record {
         values.put(Constants.METRIC, metric);
         return new Record(null, values, new HashSet<String>());
     }
-    
+
     @Deprecated
     public static Record createWithValue(String metric, String msg) {
         return createWithMetricAndMsg(metric, msg);
@@ -176,7 +174,7 @@ public class Record {
     }
 
     public static Record forLog(String file, String message) {
-        Map<String, Object> values = new HashMap<String, Object>();    
+        Map<String, Object> values = new HashMap<String, Object>();
         values.put(Constants.TIME, System.currentTimeMillis());
         values.put(Constants.SOURCE, Util.hostName());
         values.put(Constants.MESSAGE, message);
@@ -209,7 +207,6 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-
     public static Record forMetric(String metric, long number, String unit) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(Constants.TIME, System.currentTimeMillis());
@@ -219,11 +216,45 @@ public class Record {
         values.put(Constants.UNIT, unit);
         return new Record(null, values, new HashSet<String>());
     }
-    
+
+    public static Record forMetric(String metric, long number, String unit, String resourcetype, MetricForm form,
+            String range) {
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(Constants.TIME, System.currentTimeMillis());
+        values.put(Constants.SOURCE, Util.hostName());
+        values.put(Constants.METRIC, metric);
+        values.put(Constants.VALUE, number);
+        values.put(Constants.UNIT, unit);
+
+        values.put(Constants.RESCOURCE_TYPE, resourcetype);
+        values.put(Constants.FORM, form.toShortString());
+        values.put(Constants.RANGE, range);
+        return new Record(null, values, new HashSet<String>());
+    }
+
     public static Record forMetric(Number number, MetricType type) {
         return new Record(number, type);
     }
 
+    public static Record forMetricWithInstance(String metric, String instance, long number, String unit,
+            String resourcetype, MetricForm form, String range) {
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(Constants.TIME, System.currentTimeMillis());
+        values.put(Constants.SOURCE, Util.hostName());
+        values.put(Constants.METRIC, metric);
+        values.put(Constants.VALUE, number);
+        values.put(Constants.INSTANCE, instance);
+
+        values.put(Constants.UNIT, unit);
+        values.put(Constants.RESCOURCE_TYPE, resourcetype);
+        values.put(Constants.FORM, form.toShortString());
+        values.put(Constants.RANGE, range);
+        return new Record(null, values, new HashSet<String>());
+    }
+
+    public boolean isMetric() {
+        return values.containsKey(Constants.METRIC);
+    }
 
     @Deprecated
     public static Record createWithTypeTimeAndValue(long timestamp, String metric, String type, long value) {
@@ -236,8 +267,7 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    public static Record createWithTypeTimeAndValue(
-            long timestamp, String metric, String type, long value, String unit) {
+    public static Record createWithTypeTimeAndValue(long timestamp, String metric, String type, long value, String unit) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(Constants.TIME, timestamp);
         values.put(Constants.SOURCE, Util.hostName());
@@ -282,8 +312,6 @@ public class Record {
         values.put(Constants.METRIC, metric);
         return new Record(null, values, new HashSet<String>());
     }
-
-   
 
     @Deprecated
     public static Record createWithMetricAndMsg(String metric, String msg) {
@@ -447,16 +475,25 @@ public class Record {
     }
 
     public void addMeta(MetricType metricType) {
-        values.put("unit", metricType.getUnit());
-        values.put("resourcetype", metricType.getResource());
-        values.put("form", metricType.getForm().toString());
-        values.put("range", metricType.getRange());
+        values.put(Constants.UNIT, metricType.getUnit());
+        values.put(Constants.RESCOURCE_TYPE, metricType.getResource());
+        values.put(Constants.FORM, metricType.getForm().toShortString());
+        values.put(Constants.RANGE, metricType.getRange());
+    }
+
+    public boolean hasMetricType() {
+        return values.containsKey(Constants.UNIT) && values.containsKey(Constants.RESCOURCE_TYPE)
+                && values.containsKey(Constants.FORM) && values.containsKey(Constants.RANGE);
     }
 
     public static Record createFromTypeAndInstance(Number value, MetricType intype, String instance) {
         Record out = new Record(value, intype);
         out.values.put(Constants.INSTANCE, instance);
         return out;
+    }
+
+    public Object get(String name) {
+        return values.get(name);
     }
 
 }

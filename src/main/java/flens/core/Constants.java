@@ -27,25 +27,29 @@ public class Constants {
     // obligatory fields
     /**
      * time in ms since epoch (unix timestamp).
-     * <p/><b>Obligatory</b>
+     * <p/>
+     * <b>Obligatory</b>
      */
     public static final String TIME = "time";
-    
+
     /**
      * Hostname of machine to which the record appertains.
-     * <p/><b>Obligatory</b>
+     * <p/>
+     * <b>Obligatory</b>
      */
     public static final String SOURCE = "source";
-    /** 
+    /**
      * primary name of the metric.
-     * <p/><b>Obligatory for metrics</b>
+     * <p/>
+     * <b>Obligatory for metrics</b>
      */
     public static final String METRIC = "metric";
 
-    /** 
+    /**
      * Primary name of the metric.
      * 
-     * <p/><b>Optional for logs</b>
+     * <p/>
+     * <b>Optional for logs</b>
      */
     public static final String LOG_FILE = "file";
 
@@ -54,7 +58,8 @@ public class Constants {
     /**
      * text message.
      * 
-     * <p/><b>Primary value field for logs</b>
+     * <p/>
+     * <b>Primary value field for logs</b>
      * 
      * 
      */
@@ -64,7 +69,8 @@ public class Constants {
     /**
      * binary message.
      * 
-     * <p/><b>Primary value field for binary messages</b>
+     * <p/>
+     * <b>Primary value field for binary messages</b>
      */
     public static final String BINARY_MESSAGE = "body";
     public static final String BODY = "body";
@@ -72,7 +78,8 @@ public class Constants {
     /**
      * numerical value message.
      * 
-     * <p/><b>Primary value field for metrics</b>
+     * <p/>
+     * <b>Primary value field for metrics</b>
      */
     public static final String VALUE = "value";
 
@@ -88,4 +95,27 @@ public class Constants {
 
     public static final String TAGS = "tags";
 
+
+    // typing
+
+    /**
+     * valid range of values for this metric, as from metricType.getRange()
+     * <p/>
+     * <b>Opional for metrics</b>
+     */
+    public static final String RANGE = "range";
+
+    /**
+     * form of this metric, as from metricType.getForm()
+     * <p/>
+     * <b>Opional for metrics</b>
+     */
+    public static final String FORM = "form";
+
+    /**
+     * type of resource this metric applies to
+     * <p/>
+     * <b>Opional for metrics</b>
+     */
+    public static final String RESCOURCE_TYPE = "resourcetype";
 }

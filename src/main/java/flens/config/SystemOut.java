@@ -21,6 +21,12 @@
 package flens.config;
 
 import flens.config.util.AbstractConfig;
+import flens.core.Config.Option;
+
+import java.util.LinkedList;
+import java.util.List;
+
+
 
 public class SystemOut extends AbstractConfig {
 
@@ -31,7 +37,8 @@ public class SystemOut extends AbstractConfig {
 
     @Override
     protected void construct() {
-        engine.addOutput(new flens.output.SystemOut(name, plugin, matcher));
+        String field = get("field",null);
+        engine.addOutput(new flens.output.SystemOut(name, plugin, matcher,field));
     }
 
     @Override
@@ -44,4 +51,10 @@ public class SystemOut extends AbstractConfig {
         return "send logs to system out";
     }
 
+    @Override
+    public List<Option> getOptions() {
+        List<Option> out = new LinkedList<Option>(super.getOptions());
+        out.add(new Option("field", "String", "", "field to print, default is whole record"));
+        return out;
+    }
 }

@@ -71,4 +71,8 @@ public class FileUtil {
 
     }
 
+    public static String[] getSearchPathFor(String service) {
+        return new String[] { ".", "/usr/share/flens/" + service };
+    }
+
 }

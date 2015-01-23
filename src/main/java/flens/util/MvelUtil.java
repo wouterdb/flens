@@ -22,10 +22,12 @@ package flens.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-
+import org.apache.commons.lang3.tuple.Pair;
 import org.mvel2.ParserContext;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
+
+import flens.typing.MetricType;
 
 import java.io.InputStream;
 
@@ -42,6 +44,7 @@ public class MvelUtil {
         try {
             ctx.addImport("reverseHostname", MvelUtil.class.getMethod("reverseHostname", String.class));
             ctx.addImport("debug", MvelUtil.class.getMethod("debug"));
+            ctx.addImport("parseRange", MvelUtil.class.getMethod("parseRange",String.class));
         } catch (NoSuchMethodException e) {
             // handle exception here.
         }
@@ -64,6 +67,14 @@ public class MvelUtil {
         System.out.println("debug");
     }
 
+
+    /**
+     * method for parsing range string.
+     */
+    public static Pair<Number,Number> parseRange(String range) {
+        return MetricType.parseRange(range);
+    }
+
     public static CompiledTemplate compileTemplateTooled(String source) {
         return TemplateCompiler.compileTemplate(source, getTooledContext());
     }
@@ -71,4 +82,6 @@ public class MvelUtil {
     public static CompiledTemplate compileTemplateTooled(InputStream source) {
         return TemplateCompiler.compileTemplate(source, getTooledContext());
     }
+    
+    
 }

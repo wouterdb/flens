@@ -22,19 +22,21 @@ package flens.config;
 
 import flens.config.util.AbstractConfig;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class SpecInput extends AbstractConfig {
+
+    private static final String[] defaultspecs = { "cpu", "sleep" };
 
     @Override
     @SuppressWarnings("unchecked")
     protected void construct() {
 
         int interval = getInt("interval", 10000);
-        List<String> specs = getArray("tests", Collections.emptyList());
+        List<String> specs = getArray("tests", Arrays.asList(defaultspecs));
 
         engine.addInput(new flens.input.SpecInput(name, plugin, tagger, interval, specs));
     }
@@ -53,7 +55,7 @@ public class SpecInput extends AbstractConfig {
     public List<Option> getOptions() {
         List<Option> out = new LinkedList<Option>(super.getOptions());
         out.add(new Option("interval", "int", "10000", "interval between specs tests in ms"));
-        out.add(new Option("tests", "[String]", "[]", "test suites to run"));
+        out.add(new Option("tests", "[String]", Arrays.deepToString(defaultspecs), "test suites to run"));
 
         return out;
     }

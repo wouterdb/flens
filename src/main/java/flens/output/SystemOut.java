@@ -30,10 +30,17 @@ import java.io.PrintStream;
 public class SystemOut extends AbstractPumpOutput implements Output {
 
     private PrintStream stream;
+    private String field;
 
     public SystemOut(String name, String plugin, Matcher matcher) {
         super(name, plugin, matcher);
         stream = System.out;
+    }
+
+    public SystemOut(String name, String plugin, Matcher matcher, String field) {
+        super(name, plugin, matcher);
+        stream = System.out;
+        this.field = field;
     }
 
     @Override
@@ -42,7 +49,11 @@ public class SystemOut extends AbstractPumpOutput implements Output {
         try {
             while (running) {
                 Record record = queue.take();
-                stream.println(String.format("[%s] %s", getName(), record.toLine()));
+                if (field != null) {
+                    stream.println(String.format("[%s] %s", getName(), record.get(field)));
+                } else {
+                    stream.println(String.format("[%s] %s", getName(), record.toLine()));
+                }
                 sent++;
             }
         } catch (InterruptedException e) {

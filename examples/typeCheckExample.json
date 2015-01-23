@@ -1,0 +1,50 @@
+{
+	"input":{
+	    //get some data from different source
+	    
+	    //types can be found in jar, in collectd/typing.db 
+	    //to format correctly awk -F '[\t ]+' '!/^($|#)/{print $4 " " $5 " " $6 " " $7 " " $8 " " $9}' collectd/typing.db > typing.db
+		"collectd-in":{
+			"type":"metrics"
+		},
+		
+		//types are attached by default (typed) but not known
+		"self":{
+			"type":"metrics"
+		},
+		"spec":{
+			"type":"metrics"
+		}
+		
+	},
+	"filter":{
+		//do the check
+		"metric-type-check":{
+			 "type":"metrics",
+			 "add-tags":"typed",
+			 "unknown-add-tags":"unknown",
+		//	 "untyped-add-tags":"untyped",
+			 "prio":"1"
+		 },"template":{
+		 //filter out all typed record that are not in the types database
+		 	"type":"metrics",
+			"tags":["unknown","typed"],
+			"prio":"2",
+			"template":"${metric} ${resourcetype} ${unit} ${form} ${parseRange(range).left} ${parseRange(range).right}",
+			"field":"typestring"
+		 }
+	},
+	"output":{
+		"file-out":{
+		//store all newly discovered types
+		//to make new entries for known types db
+		//sort newtypes.csv | uniq | sed "s/Infinity/-/g"
+			"type":"metrics",
+			"tags":["unknown","typed"],
+			"field":"typestring",
+			"file":"newtypes.csv",
+			"newline":"true"
+		}
+	}
+	
+}

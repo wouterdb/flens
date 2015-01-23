@@ -45,5 +45,9 @@ public enum MetricForm {
 
         throw new IllegalArgumentException("form unkown: " + in);
     }
+    
+    public String toShortString() {
+        return name().substring(0, 1).toLowerCase();
+    }
 
 }

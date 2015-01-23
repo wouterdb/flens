@@ -20,6 +20,7 @@
 
 package flens.core;
 
+import flens.typing.MetricForm;
 import flens.util.NamedThreadFactory;
 
 import java.util.Collection;
@@ -430,26 +431,32 @@ public class Flengine {
         }
     }
 
+    private Record getQRecord(String sub, String instance, long value, MetricForm form) {
+        return Record.forMetricWithInstance("flens.q-" + sub, instance, value, "record", "flens.q", form, "[0,[");
+    }
+
     /**
      * add a full report on queue statistics to the given set of records.
      */
     public void report(Set<Record> out) {
 
-        out.add(Record.forMetric("flens.q-in-size", executor.getQueue().size(), "record"));
+        out.add(getQRecord("size", "in", executor.getQueue().size(), MetricForm.Gauge));
         for (Output o : outputs) {
-            out.add(Record.forMetric(
-                    String.format("flens.q-%s-size", o.getName()), o.getOutputQueue().size(), "record"));
-            out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent(), "record"));
-            out.add(Record.forMetric(String.format("flens.q-%s-lost", o.getName()), o.getRecordsLost(), "record"));
+            out.add(getQRecord("size", o.getName(), o.getOutputQueue().size(), MetricForm.Gauge));
+            out.add(getQRecord("sent", o.getName(), o.getRecordsSent(), MetricForm.Counter));
+            out.add(getQRecord("lost", o.getName(), o.getRecordsLost(), MetricForm.Counter));
         }
 
         for (Input o : inputs) {
-            out.add(Record.forMetric(String.format("flens.q-%s-sent", o.getName()), o.getRecordsSent(), "record"));
+            out.add(getQRecord("sent", o.getName(), o.getRecordsSent(), MetricForm.Counter));
         }
 
-        out.add(Record.forMetric("flens.exec-threads-active", executor.getActiveCount(), "thread"));
-        out.add(Record.forMetric("flens.exec-threads-live", executor.getPoolSize(), "thread"));
-        out.add(Record.forMetric("flens.exec-seen", executor.getCompletedTaskCount(), "record"));
+        out.add(Record.forMetric("flens.exec-threads-active", executor.getActiveCount(), "thread", "flens.executor",
+                MetricForm.Gauge, "[0,["));
+        out.add(Record.forMetric("flens.exec-threads-live", executor.getPoolSize(), "thread", "flens.executor",
+                MetricForm.Gauge, "[0,["));
+        out.add(Record.forMetric("flens.exec-seen", executor.getCompletedTaskCount(), "record", "flens.executor",
+                MetricForm.Counter, "[0,["));
 
         for (SelfReporter r : getSelfReporters()) {
             r.report(out);
