@@ -21,7 +21,6 @@
 package flens.output;
 
 import flens.core.Matcher;
-import flens.core.Output;
 import flens.core.Record;
 import flens.output.util.AbstractPumpOutput;
 

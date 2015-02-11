@@ -59,8 +59,8 @@ public class StandardTagger implements Tagger {
 
     @Override
     public void outputConfig(Map<String, Object> tree) {
-        tree.put(configprefix + "add-tag", tags);
-        tree.put(configprefix + "type", type);
+        tree.put(configprefix + "add-tags", tags);
+        tree.put(configprefix + "set-type", type);
         tree.put(configprefix + "remove-tag", rtags);
     }
 

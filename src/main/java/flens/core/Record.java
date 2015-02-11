@@ -267,7 +267,8 @@ public class Record {
         return new Record(null, values, new HashSet<String>());
     }
 
-    public static Record createWithTypeTimeAndValue(long timestamp, String metric, String type, long value, String unit) {
+    public static Record createWithTypeTimeAndValue(
+            long timestamp, String metric, String type, long value, String unit) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(Constants.TIME, timestamp);
         values.put(Constants.SOURCE, Util.hostName());

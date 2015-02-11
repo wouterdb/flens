@@ -15,7 +15,7 @@ public class DefaultOverrides {
         specialOverrides.put("cookbook.template", "dummy.tmpl");
         specialOverrides.put("grep.file", "/etc/hosts");
         specialOverrides.put("http-poll.url", "http://www.google.be/");
-
+        specialOverrides.put("metric-type-check.dir", "src/test/resources/types");
     }
 
     public static String getDefaultFor(String pluginName, Option option) {

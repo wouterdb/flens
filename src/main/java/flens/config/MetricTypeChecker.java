@@ -65,15 +65,15 @@ public class MetricTypeChecker extends AbstractConfig {
         if (!refresh) {
             if (dir.isEmpty()) {
                 engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped,
-                        unknown, new DefaultTypeDb(), checkall));
+                        unknown, new DefaultTypeDb(), checkall,dir,refresh));
             } else {
                 engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped,
-                        unknown, new DefaultTypeDb(dir), checkall));
+                        unknown, new DefaultTypeDb(dir), checkall,dir,refresh));
             }
 
         } else {
             engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped, unknown,
-                    new UpdatingTypeDb(dir), checkall));
+                    new UpdatingTypeDb(dir), checkall,dir,refresh));
         }
 
     }

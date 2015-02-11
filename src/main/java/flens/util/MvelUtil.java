@@ -20,6 +20,8 @@
 
 package flens.util;
 
+import flens.typing.MetricType;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,7 +29,6 @@ import org.mvel2.ParserContext;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 
-import flens.typing.MetricType;
 
 import java.io.InputStream;
 

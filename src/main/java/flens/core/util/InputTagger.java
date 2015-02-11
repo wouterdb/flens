@@ -57,7 +57,7 @@ public class InputTagger implements Tagger {
 
     @Override
     public void outputConfig(Map<String, Object> tree) {
-        tree.put(configprefix + "add-tag", tags);
+        tree.put(configprefix + "add-tags", tags);
         tree.put(configprefix + "type", type);
 
     }

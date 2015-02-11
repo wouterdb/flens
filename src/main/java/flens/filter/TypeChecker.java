@@ -34,15 +34,19 @@ import java.util.Collections;
 public class TypeChecker extends AbstractFilter {
 
     private final boolean checkall;
+    protected String dir;
+    protected boolean refresh;
 
     public TypeChecker(String name, String plugin, Matcher matcher, int prio, Tagger good, Tagger bad, Tagger untyped,
-            Tagger unknown, TypeDb db, boolean checkall) {
+            Tagger unknown, TypeDb db, boolean checkall, String dir, boolean refresh) {
         super(name, plugin, good, matcher, prio);
         this.untyped = untyped;
         this.bad = bad;
         this.types = db;
         this.unknown = unknown;
         this.checkall = checkall;
+        this.dir = dir;
+        this.refresh = refresh;
     }
 
     private TypeDb types;

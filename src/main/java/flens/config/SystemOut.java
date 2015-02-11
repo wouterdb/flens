@@ -21,7 +21,6 @@
 package flens.config;
 
 import flens.config.util.AbstractConfig;
-import flens.core.Config.Option;
 
 import java.util.LinkedList;
 import java.util.List;

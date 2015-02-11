@@ -44,6 +44,6 @@ public class TypeTagger implements Tagger {
 
     @Override
     public void outputConfig(Map<String, Object> tree) {
-        tree.put(configprefix + "type", type);
+        tree.put(configprefix + "set-type", type);
     }
 }

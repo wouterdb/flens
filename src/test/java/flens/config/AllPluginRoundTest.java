@@ -57,6 +57,7 @@ public class AllPluginRoundTest {
         for (String name : pr.names()) {
             out.add(new Object[] { name });
         }
+        //out.add(new Object[] { "metric-type-check" });
         return out;
     }
 
@@ -78,13 +79,12 @@ public class AllPluginRoundTest {
         if (config1.equals(defaults)) {
             return;
         }
+        
         Map<String, Object> config2 = configRoundTrip(config1);
         assertThat(config2, equalTo(config1));
 
         Map<String, Object> config3 = configRoundTrip(config2);
         assertThat(config3, equalTo(config2));
-
-        System.out.println(config3);
     }
 
     @SuppressWarnings("unchecked")
