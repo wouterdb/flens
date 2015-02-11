@@ -53,23 +53,29 @@ public class PatternInput extends AbstractActiveInput implements PatternStore {
                 long delay = p.length * 1000000L / nrofpackets;
                 for (int i = 0; i < nrofpackets; i++) {
                     dispatch(Record.forLog(p.getMessage(i)));
-                    long now = System.nanoTime();
-                    cond.awaitNanos(start + delay - now);
+                    // long now = System.nanoTime();
+                    // cond.awaitNanos(start + delay - now);
                     // System.out.println(start + delay - now);
                     // Thread.sleep(start + delay - now);
+                    while (System.nanoTime() < start + delay) {
+
+                    }
                     start += delay;
                 }
 
             }
 
-        } catch (InterruptedException e) {
-            System.out.println(e);
+            /*
+             * catch (InterruptedException e) { System.out.println(e); }
+             */
         } finally {
 
             lock.unlock();
 
             running = false;
         }
+        
+        
     }
 
     public void addPattern(Pattern pattern) {

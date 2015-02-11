@@ -131,8 +131,9 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
                 rate = 1000000000.0f / time;
 
                 if (!(Math.abs(p.msgrate - rate) < deltarate)) {
-                    System.out.println(String.format("rate change at packet %d (%d) to %f (expected %f)", index,
-                            current, rate, p.msgrate));
+                    System.out.println(String.format(
+                            "rate change at packet %d (pattern offset=%d) to %f (expected %f)",
+                            index,current, rate, p.msgrate));
                     break;
                 }
 
