@@ -22,25 +22,21 @@ package flens.typing;
 
 import static flens.util.ParseUtil.bool;
 import static flens.util.ParseUtil.form;
-import static flens.util.ParseUtil.list;
-import static flens.util.ParseUtil.may;
-import static flens.util.ParseUtil.nrHigh;
-import static flens.util.ParseUtil.nrLow;
-import static flens.util.ParseUtil.bool;
-import static flens.util.ParseUtil.form;
-import static flens.util.ParseUtil.list;
-import static flens.util.ParseUtil.may;
 import static flens.util.ParseUtil.nrHigh;
 import static flens.util.ParseUtil.nrLow;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,12 +44,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import flens.util.FileUtil;
 
 public class TypeDb {
 

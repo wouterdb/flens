@@ -59,7 +59,7 @@ public class HttpPullInput extends AbstractPeriodicInput {
      *            url is bad
      */
     public HttpPullInput(String name, String plugin, Tagger tagger, int interval, String url)
-            throws MalformedURLException {
+        throws MalformedURLException {
         super(name, plugin, tagger, interval);
         this.url = url;
         this.myUrl = new URL(url);

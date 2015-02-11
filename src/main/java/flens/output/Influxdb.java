@@ -64,7 +64,7 @@ public class Influxdb {
     public boolean debugJson = false;
 
     public Influxdb(String host, int port, String database, String username, String password, TimeUnit timePrecision)
-            throws Exception {
+        throws Exception {
         this(new URL("http", host, port, "/db/" + database + "/series?u=" + URLEncoder.encode(username, UTF_8.name())
                 + "&p=" + password + "&time_precision=" + toTimePrecision(timePrecision)));
     }
