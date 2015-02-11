@@ -53,7 +53,7 @@ public class TestTest {
         testenFlengine.start();
         pinp.join();
         testenFlengine.stop();
-        poutp.analyze(7.0f, 0);
+        poutp.analyze(8.0f, 0);
     }
 
     private void load(PatternStore st) {
