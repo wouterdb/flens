@@ -155,8 +155,7 @@
 					<packager>WDB</packager>
 					<prefix>/usr/share/flens</prefix>
 					<requires>
-						<require>java-1.7.0-openjdk</require>
-						<require>java-1.7.0-openjdk-devel</require>
+						<require>java-headless >= 1:1.7.0</require>
 					</requires>
 					<mappings>
 						<mapping>
