@@ -58,8 +58,7 @@ public class TestTest {
 
     private void load(PatternStore st) {
         st.addPattern(new Pattern());
-        st.addPattern(new Pattern(3000, 100, "test a "));
-        st.addPattern(new Pattern(3000, 10, "test b "));
-        st.addPattern(new Pattern(2000, 1, "test c "));
+        st.addPattern(new Pattern(3000, 10, "test a "));
+        st.addPattern(new Pattern(3000, 1, "test b "));
     }
 }
