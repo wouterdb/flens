@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>com.nflabs</groupId>
 			<artifactId>grok</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
+			<version>0.0.6</version>
 		</dependency>
 
 
@@ -330,42 +330,5 @@
 			</dependencies>
 		</profile>
 	</profiles>
-
-	<repositories>
-		<repository>
-			<id>nflabs.public</id>
-			<url>https://github.com/NFLabs/mvn-repo/raw/master/releases</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>nflabs.snapshot</id>
-			<url>https://github.com/NFLabs/mvn-repo/raw/master/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>apache.snapshots</id>
-			<name>Apache snapshot</name>
-			<url>https://repository.apache.org/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
