@@ -621,4 +621,16 @@ public class Flengine {
         return tree;
 
     }
+    
+    public int getInputSize(){
+        return inputs.size();
+    }
+    
+    public int getOutputSize(){
+        return outputs.size();
+    }
+    
+    public int getFilterSize(){
+        return filters.size();
+    }
 }

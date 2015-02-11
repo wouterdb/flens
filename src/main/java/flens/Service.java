@@ -60,9 +60,17 @@ public class Service {
             ch.getEngine().addTags(tags);
         }
 
+        if(ch.getEngine().getInputSize() == 0){
+            System.out.println("No inputs configured");
+        }
+        
+        if(ch.getEngine().getOutputSize() == 0){
+            System.out.println("No outputs configured");
+        }
+        
         ch.getEngine().start();
         EmbededFlens.setInstance(ch.getEngine());
-
+        
     }
 
 }
