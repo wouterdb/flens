@@ -26,7 +26,6 @@ import flens.core.Output;
 import flens.core.Record;
 import flens.core.util.AbstractPlugin;
 
-
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Queue;
@@ -65,7 +64,6 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
     protected int flushOnSize = 10000;
     protected int sent;
     protected int lost;
-   
 
     @Override
     public Matcher getMatcher() {
@@ -98,7 +96,9 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
     @Override
     public void stop() {
         running = false;
-        thread.interrupt();
+        if (thread != null) {
+            thread.interrupt();
+        }
     }
 
     @Override
@@ -179,5 +179,4 @@ public abstract class AbstractPumpOutput extends AbstractPlugin implements Outpu
 
     }
 
-   
 }

@@ -27,7 +27,7 @@ import flens.output.util.AbstractPumpOutput;
 
 import java.io.PrintStream;
 
-public class SystemOut extends AbstractPumpOutput implements Output {
+public class SystemOut extends AbstractPumpOutput {
 
     private PrintStream stream;
     private String field;

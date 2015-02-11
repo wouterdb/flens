@@ -46,7 +46,11 @@
 			"field":"typestring",
 			"file":"newtypes.csv",
 			"newline":"true"
-		}
+		},"tsdb-out":{
+			 "host":"opentsdbgateway.cloudapp.net",
+			 "type":"metrics",
+			 "send-tags":"instance"
+	    }
 	}
 	
 }
