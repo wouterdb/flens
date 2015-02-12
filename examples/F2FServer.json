@@ -1,20 +1,22 @@
 {
 	"input":{
-		"socket-in":{
-			"add-tag":["binary","json"]
+		"socket-line-in":{
+			"add-tags":["json"],
+			"port":6619
 		}
 		
 	},
 	"filter":{
 		"decoder" : {
  			"tags" : ["binary"],
- 			"remove-tag" : ["binary"] 
+ 			"remove-tags" : ["binary"] 
  		},"json-decoder" : {
  			"tags" : ["json"],
- 			"remove-tag" : ["json"]
+ 			"remove-tags" : ["json"]
  		}
 	},
 	"output":{
-		"system-out":{}
+		"system-out":{},
+		
 	}
 }

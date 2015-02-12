@@ -28,7 +28,6 @@ import flens.filter.util.AbstractFilter;
 import java.util.Collection;
 import java.util.Collections;
 
-
 public class CharacterDecoder extends AbstractFilter {
 
     public CharacterDecoder(String name, String plugin, Tagger tagger, Matcher matcher, int prio) {
@@ -40,7 +39,11 @@ public class CharacterDecoder extends AbstractFilter {
         // TODO config
         // String encoding = (String) in.getValues().get("encoding");
         // TODO encoding
-        String massage = new String((byte[]) in.getValues().get("body"));
+        byte[] din = (byte[]) in.getValues().get("body");
+        if (din == null) {
+            return Collections.emptyList();
+        }
+        String massage = new String(din);
         in.getValues().put("message", massage);
         tag(in);
         return Collections.emptyList();

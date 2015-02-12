@@ -60,7 +60,10 @@ public class SocketInput extends AbstractListenerInput<Pair<String, DataInputStr
         DataInputStream in = inx.getRight();
         String host = inx.getLeft();
         int line = in.readInt();
-
+        if(line>65536){
+            throw new IOException("number of bytes to be read is too big: " + line );
+        }
+            
         byte[] block = new byte[line];
 
         IOUtils.readFully(in, block);

@@ -1,0 +1,29 @@
+{
+	"input" : {		
+ 		"graphite-in":{
+			"type":"metrics"
+		},
+		"socket-line-in":{
+			"add-tags":["json"],
+			"port":6619,
+			"type":"syslog"
+		}
+ 	},"filter":{
+		"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tags" : ["json"]
+ 		}
+	},
+ 	"output" : {
+ 		"statsd-out":{
+ 			"type":"syslog",
+ 			"metric":"syslog.severity.@{severity}:1|c"
+ 		},
+		"system-out":{
+			"type":"metrics"
+		}
+ 		
+ 	}
+ 		 
+
+}
