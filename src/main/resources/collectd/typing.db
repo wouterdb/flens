@@ -13,7 +13,7 @@ df			df_complex	reserved	collectd.df.reserved	filesystem	bytes G 0 1125899906842
 df			df_complex	used		collectd.df.used		filesystem	bytes G 0 1125899906842623
 #
 disk		disk_merged	*			collectd.disk_merged.read,collectd.disk_merged.write	disk	bytes C 0 -
-disk		disk_merged	*			collectd.disk_octets.read,collectd.disk_octets.write	disk	bytes C 0 -
+disk		disk_octets	*			collectd.disk_octets.read,collectd.disk_octets.write	disk	bytes C 0 -
 disk		disk_ops	*			collectd.disk_ops.read,collectd.disk_ops.write			disk	ops C 0 -
 disk		disk_time	*			collectd.disk_time.read,collectd.disk_time.write		disk	s/ops C 0 -
 #

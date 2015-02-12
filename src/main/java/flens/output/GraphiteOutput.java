@@ -25,15 +25,14 @@ import flens.core.Record;
 import flens.output.util.AbstractSocketOutput;
 import flens.util.MvelUtil;
 
+import org.mvel2.UnresolveablePropertyException;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateRuntime;
 
 import java.io.BufferedWriter;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
 
 public class GraphiteOutput extends AbstractSocketOutput<BufferedWriter> {
 
@@ -56,28 +55,27 @@ public class GraphiteOutput extends AbstractSocketOutput<BufferedWriter> {
      *            mvel template to create flat metric name
      */
     public GraphiteOutput(String name, String plugin, Matcher matcher, String server, int port, String metric) {
-        super(name, plugin, matcher,server,port);
-  
+        super(name, plugin, matcher, server, port);
+
         this.metric = metric;
 
         this.index = MvelUtil.compileTemplateTooled(metric);
     }
 
-  
-    
     @Override
     protected void dispatch(BufferedWriter outstream, Record record) throws IOException {
-        
-        String metric = (String) TemplateRuntime.execute(this.index, record.getValues());
-        Object value = record.getValues().get("value");
-        if (value != null) {
-            outstream.write(String.format("%s %s %d\n", metric, value, record.getTimestamp() / 1000));
-            outstream.flush();
+        try {
+            String metric = (String) TemplateRuntime.execute(this.index, record.getValues());
+            Object value = record.getValues().get("value");
+            if (value != null) {
+                outstream.write(String.format("%s %s %d\n", metric, value, record.getTimestamp() / 1000));
+                outstream.flush();
+            }
+        } catch (UnresolveablePropertyException e) {
+            
         }
-        
+
     }
-
-
 
     @Override
     protected BufferedWriter getWriter(OutputStream outputStream) {
