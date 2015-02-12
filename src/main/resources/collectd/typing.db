@@ -8,6 +8,17 @@ cpu			cpu			interrupt	collectd.cpu.interrupt	cpu	jiffies C 0 -
 cpu			cpu			softirq	collectd.cpu.softirq	cpu	jiffies C 0 -
 cpu			cpu			steal	collectd.cpu.steal	cpu	jiffies C 0 -
 #
+df			df_complex	free		collectd.df.free		filesystem	bytes G 0 1125899906842623
+df			df_complex	reserved	collectd.df.reserved	filesystem	bytes G 0 1125899906842623
+df			df_complex	used		collectd.df.used		filesystem	bytes G 0 1125899906842623
+#
+disk		disk_merged	*			collectd.disk_merged.read,collectd.disk_merged.write	disk	bytes C 0 -
+disk		disk_merged	*			collectd.disk_octets.read,collectd.disk_octets.write	disk	bytes C 0 -
+disk		disk_ops	*			collectd.disk_ops.read,collectd.disk_ops.write			disk	ops C 0 -
+disk		disk_time	*			collectd.disk_time.read,collectd.disk_time.write		disk	s/ops C 0 -
+#
+entropy		entropy		*			collectd.entropy	entropy	bytes G 0 4294967295 
+#
 interface	if_octets	*		collectd.if_octets.rx,collectd.if_octets.tx	interface	bytes C 0 -
 interface	if_packets	*		collectd.if_packets.rx,collectd.if_packets.tx	interface	packets C 0 -
 interface	if_errors	*		collectd.if_errors.rx,collectd.if_errors.tx	interface	errors C 0 -

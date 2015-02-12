@@ -35,7 +35,7 @@ public class GrokFilter extends AbstractConfig {
     @Override
     protected void construct() {
         String script = get("script", "");
-        String inf = get("infield", "");
+        String inf = get("infield", "message");
         String dir = get("dir", "");
 
         boolean discard = getBool("discard", false);
@@ -57,7 +57,7 @@ public class GrokFilter extends AbstractConfig {
     public List<Option> getOptions() {
         List<Option> out = new LinkedList<Option>(super.getOptions());
         out.add(new Option("script", "String", "", "script to execute"));
-        out.add(new Option("infield", "String", "", "field to match"));
+        out.add(new Option("infield", "String", "message", "field to match"));
         out.add(new Option("dir", "String", "", "directory for aux definitions"));
         out.add(new Option("discard", "boolean", "false", "discard if no match"));
         return out;
