@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GraphiteOut extends AbstractConfig {
 
-    private static final String DEFAULT_METRIC = "@{reverseHostname(source)}@{metric}@{(isdef instance)?'.'+instance:''}.";
+    private static final String DEFAULT_METRIC = "@{reverseHostname(source)}.@{metric}@{(isdef instance)?'.'+instance:''}";
 
     @Override
     protected boolean isIn() {

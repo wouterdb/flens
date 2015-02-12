@@ -72,7 +72,9 @@ public class GraphiteOutput extends AbstractSocketOutput<BufferedWriter> {
                 outstream.flush();
             }
         } catch (UnresolveablePropertyException e) {
-            
+            warn("could not form name for record " + record.toLine(),e);
+            lost++;
+            sent--;
         }
 
     }
