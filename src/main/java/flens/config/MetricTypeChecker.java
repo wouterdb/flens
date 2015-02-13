@@ -23,7 +23,6 @@ package flens.config;
 import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
 import flens.typing.DefaultTypeDb;
-import flens.typing.UpdatingTypeDb;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class MetricTypeChecker extends AbstractConfig {
 
         } else {
             engine.addFilter(new flens.filter.TypeChecker(name, plugin, matcher, prio, tagger, bad, untyped, unknown,
-                    new UpdatingTypeDb(dir), checkall,dir,refresh));
+                    new DefaultTypeDb(dir,true), checkall,dir,refresh));
         }
 
     }

@@ -32,9 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-public class TypeDb extends AbstractTypesDb {
+public class TypeDb extends AbstractTypesDb<TypeDb> {
 
     protected Map<String, MetricType> types = new HashMap<>();
 
@@ -90,6 +88,24 @@ public class TypeDb extends AbstractTypesDb {
 
     public Collection<MetricType> getAll() {
         return types.values();
+    }
+
+    @Override
+    protected void addAll(TypeDb sub) {
+        for (MetricType m : sub.getAll()) {
+            add(m);
+        }
+    }
+
+    @Override
+    protected void clear() {
+        types.clear();
+        
+    }
+
+    @Override
+    protected TypeDb createSub() {
+        return new TypeDb();
     }
 
 }

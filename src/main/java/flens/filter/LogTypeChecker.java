@@ -28,9 +28,8 @@ import flens.filter.util.AbstractFilter;
 import flens.typing.LogType;
 import flens.typing.LogTypesDb;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import oi.thekraken.grok.api.Match;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -62,12 +61,12 @@ public class LogTypeChecker extends AbstractFilter {
     public Collection<Record> process(Record in) {
         if (in.isLog()) {
             String message = (String) in.get(Constants.MESSAGE);
-            List<Pair<LogType,Match>> matches = new LinkedList<>();
+            List<Pair<LogType, Match>> matches = new LinkedList<>();
             for (LogType lt : types.getAll()) {
                 Match adding = lt.match(message);
                 adding.captures();
                 if (!adding.isNull()) {
-                    matches.add(Pair.of(lt,adding));
+                    matches.add(Pair.of(lt, adding));
                     if (breakOnMatch) {
                         break;
                     }
@@ -84,9 +83,9 @@ public class LogTypeChecker extends AbstractFilter {
         return Collections.emptyList();
     }
 
-    private void safemerge(Record in, List<Pair<LogType,Match>> matches) {
+    private void safemerge(Record in, List<Pair<LogType, Match>> matches) {
         List<String> names = new LinkedList<>();
-        for (Pair<LogType,Match> match : matches) {
+        for (Pair<LogType, Match> match : matches) {
             Map<String, Object> parts = match.getRight().toMap();
             for (String key : parts.keySet()) {
                 Object value = parts.get(key);
@@ -94,7 +93,7 @@ public class LogTypeChecker extends AbstractFilter {
             }
             names.add(match.getKey().getType());
         }
-        
+
         in.getValues().put(Constants.TYPE, names);
 
     }

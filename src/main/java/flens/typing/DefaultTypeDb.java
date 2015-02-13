@@ -26,4 +26,12 @@ public class DefaultTypeDb extends TypeDb {
         loadDir(new File(dir));
     }
 
+    public DefaultTypeDb(String dir, boolean refresh) {
+        if (refresh == true) {
+            setupListener(dir);
+        } else {
+            loadDir(new File(dir));
+        }
+    }
+
 }

@@ -20,7 +20,6 @@
 
 package flens.config;
 
-
 import flens.config.util.AbstractConfig;
 import flens.core.Tagger;
 import flens.typing.LogTypesDb;
@@ -41,22 +40,17 @@ public class LogTypeChecker extends AbstractConfig {
 
     @Override
     protected void construct() {
-       
+
         Tagger unknown = readTagger("unknown-");
         String dir = get("dir", "");
         boolean refresh = getBool("refresh", false);
         boolean breakOnMatch = getBool("breakOnMatch", true);
 
-        if (!refresh) {
-            if (dir.isEmpty()) {
-                throw new UnsupportedOperationException();
-            } else {
-                engine.addFilter(new flens.filter.LogTypeChecker(name, plugin, matcher, prio, tagger,
-                        unknown, new LogTypesDb(dir),dir,refresh,breakOnMatch));
-            }
-
-        } else {
+        if (dir.isEmpty()) {
             throw new UnsupportedOperationException();
+        } else {
+            engine.addFilter(new flens.filter.LogTypeChecker(name, plugin, matcher, prio, tagger, unknown,
+                    new LogTypesDb(dir,refresh), dir, refresh, breakOnMatch));
         }
 
     }
@@ -70,11 +64,9 @@ public class LogTypeChecker extends AbstractConfig {
     public List<Option> getOptions() {
         List<Option> out = new LinkedList<Option>(super.getOptions());
         out.add(new Option("unknown-add-tags", "[String]", "[]", "add following tags to records with unknown type"));
-        out.add(new Option("unknown-remove-tags", "[String]", "[]",
-                "add following tags from records with unknown type"));
+        out.add(new Option("unknown-remove-tags", "[String]", "[]", "add following tags from records with unknown type"));
         out.add(new Option("unknown-set-type", "String", "", "add following type to records with unknown type"));
-        
-        
+
         out.add(new Option("dir", "String", "", "directory to from which to read .db files"));
         out.add(new Option("refresh", "boolean", "false", "scan for file updates continuously"));
         out.add(new Option("breakOnMatch", "boolean", "true", "break after a matching pattern is found"));

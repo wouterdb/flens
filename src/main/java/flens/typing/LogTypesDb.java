@@ -36,14 +36,21 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
 
+    private LogTypesDb() {
 
-public class LogTypesDb extends AbstractTypesDb {
-    
-    public LogTypesDb(String dir) {
-        loadDir(new File(dir));
     }
-    
+
+    public LogTypesDb(String dir, boolean refresh) {
+        if (refresh == true) {
+            setupListener(dir);
+        } else {
+            loadDir(new File(dir));
+        }
+
+    }
+
     protected static final IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(),
             FileFilterUtils.suffixFileFilter(".db"));
     protected static final IOFileFilter filter = FileFilterUtils.or(FileFilterUtils.directoryFileFilter(), files);
@@ -109,6 +116,19 @@ public class LogTypesDb extends AbstractTypesDb {
         return types;
     }
 
-  
+    @Override
+    protected void addAll(LogTypesDb sub) {
+        types.addAll(sub.getAll());
+    }
+
+    @Override
+    protected void clear() {
+        types.clear();
+    }
+
+    @Override
+    protected LogTypesDb createSub() {
+        return new LogTypesDb();
+    }
 
 }

@@ -24,6 +24,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationMonitor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,17 +34,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractTypesDb {
+public abstract class AbstractTypesDb<T extends AbstractTypesDb<T>> implements FileAlterationListener {
 
     protected static final IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(),
-                FileFilterUtils.suffixFileFilter(".db"));
+            FileFilterUtils.suffixFileFilter(".db"));
     protected static final IOFileFilter filter = FileFilterUtils.or(FileFilterUtils.directoryFileFilter(), files);
-    
+
     public abstract void parse(BufferedReader br, String filename) throws Exception;
-    
+
     public void load(File file) throws Exception {
         try (InputStream in = new FileInputStream(file)) {
             parse(new BufferedReader(new InputStreamReader(in)), file.getPath());
@@ -55,20 +60,16 @@ public abstract class AbstractTypesDb {
         }
         if (directory.isFile()) {
             try {
-                load(directory);
+                onFileCreate(directory);
                 return;
-            } catch (FileNotFoundException e) {
-                warn("file vanished before reading started " + directory, e);
             } catch (Exception e) {
                 warn("failed to read types database " + directory, e);
-            } 
+            }
         }
 
         for (File f : FileUtils.listFiles(directory, files, TrueFileFilter.INSTANCE)) {
             try {
-                load(f);
-            } catch (FileNotFoundException e) {
-                warn("file vanished before reading started " + f, e);
+                onFileCreate(f);
             } catch (Exception e) {
                 warn("failed to read types database " + f, e);
             }
@@ -76,9 +77,9 @@ public abstract class AbstractTypesDb {
     }
 
     protected void warn(String msg) {
-        Logger.getLogger(getClass().getName()).warning(msg );
+        Logger.getLogger(getClass().getName()).warning(msg);
     }
-    
+
     protected void warn(String msg, String extra) {
         Logger.getLogger(getClass().getName()).warning(msg + " : " + extra);
     }
@@ -90,5 +91,98 @@ public abstract class AbstractTypesDb {
 
     protected void info(String msg) {
         Logger.getLogger(getClass().getName()).info(msg);
+    }
+
+    // Updating behavior
+    private Map<String, T> subs = new HashMap<String, T>();
+
+    public void setupListener(String dir) {
+
+        File directory = new File(dir);
+
+        FileAlterationObserver observer = new FileAlterationObserver(directory, filter);
+
+        observer.addListener(this);
+
+        FileAlterationMonitor fam = new FileAlterationMonitor(100);
+        fam.addObserver(observer);
+        try {
+            fam.start();
+        } catch (Exception e) {
+            throw new Error("should not occur", e);
+        }
+        loadDir(directory);
+
+    }
+
+    @Override
+    public void onDirectoryCreate(File directory) {
+    }
+
+    @Override
+    public void onDirectoryChange(File directory) {
+    }
+
+    @Override
+    public void onDirectoryDelete(File directory) {
+    }
+
+    @Override
+    public synchronized void onFileCreate(File file) {
+        T sub = createSub();
+        try {
+            sub.load(file);
+            subs.put(file.getPath(), sub);
+            addAll(sub);
+            info("add new file to types db: " + file);
+        } catch (FileNotFoundException e) {
+            warn("file vanished before reading started " + file, e);
+        } catch (Exception e) {
+            warn("could not read types from file", e);
+        }
+
+    }
+
+    protected abstract void addAll(T sub);
+    protected abstract void clear();
+    protected abstract T createSub();
+
+    private synchronized void rebuild() {
+        clear();
+        for (T sub : subs.values()) {
+            addAll(sub);
+        }
+    }
+
+    @Override
+    public synchronized void onFileChange(File file) {
+        T sub = createSub();
+        try {
+            sub.load(file);
+            subs.put(file.getPath(), sub);
+            rebuild();
+            info("updated file for types db: " + file);
+        } catch (FileNotFoundException e) {
+            warn("file vanished before reading started " + file, e);
+        } catch (Exception e) {
+            warn("could not read types from file", e);
+        }
+
+    }
+
+    @Override
+    public synchronized void onFileDelete(File file) {
+        subs.remove(file.getPath());
+        rebuild();
+        info("removed file from types db: " + file);
+    }
+
+    @Override
+    public void onStop(FileAlterationObserver observer) {
+
+    }
+
+    @Override
+    public void onStart(FileAlterationObserver observer) {
     }
 }

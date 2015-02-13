@@ -45,7 +45,13 @@ public class TestDbTest {
 
     @Test
     public void test() throws Exception {
-        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes");
+        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",false);
+        assertEquals(ltdb.getAll().size(), 1);
+    }
+    
+    @Test
+    public void testrefresh() throws Exception {
+        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",true);
         assertEquals(ltdb.getAll().size(), 1);
     }
 
@@ -55,7 +61,7 @@ public class TestDbTest {
                 new InputTagger("", "logs", Collections.<String>emptyList()),
                 "src/test/resources/logtypes/teststream.data", ".*", false);
         JSonDecoder jd = new JSonDecoder("decoder", "decoder", Tagger.empty, new AllMatcher(), 5);
-        LogTypesDb db = new LogTypesDb("src/test/resources/logtypes");
+        LogTypesDb db = new LogTypesDb("src/test/resources/logtypes",false);
         LogTypeChecker ltc = new LogTypeChecker("xfilter", "log-type-checker", new AllMatcher(), 14, new TypeTagger("",
                 "matched"), Tagger.empty, db, "src/test/resources/logtypes", false, false);
         OutputQueueExposer poutp = new OutputQueueExposer(new StandardMatcher("matched",
