@@ -25,6 +25,7 @@
  "json-decoder" : "flens.config.JSonDecoder",
  "json-encoder" : "flens.config.JsonEncoder",
  
+ "log-type-check":"flens.config.LogTypeChecker",
  "LZ4-compress":"flens.config.LZ4CompressionFilter",
  "LZ4-decompress":"flens.config.LZ4DecompressionFilter",
  

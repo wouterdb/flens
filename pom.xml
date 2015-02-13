@@ -45,9 +45,9 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.nflabs</groupId>
+			<groupId>io.thekraken</groupId>
 			<artifactId>grok</artifactId>
-			<version>0.0.6</version>
+			<version>0.1.1</version>
 		</dependency>
 
 

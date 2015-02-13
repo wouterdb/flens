@@ -1,0 +1,2 @@
+##grok.dir /etc/grok
+test log.login	Starting Session %{NUMBER:sid} of user %{USER:user}.

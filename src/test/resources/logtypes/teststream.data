@@ -1,0 +1,3 @@
+{"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"daemon","tag":"systemd:","message":"Starting Session 7895 of user root."}
+{"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"daemon","tag":"systemd:","message":"Started Session 7895 of user root."}
+{"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"cron","tag":"CROND[14485]:","message":"(root) CMD (/usr/lib64/sa/sa1 1 1)"}

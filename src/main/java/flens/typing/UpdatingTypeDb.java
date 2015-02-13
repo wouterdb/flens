@@ -8,7 +8,6 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class UpdatingTypeDb extends TypeDb implements FileAlterationListener {
 
     }
 
-    protected void loadDir(File directory) {
+    public void loadDir(File directory) {
         if (directory.isFile()) {
             onFileCreate(directory);
         } else {
@@ -69,7 +68,7 @@ public class UpdatingTypeDb extends TypeDb implements FileAlterationListener {
 
         } catch (FileNotFoundException e) {
             warn("file vanished before reading started " + file, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             warn("could not read types from file", e);
         }
 
@@ -98,7 +97,7 @@ public class UpdatingTypeDb extends TypeDb implements FileAlterationListener {
             info("updated file for types db: " + file);
         } catch (FileNotFoundException e) {
             warn("file vanished before reading started " + file, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             warn("could not read types from file", e);
         }
 

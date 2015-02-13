@@ -621,16 +621,16 @@ public class Flengine {
         return tree;
 
     }
-    
-    public int getInputSize(){
+
+    public int getInputSize() {
         return inputs.size();
     }
-    
-    public int getOutputSize(){
+
+    public int getOutputSize() {
         return outputs.size();
     }
-    
-    public int getFilterSize(){
+
+    public int getFilterSize() {
         return filters.size();
     }
 }

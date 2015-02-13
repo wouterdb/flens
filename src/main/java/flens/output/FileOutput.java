@@ -72,6 +72,12 @@ public class FileOutput extends AbstractPumpOutput {
                 Record rin = queue.take();
 
                 Object value = rin.getValues().get(field);
+                if (value == null) {
+                    lost++;
+                    continue;
+                    // TODO log?
+
+                }
 
                 os.write(value.toString());
                 if (newline) {

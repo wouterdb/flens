@@ -31,7 +31,8 @@ import java.util.Map;
 public class Service {
 
     /**
-     * Start new flens instance, from config directory, given as the first argument.
+     * Start new flens instance, from config directory, given as the first
+     * argument.
      */
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException {
@@ -52,7 +53,7 @@ public class Service {
         if (initial != null) {
             ch.construct(initial);
         } else {
-            //fallback, making config without init block work
+            // fallback, making config without init block work
             ch.construct(myconfig);
         }
 
@@ -60,17 +61,17 @@ public class Service {
             ch.getEngine().addTags(tags);
         }
 
-        if(ch.getEngine().getInputSize() == 0){
+        if (ch.getEngine().getInputSize() == 0) {
             System.out.println("No inputs configured");
         }
-        
-        if(ch.getEngine().getOutputSize() == 0){
+
+        if (ch.getEngine().getOutputSize() == 0) {
             System.out.println("No outputs configured");
         }
-        
+
         ch.getEngine().start();
         EmbededFlens.setInstance(ch.getEngine());
-        
+
     }
 
 }

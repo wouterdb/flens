@@ -1,0 +1,26 @@
+{
+	"input" : {		
+ 		"grep" : {
+ 			"type" : "rawlog",
+ 			"file":"/tmp/messagessmall",
+ 			"tail":"false"
+ 			
+ 		}
+ 		
+ 	},
+ 	
+ 	"filter" : {
+		"grok":{
+			"infield":"message",
+			"script":"%{SYSLOGBASE}"
+		}
+	},
+ 	
+ 	"output" : {
+ 		"system-out":{
+ 		}
+ 		
+ 	}
+ 		 
+
+}

@@ -256,6 +256,10 @@ public class Record {
         return values.containsKey(Constants.METRIC);
     }
 
+    public boolean isLog() {
+        return values.containsKey(Constants.MESSAGE);
+    }
+
     @Deprecated
     public static Record createWithTypeTimeAndValue(long timestamp, String metric, String type, long value) {
         Map<String, Object> values = new HashMap<String, Object>();

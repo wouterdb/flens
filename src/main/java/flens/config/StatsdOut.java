@@ -21,7 +21,6 @@
 package flens.config;
 
 import flens.config.util.AbstractConfig;
-import flens.output.GraphiteOutput;
 import flens.output.StatsdOutput;
 
 import java.util.LinkedList;
@@ -58,7 +57,8 @@ public class StatsdOut extends AbstractConfig {
         List<Option> out = new LinkedList<Option>(super.getOptions());
         out.add(new Option("port", "int", "8125", "port to which to connect"));
         out.add(new Option("host", "String", "localhost", "host to which to connect"));
-        out.add(new Option("metric", "String", DEFAULT_METRIC, "mvel template to construct the metric to send to statsd"));
+        out.add(new Option("metric", "String", DEFAULT_METRIC, 
+                "mvel template to construct the metric to send to statsd"));
         return out;
     }
 

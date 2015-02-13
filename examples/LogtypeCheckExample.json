@@ -1,0 +1,44 @@
+{
+	"input":{
+		"socket-line-in":{
+			"add-tags":["json"],
+			"port":6619,
+			"type":"logs"
+		}
+		
+	},
+	"filter":{
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tags" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tags" : ["json"]
+ 		},
+		//do the check
+		"log-type-check":{
+			 "type":"logs",
+			 "add-tags":"typed",
+			 "unknown-add-tags":"unknown",
+			 "prio":"20",
+			 "dir":"src/test/resources/logtypes",
+			 "refresh":"false"
+		 }
+	},
+	"output":{
+		"file-out":{
+		//store all newly discovered types
+		//to make new entries for known types db
+		//sort newtypes.csv | uniq | sed "s/Infinity/-/g"
+			"type":"logs",
+			"tags":["unknown"],
+			"field":"message",
+			"file":"newtypes.csv",
+			"newline":"true"
+		},"system-out":{
+		
+			"tags":"typed"
+		}
+	}
+	
+}

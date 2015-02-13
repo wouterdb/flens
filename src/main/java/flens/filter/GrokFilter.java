@@ -24,13 +24,13 @@ import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
+import flens.util.GrokUtil;
 
-import com.nflabs.grok.Grok;
-import com.nflabs.grok.GrokException;
-import com.nflabs.grok.Match;
+import oi.thekraken.grok.api.Grok;
+import oi.thekraken.grok.api.Match;
+import oi.thekraken.grok.api.exception.GrokException;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -43,14 +43,14 @@ public class GrokFilter extends AbstractFilter {
     private boolean discard;
 
     /**
-     * Filter that unpack strings into fields using Grok 
+     * Filter that unpack strings into fields using Grok
      * 
      * @param name
      *            name under which this plugin is registered with the engine
      * @param plugin
      *            name of config that loaded this plugin (as registered in
      *            plugins.json)
-     * @param tagger 
+     * @param tagger
      *            tagger used to mark output records
      * @param matcher
      *            matcher this filter should used to select recrods
@@ -77,14 +77,7 @@ public class GrokFilter extends AbstractFilter {
 
     private void start() {
         // Compile the expression.
-        compiled = new Grok();
-        try {
-            compiled.addPatternFromReader(new InputStreamReader(GrokFilter.class.getResourceAsStream("/grok/base")));
-
-            compiled.addPatternFromReader(new InputStreamReader(GrokFilter.class.getResourceAsStream("/grok/java")));
-        } catch (Throwable e) {
-            throw new IllegalArgumentException("could not load aux patterns", e);
-        }
+        compiled = GrokUtil.getGrok();
         if (dir != null && !dir.isEmpty()) {
             File dirh = new File(dir);
             if (!dirh.isDirectory()) {
