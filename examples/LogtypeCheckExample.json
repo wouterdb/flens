@@ -3,7 +3,7 @@
 		"socket-line-in":{
 			"add-tags":["json"],
 			"port":6619,
-			"type":"logs"
+			"type":"log"
 		}
 		
 	},
@@ -17,7 +17,7 @@
  		},
 		//do the check
 		"log-type-check":{
-			 "type":"logs",
+			 "type":"log",
 			 "add-tags":"typed",
 			 "unknown-add-tags":"unknown",
 			 "prio":"20",
@@ -26,18 +26,13 @@
 		 }
 	},
 	"output":{
-		"file-out":{
-		//store all newly discovered types
-		//to make new entries for known types db
-		//sort newtypes.csv | uniq | sed "s/Infinity/-/g"
-			"type":"logs",
+		"file-out-logs":{
+			"plugin":"file-out",
+			"type":"log",
 			"tags":["unknown"],
 			"field":"message",
-			"file":"newtypes.csv",
+			"file":"newlogs.data",
 			"newline":"true"
-		},"system-out":{
-		
-			"tags":"typed"
 		}
 	}
 	

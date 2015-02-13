@@ -33,6 +33,7 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,16 +87,17 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
     private void parseConfig(Grok grok, String line) {
         if (line.startsWith("grok.dir")) {
 
-            String dir = line.substring(8);
-            System.out.println("Dir:" + dir);
+            String dir = line.substring(8).trim();
             if (dir != null && !dir.isEmpty()) {
                 File dirh = new File(dir);
                 if (!dirh.isDirectory()) {
                     warn("dir is not a directory " + dir);
                 } else {
-                    for (String f : dirh.list()) {
+                    String[] files = dirh.list();
+                    Arrays.sort(files);
+                    for (String f : files ) {
                         try {
-                            grok.addPatternFromFile(f);
+                            grok.addPatternFromFile(dir+"/"+f);
                         } catch (Exception e) {
                             warn("can not read file" + f, e);
                         }

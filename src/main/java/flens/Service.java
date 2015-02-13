@@ -21,6 +21,7 @@
 package flens;
 
 import static flens.core.util.ConfigUtil.collectConfig;
+import static flens.core.util.ConfigUtil.merge;
 
 import flens.core.ConfigParser;
 import flens.core.Util;
@@ -34,28 +35,28 @@ public class Service {
      * Start new flens instance, from config directory, given as the first
      * argument.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void main(String[] args) throws IOException {
 
         ConfigParser ch = new ConfigParser();
 
         Map<String, Object> myconfig = collectConfig(args[0]);
 
-        Map<String, String> tags = (Map<String, String>) myconfig.get("tags");
+        final Map<String, String> tags = (Map<String, String>) myconfig.remove("tags");
 
-        Map<String, Object> initial = (Map<String, Object>) myconfig.get("init");
+        Map<String, Object> initial = (Map<String, Object>) myconfig.remove("init");
 
-        String name = (String) myconfig.get("name");
+        String name = (String) myconfig.remove("name");
         if (name != null) {
             Util.overriderHostname(name);
         }
 
-        if (initial != null) {
-            ch.construct(initial);
-        } else {
-            // fallback, making config without init block work
-            ch.construct(myconfig);
-        }
+        //make mixed config work
+        //init block takes precedence
+        merge((Map)myconfig,(Map)initial);
+        
+        ch.construct(myconfig);
+        
 
         if (tags != null) {
             ch.getEngine().addTags(tags);
@@ -73,5 +74,7 @@ public class Service {
         EmbededFlens.setInstance(ch.getEngine());
 
     }
+
+  
 
 }

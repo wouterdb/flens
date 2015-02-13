@@ -81,7 +81,8 @@ public class ConfigUtil {
         return out;
     }
 
-    private static void merge(Map<Object, Object> out, Map<Object, Object> newMap) {
+  
+    public static void merge(Map<Object, Object> out, Map<Object, Object> newMap) {
         for (Map.Entry entry : newMap.entrySet()) {
             if (!out.containsKey(entry.getKey())) {
                 out.put(entry.getKey(), entry.getValue());
