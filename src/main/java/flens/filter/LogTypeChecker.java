@@ -106,8 +106,8 @@ public class LogTypeChecker extends AbstractFilter {
         if (value.equals(old)) {
             return true;
         } else {
-            // for safety, be conservative
-            in.getValues().put(name, old);
+            // we consider newer value to be more precise, s we replace
+            //in.getValues().put(name, old);
             warn("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
                     name, value, old);
             return false;

@@ -20,10 +20,24 @@
 
 package flens.util;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NamedThreadFactory implements ThreadFactory {
+    public class LogExcpetionHandler implements UncaughtExceptionHandler {
+
+        @Override
+        public void uncaughtException(Thread tr, Throwable ex) {
+            Logger.getLogger("flens.util.NamedThreadFactory").log(Level.SEVERE,
+                    "thread " + tr.getName() + " was killed by exception", ex);
+
+        }
+
+    }
+
     private final ThreadGroup group;
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;
@@ -36,6 +50,7 @@ public class NamedThreadFactory implements ThreadFactory {
         SecurityManager sec = System.getSecurityManager();
         group = (sec != null) ? sec.getThreadGroup() : Thread.currentThread().getThreadGroup();
         this.namePrefix = perfix;
+
     }
 
     @Override
@@ -47,6 +62,8 @@ public class NamedThreadFactory implements ThreadFactory {
         if (thread.getPriority() != Thread.NORM_PRIORITY) {
             thread.setPriority(Thread.NORM_PRIORITY);
         }
+
+        thread.setUncaughtExceptionHandler(new LogExcpetionHandler());
         return thread;
     }
 }
