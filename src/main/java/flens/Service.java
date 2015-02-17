@@ -28,6 +28,9 @@ import flens.core.Util;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class Service {
 
@@ -36,45 +39,46 @@ public class Service {
      * argument.
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        try {
+            LogManager.getLogManager().readConfiguration(
+                    Service.class.getClassLoader().getResourceAsStream("logging.properties"));
+            ConfigParser ch = new ConfigParser();
 
-        ConfigParser ch = new ConfigParser();
+            Map<String, Object> myconfig = collectConfig(args[0]);
 
-        Map<String, Object> myconfig = collectConfig(args[0]);
+            final Map<String, String> tags = (Map<String, String>) myconfig.remove("tags");
 
-        final Map<String, String> tags = (Map<String, String>) myconfig.remove("tags");
+            Map<String, Object> initial = (Map<String, Object>) myconfig.remove("init");
 
-        Map<String, Object> initial = (Map<String, Object>) myconfig.remove("init");
+            String name = (String) myconfig.remove("name");
+            if (name != null) {
+                Util.overriderHostname(name);
+            }
 
-        String name = (String) myconfig.remove("name");
-        if (name != null) {
-            Util.overriderHostname(name);
+            // make mixed config work
+            // init block takes precedence
+            merge((Map) myconfig, (Map) initial);
+
+            ch.construct(myconfig);
+
+            if (tags != null) {
+                ch.getEngine().addTags(tags);
+            }
+
+            if (ch.getEngine().getInputSize() == 0) {
+                System.out.println("No inputs configured");
+            }
+
+            if (ch.getEngine().getOutputSize() == 0) {
+                System.out.println("No outputs configured");
+            }
+
+            ch.getEngine().start();
+            EmbededFlens.setInstance(ch.getEngine());
+        } catch (IOException e) {
+            Logger.getLogger("flens.Service").log(Level.SEVERE, "could not start Flens", e);
         }
-
-        //make mixed config work
-        //init block takes precedence
-        merge((Map)myconfig,(Map)initial);
-        
-        ch.construct(myconfig);
-        
-
-        if (tags != null) {
-            ch.getEngine().addTags(tags);
-        }
-
-        if (ch.getEngine().getInputSize() == 0) {
-            System.out.println("No inputs configured");
-        }
-
-        if (ch.getEngine().getOutputSize() == 0) {
-            System.out.println("No outputs configured");
-        }
-
-        ch.getEngine().start();
-        EmbededFlens.setInstance(ch.getEngine());
-
     }
-
-  
 
 }
