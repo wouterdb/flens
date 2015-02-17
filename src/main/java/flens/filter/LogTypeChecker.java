@@ -89,7 +89,7 @@ public class LogTypeChecker extends AbstractFilter {
             Map<String, Object> parts = match.getRight().toMap();
             for (String key : parts.keySet()) {
                 Object value = parts.get(key);
-                safeset(in, key, value);
+                safeset(match.getKey(), in, key, value);
             }
             names.add(match.getKey().getType());
         }
@@ -98,7 +98,7 @@ public class LogTypeChecker extends AbstractFilter {
 
     }
 
-    private boolean safeset(Record in, String name, Object value) {
+    private boolean safeset(LogType logType, Record in, String name, Object value) {
         Object old = in.getValues().put(name, value);
         if (old == null) {
             return true;
@@ -108,7 +108,8 @@ public class LogTypeChecker extends AbstractFilter {
         } else {
             // for safety, be conservative
             in.getValues().put(name, old);
-            warn("colliding pattern matches on " + name + " " + old + " " + value);
+            warn("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
+                    name, value, old);
             return false;
         }
 
