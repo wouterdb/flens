@@ -46,13 +46,17 @@ public class JSonDecoder extends AbstractFilter {
     @Override
     public Collection<Record> process(Record in) {
         // TODO config
-
-        Map<String, Object> values = decoder.fromJson((String) in.getValues().get("message"), HashMap.class);
-        if (values != null) {
-            in.getValues().putAll(values);
+        try {
+            Map<String, Object> values = decoder.fromJson((String) in.get("message"), HashMap.class);
+            if (values != null) {
+                in.getValues().putAll(values);
+            }
+            tag(in);
+            return Collections.emptyList();
+        } catch (Exception e) {
+            warn("could not parse json {0}",((String) in.get("message")).replace("\n", " ") );
+            return Collections.emptyList();
         }
-        tag(in);
-        return Collections.emptyList();
     }
 
 }
