@@ -34,8 +34,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
 
@@ -58,28 +60,69 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
 
     private List<LogType> types = new LinkedList<>();
 
+    private Map<String, LogType> typesm = new HashMap<String, LogType>();
+
     public void parse(BufferedReader br, String filename) throws IOException, GrokException {
 
         Grok basegrok = GrokUtil.getGrok();
+        LogType current = null;
+
         for (String line = br.readLine(); line != null; line = br.readLine()) {
             if (line.startsWith("##")) {
                 parseConfig(basegrok, line.substring(2));
             } else if (line.startsWith("#")) {
                 continue;
+            } else if (line.trim().startsWith("[")) {
+                line = line.trim();
+                line = line.replace("[", "").replace("]", "");
+                current = new LogType(line);
+                if (typesm.containsKey(line)) {
+                    warn("duplicate section in types database: " + line + " " + filename);
+                }
+                add(current);
+
             } else {
 
-                String[] parts = line.split("\\s+", 3);
+                String[] parts = line.split("\\s+", 2);
                 // name type grok
-                if (parts.length != 3) {
+                if (parts.length != 2) {
                     warn("bad line in types from " + filename + ", wrong number of parts" + parts.length + ":" + line);
                     continue;
                 }
-                Grok ext = new Grok();
-                ext.copyPatterns(basegrok.getPatterns());
-                add(new LogType(parts[0], may(parts[1]), parts[2], ext));
+
+                if (parts[0].equals("grok")) {
+                    Grok ext = new Grok();
+                    ext.copyPatterns(basegrok.getPatterns());
+                    addGrok(current, parts[1], ext);
+                } else if (parts[0].equals("filter")) {
+                    addExpressions(current, parts[1]);
+                } else if (parts[0].equals("mvel")) {
+                    addScript(current, parts[1]);
+                } else {
+                    warn("unknown line in types db: " + filename + " " + line);
+                }
 
             }
 
+        }
+
+    }
+
+    private void addScript(LogType current, String script) {
+        current.setScript(script);
+
+    }
+
+    private void addExpressions(LogType current, String expression) {
+        current.setExpression(expression);
+
+    }
+
+    private void addGrok(LogType current, String pattern, Grok ext) {
+        try {
+            current.setGrok(ext, pattern);
+        } catch (GrokException e) {
+            warn("bad grok pattern! " + pattern, e);
         }
 
     }
@@ -95,9 +138,9 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
                 } else {
                     String[] files = dirh.list();
                     Arrays.sort(files);
-                    for (String f : files ) {
+                    for (String f : files) {
                         try {
-                            grok.addPatternFromFile(dir+"/"+f);
+                            grok.addPatternFromFile(dir + "/" + f);
                         } catch (Exception e) {
                             warn("can not read file" + f, e);
                         }
@@ -112,6 +155,17 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
 
     private void add(LogType metricType) {
         types.add(metricType);
+        typesm.put(metricType.getName(), metricType);
+    }
+
+    private LogType get(String name) {
+        LogType out = typesm.get(name);
+        if (out == null) {
+            out = new LogType(name);
+            add(out);
+
+        }
+        return out;
     }
 
     public List<LogType> getAll() {

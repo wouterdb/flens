@@ -20,28 +20,72 @@
 
 package flens.typing;
 
+import flens.core.Constants;
+import flens.core.Record;
+import flens.typing.scripting.GrokUtil;
+import flens.typing.scripting.StatsdUtil;
+import flens.util.MvelUtil;
+
 import oi.thekraken.grok.api.Grok;
 import oi.thekraken.grok.api.Match;
 import oi.thekraken.grok.api.exception.GrokException;
 
+import org.mvel2.DataConversion;
+import org.mvel2.MVEL;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class LogType {
 
-    private String type;
     private String name;
     private String pattern;
     private Grok grok;
 
-    public LogType(String name, String type, String pattern, Grok grok) throws GrokException {
+    private String expression;
+    private Serializable compiledexpression;
+
+    private String script;
+    private Serializable compiledscript;
+
+    public LogType(String name) {
         super();
         this.name = name;
-        this.type = type;
+    }
+
+    public void setGrok(Grok grok, String pattern) throws GrokException {
         this.pattern = pattern;
         this.grok = grok;
         grok.compile(pattern);
     }
 
-    public String getType() {
-        return type;
+    public void setExpression(String expression) {
+        this.expression = expression;
+
+        try {
+            this.compiledexpression = MVEL.compileExpression(expression, MvelUtil.getTooledContext());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("filter expression failed for expression " + expression, e);
+
+        }
+    }
+
+    public void setScript(String script) {
+        this.script = script;
+
+        try {
+            this.compiledscript = MVEL.compileExpression(script, MvelUtil.getScriptingContext());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("script failed: " + expression, e);
+
+        }
+
     }
 
     public String getName() {
@@ -52,8 +96,49 @@ public class LogType {
         return pattern;
     }
 
-    public Match match(String in) {
-        return grok.match(in);
+    public LogMatch match(Record rec) {
+        boolean expmatch = false;
+        if (compiledexpression != null) {
+            try {
+                expmatch = DataConversion.convert(
+                        MVEL.executeExpression(compiledexpression, Collections.unmodifiableMap(rec.getValues())),
+                        Boolean.class);
+
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.FINE,
+                        "log type expression failed: " + expression + " for record " + rec, e);
+            }
+            // return on failure, or on false
+            if (!expmatch) {
+                return null;
+            }
+        }
+
+        Map<String, Object> out = new HashMap<>(rec.getValues());
+        Set<String> tags = Collections.emptySet();
+
+        if (grok != null) {
+            Match adding = grok.match((String) rec.get(Constants.MESSAGE));
+            adding.captures();
+            if (!adding.isNull()) {
+                out.putAll(adding.toMap());
+            } else {
+                return null;
+            }
+        }
+
+        if (script != null) {
+            tags = new HashSet<>();
+            GrokUtil groks = new GrokUtil(out, tags);
+            StatsdUtil stats = new StatsdUtil(out, tags);
+            out.put("_grok", groks);
+            out.put("_statsd", stats);
+            MVEL.executeExpression(compiledscript, out);
+
+            out.remove("_util");
+        }
+        return new LogMatch(out, tags, this);
+
     }
 
 }

@@ -1,2 +1,10 @@
 ##grok.dir /etc/grok
-test log.login	Starting Session %{NUMBER:sid} of user %{USER:user}.
+[log.login]
+filter	facility == "daemon" && tag=="systemd:"
+grok	Starting Session %{NUMBER:sid} of user %{USER:user}.
+mvel	_statsd.count("login"); _statsd.count("login."+user);
+
+[httpd]
+filter	facility == "httpd"
+grok	%{COMBINEDAPACHELOG}
+mvel	_statsd.count("http."+verb);_grok.cleanTime();_grok.clean();

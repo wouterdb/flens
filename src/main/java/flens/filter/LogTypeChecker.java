@@ -25,10 +25,12 @@ import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
+import flens.typing.LogMatch;
 import flens.typing.LogType;
 import flens.typing.LogTypesDb;
 
 import oi.thekraken.grok.api.Match;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
@@ -51,7 +53,6 @@ public class LogTypeChecker extends AbstractFilter {
 
         this.dir = dir;
         this.refresh = refresh;
-        this.breakOnMatch = breakOnMatch;
     }
 
     private LogTypesDb types;
@@ -60,41 +61,34 @@ public class LogTypeChecker extends AbstractFilter {
     @Override
     public Collection<Record> process(Record in) {
         if (in.isLog()) {
-            String message = (String) in.get(Constants.MESSAGE);
-            List<Pair<LogType, Match>> matches = new LinkedList<>();
+            LogMatch adding = null;
             for (LogType lt : types.getAll()) {
-                Match adding = lt.match(message);
-                adding.captures();
-                if (!adding.isNull()) {
-                    matches.add(Pair.of(lt, adding));
-                    if (breakOnMatch) {
-                        break;
-                    }
+                adding = lt.match(in);
+                if (adding != null) {
+                    break;
                 }
             }
 
-            if (matches.isEmpty()) {
+            if (adding == null) {
                 unknown.adapt(in);
             } else {
-                safemerge(in, matches);
+                safemerge(in, adding);
                 tag(in);
             }
         }
         return Collections.emptyList();
     }
 
-    private void safemerge(Record in, List<Pair<LogType, Match>> matches) {
-        List<String> names = new LinkedList<>();
-        for (Pair<LogType, Match> match : matches) {
-            Map<String, Object> parts = match.getRight().toMap();
-            for (String key : parts.keySet()) {
-                Object value = parts.get(key);
-                safeset(match.getKey(), in, key, value);
-            }
-            names.add(match.getKey().getType());
+    private void safemerge(Record in, LogMatch match) {
+
+        Map<String, Object> parts = match.getValues();
+        for (String key : parts.keySet()) {
+            Object value = parts.get(key);
+            safeset(match.getOwner(), in, key, value);
         }
 
-        in.getValues().put(Constants.TYPE, names);
+        in.getValues().put(Constants.TYPE, match.getOwner().getName());
+        in.getTags().addAll(match.getTags());
 
     }
 
@@ -107,7 +101,7 @@ public class LogTypeChecker extends AbstractFilter {
             return true;
         } else {
             // we consider newer value to be more precise, s we replace
-            //in.getValues().put(name, old);
+            in.getValues().put(name, old);
             warn("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
                     name, value, old);
             return false;

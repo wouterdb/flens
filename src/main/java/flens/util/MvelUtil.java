@@ -25,12 +25,18 @@ import flens.typing.MetricType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.mvel2.Macro;
 import org.mvel2.ParserContext;
+import org.mvel2.ast.ASTNode;
+import org.mvel2.integration.*;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 
-
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MvelUtil {
 
@@ -40,20 +46,35 @@ public class MvelUtil {
         return ctx;
     }
 
+    private static ParserContext sctx;
+
+    public static ParserContext getScriptingContext() {
+        return sctx;
+    }
+
     static {
-        ctx = new ParserContext();
+
         try {
+            ctx = new ParserContext();
             ctx.addImport("reverseHostname", MvelUtil.class.getMethod("reverseHostname", String.class));
             ctx.addImport("debug", MvelUtil.class.getMethod("debug"));
-            ctx.addImport("parseRange", MvelUtil.class.getMethod("parseRange",String.class));
+            ctx.addImport("parseRange", MvelUtil.class.getMethod("parseRange", String.class));
+
+            sctx = new ParserContext();
+
+            sctx.addImport("reverseHostname", MvelUtil.class.getMethod("reverseHostname", String.class));
+            sctx.addImport("debug", MvelUtil.class.getMethod("debug"));
+            sctx.addImport("parseRange", MvelUtil.class.getMethod("parseRange", String.class));
+
+
         } catch (NoSuchMethodException e) {
             // handle exception here.
         }
     }
 
     /**
-     * reverse a hostname, used for flattening host trees
-     * e.g. from www.example.com to com.example.www
+     * reverse a hostname, used for flattening host trees e.g. from
+     * www.example.com to com.example.www
      */
     public static String reverseHostname(String hostname) {
         String[] parts = hostname.split("[.]");
@@ -68,12 +89,18 @@ public class MvelUtil {
         System.out.println("debug");
     }
 
-
     /**
      * method for parsing range string.
      */
-    public static Pair<Number,Number> parseRange(String range) {
+    public static Pair<Number, Number> parseRange(String range) {
         return MetricType.parseRange(range);
+    }
+
+    /**
+     * method for capturing breakpoints.
+     */
+    public static void cleanGrokTime() {
+        System.out.println("debug");
     }
 
     public static CompiledTemplate compileTemplateTooled(String source) {
@@ -83,6 +110,5 @@ public class MvelUtil {
     public static CompiledTemplate compileTemplateTooled(InputStream source) {
         return TemplateCompiler.compileTemplate(source, getTooledContext());
     }
-    
-    
+
 }

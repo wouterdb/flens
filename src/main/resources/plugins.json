@@ -10,8 +10,8 @@
  "decoder" : "flens.config.CharacterDecoder",
  "drop" : "flens.config.DropFilter",
  
+ "file-in":"flens.config.FileIn",
  "file-out":"flens.config.FileOutput",
- 
  
  "grep":"flens.config.GrepIn",
  "graphite-in" : "flens.config.GraphiteIn",

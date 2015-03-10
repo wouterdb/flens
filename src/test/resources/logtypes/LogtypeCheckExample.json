@@ -1,0 +1,33 @@
+{
+	"input":{
+		"file-in":{
+			"add-tags":["json"],
+			"file":"src/test/resources/logtypes/teststream.data",
+			"tail":"false",
+			"type":"log"
+		}
+		
+	},
+	"filter":{
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tags" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tags" : ["json"]
+ 		},
+		//do the check
+		"log-type-check":{
+			 "type":"log",
+			 "add-tags":"typed",
+			 "unknown-add-tags":"unknown",
+			 "prio":"20",
+			 "dir":"src/test/resources/logtypes",
+			 "refresh":"false"
+		 }
+	},
+	"output":{
+		
+	}
+	
+}

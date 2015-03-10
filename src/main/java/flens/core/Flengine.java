@@ -384,6 +384,10 @@ public class Flengine {
      * stop the engine.
      */
     public void stop() {
+        stop(true);
+    }
+    
+    public void stop(boolean drainout) {
         running = false;
         for (Input input : inputs) {
             input.stop();
@@ -410,8 +414,9 @@ public class Flengine {
             throw new Error(e);
         }
 
+        
         for (Output output : outputs) {
-            while (output.getOutputQueue().size() > 0) {
+            while (drainout &&  output.getOutputQueue().size() > 0) {
                 // TODO: best option?
                 Thread.yield();
             }

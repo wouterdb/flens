@@ -1,3 +1,5 @@
 {"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"daemon","tag":"systemd:","message":"Starting Session 7895 of user root."}
 {"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"daemon","tag":"systemd:","message":"Started Session 7895 of user root."}
 {"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"cron","tag":"CROND[14485]:","message":"(root) CMD (/usr/lib64/sa/sa1 1 1)"}
+{"timestamp":"1408322401","sourcet":"helios","severity":"bad"}
+{"timestamp":"1408322401","sourcet":"helios","severity":"info","facility":"httpd", "message":"66.249.79.107 - - [08/Mar/2015:06:37:17 +0100] \"GET /people/showMember.do?memberID=u0050031 HTTP/1.1\" 302 549 \"-\" \"Googlebot/2.1 (+http://www.google.com/bot.html)\""}
