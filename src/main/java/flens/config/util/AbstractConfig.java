@@ -26,6 +26,7 @@ import flens.core.Matcher;
 import flens.core.Tagger;
 import flens.core.util.AllMatcher;
 import flens.core.util.InputTagger;
+import flens.core.util.RecordMatcher;
 import flens.core.util.StandardMatcher;
 import flens.core.util.StandardTagger;
 import flens.core.util.TypeTagger;
@@ -34,8 +35,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.RuntimeErrorException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class AbstractConfig implements Config {
@@ -131,18 +135,22 @@ public abstract class AbstractConfig implements Config {
         return new StandardTagger(prefix, stype, tags, rtags);
 
     }
-    
-    
-    
+
     protected Matcher readMatcher() {
         tags = getArray("tags", Collections.EMPTY_LIST);
         String type = get("type", null);
+        String expression = get("matches", "");
 
-        if (tags.isEmpty() && type == null) {
+        if (tags.isEmpty() && type == null && expression.isEmpty()) {
             return new AllMatcher();
         }
 
-        return new StandardMatcher(type, tags);
+        if (expression.isEmpty()) {
+            return new StandardMatcher(type, tags);
+        } else {
+            return new RecordMatcher(type, tags, expression);
+            
+        }
 
     }
 
@@ -180,6 +188,10 @@ public abstract class AbstractConfig implements Config {
         }
         if (object instanceof List) {
             return (List) object;
+        }
+        
+        if (object instanceof Set) {
+            return new LinkedList((Set) object);
         }
 
         return Collections.singletonList(object);
@@ -256,13 +268,14 @@ public abstract class AbstractConfig implements Config {
     static {
         List<Option> matcherOpts = new LinkedList<Config.Option>();
         matcherOpts.add(new Option("tags", "[String]", "[]", "only apply to records having all of these tags"));
-        matcherOpts.add(new Option("type", "String", "name", "only apply to records having this type"));
-        
+        matcherOpts.add(new Option("type", "String", "", "only apply to records having this type"));
+        matcherOpts.add(new Option("matches", "String", "", "only apply to records matching the mvel condition"));
+
         List<Option> taggerOpts = new LinkedList<Config.Option>();
         taggerOpts.add(new Option("add-tags", "[String]", "[]", "add following tags"));
 
         Option name = new Option("plugin", "String", "plugin name", "name of the plugin used");
-        
+
         inopts = new LinkedList<Option>();
         inopts.add(name);
 

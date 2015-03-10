@@ -8,6 +8,7 @@
  "cookbook":"flens.config.CookbookConfig",
  
  "decoder" : "flens.config.CharacterDecoder",
+ "drop" : "flens.config.DropFilter",
  
  "file-out":"flens.config.FileOutput",
  

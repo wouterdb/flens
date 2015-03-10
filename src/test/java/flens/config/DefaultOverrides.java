@@ -5,8 +5,6 @@ import flens.core.Config.Option;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 public class DefaultOverrides {
 
     private static Map<String, String> specialOverrides = new HashMap<>();
@@ -25,6 +23,10 @@ public class DefaultOverrides {
         String def = option.getDefaultv();
         if (def != null && !def.isEmpty()) {
             return def;
+        }
+
+        if (option.getName().equals("matches")) {
+            return "";
         }
 
         return getDefaultFor(option.getType());
