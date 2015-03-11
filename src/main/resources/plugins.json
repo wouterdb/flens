@@ -13,6 +13,7 @@
  "file-in":"flens.config.FileIn",
  "file-out":"flens.config.FileOutput",
  
+ "geo-ip":"flens.config.GeoIPFilter",
  "grep":"flens.config.GrepIn",
  "graphite-in" : "flens.config.GraphiteIn",
  "graphite-out" : "flens.config.GraphiteOut",

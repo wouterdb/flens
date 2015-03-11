@@ -68,7 +68,7 @@ public class LogTypeChecker extends AbstractConfig {
 
         out.add(new Option("dir", "String", "", "directory to from which to read .db files"));
         out.add(new Option("refresh", "boolean", "false", "scan for file updates continuously"));
-        out.add(new Option("breakOnMatch", "boolean", "true", "break after a matching pattern is found"));
+       
         return out;
     }
 }

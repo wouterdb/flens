@@ -1,0 +1,21 @@
+{
+	"input":{
+		"file-in":{
+			"file":"geo.data",
+			"tail":"false",
+			"type":"log"
+		}
+		
+	},
+	"filter":{
+		"geo-ip":{
+			"database":"GeoLite2-City.mmdb",
+			"from-field":"message",
+			"to-field":"ip"
+		}
+	},
+	"output":{
+		"system-out":{}
+	}
+	
+}

@@ -46,13 +46,13 @@ public class TestDbTest {
     @Test
     public void test() throws Exception {
         LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",false);
-        assertEquals(ltdb.getAll().size(), 1);
+        assertEquals(ltdb.getAll().size(), 2);
     }
     
     @Test
     public void testrefresh() throws Exception {
         LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",true);
-        assertEquals(ltdb.getAll().size(), 1);
+        assertEquals(ltdb.getAll().size(), 2);
     }
 
     @Test
@@ -79,10 +79,10 @@ public class TestDbTest {
         List<Record> output = new LinkedList<>();
         poutp.getOutputQueue().drainTo(output);
         testenFlengine.stop();
-
-        assertEquals(output.size(), 1);
+        System.out.println(output);
+        assertEquals(output.size(), 2);
         assertEquals(output.get(0).get("sid"), 7895);
-        assertEquals(output.get(0).get("type"), Collections.singletonList("log.login"));
+        assertEquals(output.get(0).get("type"), "log.login");
     }
 
 }

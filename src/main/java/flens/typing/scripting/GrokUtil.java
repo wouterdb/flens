@@ -84,8 +84,10 @@ public class GrokUtil {
         Object min = out.remove("MINUTE");
         Object sec = out.remove("SECOND");
 
-        String tz = (String) out.remove("INT");
-        if (tz == null) {
+        Object tz = out.remove("INT");
+        if (tz instanceof Integer) {
+            tz = String.format("%+05d", tz);
+        } else if (tz == null) {
             tz = "+0000";
         }
 

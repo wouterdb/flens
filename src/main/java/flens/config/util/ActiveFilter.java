@@ -73,6 +73,7 @@ public abstract class ActiveFilter extends AbstractConfig {
 
         matcherOpts.add(new Option("type", "String", "name", "only apply to records having this type"));
         matcherOpts.add(new Option("tags", "[String]", "[]", "only apply to records having all of these tags"));
+        matcherOpts.add(new Option("matches", "String", "", "only apply to records matching the MVEL query"));
 
         matcherOpts.add(new Option("out-type", "String", "name", "type to apply to the records"));
         matcherOpts.add(new Option("out-add-tags", "[String]", "[]", "add following tags"));

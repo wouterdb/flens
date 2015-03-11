@@ -14,6 +14,9 @@ public class DefaultOverrides {
         specialOverrides.put("grep.file", "/etc/hosts");
         specialOverrides.put("http-poll.url", "http://www.google.be/");
         specialOverrides.put("metric-type-check.dir", "src/test/resources/types");
+        specialOverrides.put("log-type-check.dir", "src/test/resources/logtypes");
+       
+        specialOverrides.put("geo-ip.database", "src/test/resources/GeoLite2-City.mmdb");
     }
 
     public static String getDefaultFor(String pluginName, Option option) {
