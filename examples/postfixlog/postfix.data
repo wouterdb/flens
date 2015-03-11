@@ -1,0 +1,10 @@
+Mar 8 20:40:30 orval postfix/smtpd[25619]: connect from circuitsonline.shockmedia.nl[31.7.5.73]
+Mar 8 20:40:30 orval postfix/smtpd[25619]: D458E378D: client=circuitsonline.shockmedia.nl[31.7.5.73]
+Mar 8 20:40:30 orval postfix/cleanup[25625]: D458E378D: message-id=<322366e822892875dd0978e87d3228b7@www.circuitsonline.net>
+Mar 8 20:40:30 orval postfix/qmgr[19602]: D458E378D: from=<n6kxgl7bvr7x@circuitsonline.net>, size=21429, nrcpt=1 (queue active)
+Mar 8 20:40:30 orval postfix/smtpd[25619]: disconnect from circuitsonline.shockmedia.nl[31.7.5.73]
+Mar 8 20:40:33 orval postfix/smtp[25626]: D458E378D: to=<zoeloelip@gmail.com>, orig_to=<bart@vanbrabant.eu>, relay=gmail-smtp-in.l.google.com[74.125.22.26]:25, delay=3.1, delays=0.05/0.01/0.61/2.4, dsn=2. 0.0, status=sent (250 2.0.0 OK 1425847233 l110si16391667qgf.74 - gsmtp)
+Mar 8 20:40:33 orval postfix/qmgr[19602]: D458E378D: removed
+Mar 8 20:43:51 orval postfix/anvil[25621]: statistics: max connection rate 1/60s for (smtp:31.7.5.73) at Mar 8 20:40:30
+Mar 8 20:43:51 orval postfix/anvil[25621]: statistics: max connection count 1 for (smtp:31.7.5.73) at Mar 8 20:40:30
+Mar 8 20:43:51 orval postfix/anvil[25621]: statistics: max cache size 1 at Mar 8 20:40:30

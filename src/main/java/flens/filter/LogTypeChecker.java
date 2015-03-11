@@ -43,10 +43,9 @@ public class LogTypeChecker extends AbstractFilter {
 
     protected String dir;
     protected boolean refresh;
-    private boolean breakOnMatch;
 
     public LogTypeChecker(String name, String plugin, Matcher matcher, int prio, Tagger good, Tagger unknown,
-            LogTypesDb db, String dir, boolean refresh, boolean breakOnMatch) {
+            LogTypesDb db, String dir, boolean refresh) {
         super(name, plugin, good, matcher, prio);
         this.types = db;
         this.unknown = unknown;
@@ -101,8 +100,8 @@ public class LogTypeChecker extends AbstractFilter {
             return true;
         } else {
             // we consider newer value to be more precise, s we replace
-            in.getValues().put(name, old);
-            warn("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
+            //in.getValues().put(name, old);
+            fine("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
                     name, value, old);
             return false;
         }

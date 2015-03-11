@@ -1,0 +1,3 @@
+[syslog] 
+grok %{SYSLOGBASE} %{GREEDYDATA:message}
+mvel _grok.cleanTime();_grok.clean();source=logsource

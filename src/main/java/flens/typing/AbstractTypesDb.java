@@ -49,7 +49,11 @@ public abstract class AbstractTypesDb<T extends AbstractTypesDb<T>> implements F
 
     public void load(File file) throws Exception {
         try (InputStream in = new FileInputStream(file)) {
-            parse(new BufferedReader(new InputStreamReader(in)), file.getPath());
+            try {
+                parse(new BufferedReader(new InputStreamReader(in)), file.getPath());
+            } catch (Exception e) {
+                warn("file could not be loaded", e);
+            }
         }
     }
 
@@ -144,7 +148,9 @@ public abstract class AbstractTypesDb<T extends AbstractTypesDb<T>> implements F
     }
 
     protected abstract void addAll(T sub);
+
     protected abstract void clear();
+
     protected abstract T createSub();
 
     private synchronized void rebuild() {

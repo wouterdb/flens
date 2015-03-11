@@ -1,0 +1,87 @@
+##grok.file postfix.grok
+
+[POSTFIX_ANVIL]
+filter program~='^postfix.*/anvil$'
+grok %{POSTFIX_ANVIL}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_BOUNCE]
+filter program~='^postfix.*/bounce$'
+grok %{POSTFIX_BOUNCE}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_CLEANUP]
+filter program~='^postfix.*/cleanup$'
+grok %{POSTFIX_CLEANUP}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_DNSBLOG]
+filter program~='^postfix.*/dnsblog$'
+grok %{POSTFIX_DNSBLOG}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_LOCAL]
+filter program~='^postfix.*/local$'
+grok %{POSTFIX_LOCAL}
+mvel _grok.cleanTime();_grok.clean();
+
+
+[POSTFIX_MASTER]
+filter program~='^postfix.*/master$'
+grok %{POSTFIX_MASTER}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_PICKUP]
+filter program~='^postfix.*/pickup$'
+grok %{POSTFIX_PICKUP}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_PIPE]
+filter program~='^postfix.*/pipe$'
+grok %{POSTFIX_PIPE}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_POSTDROP]
+filter program~='^postfix.*/postdrop$'
+grok %{POSTFIX_POSTDROP}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_POSTSCREEN]
+filter program~='^postfix.*/postscreen$'
+grok %{POSTFIX_POSTSCREEN}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_QMGR]
+filter program~='^postfix.*/qmgr$'
+grok %{POSTFIX_QMGR}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_SENDMAIL]
+filter program~='^postfix.*/sendmail$'
+grok %{POSTFIX_SENDMAIL}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_SMTP]
+filter program~='^postfix.*/smtp$'
+grok %{POSTFIX_SMTP}
+mvel _grok.cleanTime();_grok.clean();_grok.splitKV(postfix_keyvalue_data,', ','=')
+
+[POSTFIX_SMTPD]
+filter program~='^postfix.*/smtpd$'
+grok %{POSTFIX_SMTPD}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_TLSMGR]
+filter program~='^postfix.*/tlsmgr$'
+grok %{POSTFIX_TLSMGR}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_TLSPROXY]
+filter program~='^postfix.*/tlsproxy$'
+grok %{POSTFIX_TLSPROXY}
+mvel _grok.cleanTime();_grok.clean();
+
+[POSTFIX_TRIVIAL_REWRITE]
+filter program~='^postfix.*/trivial-rewrite$'
+grok %{POSTFIX_TRIVIAL_REWRITE}
+mvel _grok.cleanTime();_grok.clean();

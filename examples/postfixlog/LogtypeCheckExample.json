@@ -1,0 +1,42 @@
+{
+	"input":{
+		"file-in":{
+			"file":"postfix.data",
+			"tail":"false",
+			"type":"log"
+		}
+		
+	},
+	"filter":{
+		"decoder" : {
+ 			"tags" : ["binary"],
+ 			"remove-tags" : ["binary"] 
+ 		},"json-decoder" : {
+ 			"tags" : ["json"],
+ 			"remove-tags" : ["json"]
+ 		},
+		//do the check
+		"log-type-check":{
+			 "type":"log",
+			 "add-tags":"styped",
+			 "prio":"20",
+			 "dir":"syslog.db",
+			 "refresh":"false"
+		 },
+		 "log-type-check2":{
+			 "plugin":"log-type-check",
+			 "type":"log",
+			 "tags":"styped",
+			 "add-tags":"typed",
+			 "matches":"isdef type && type=='syslog'",
+			 "unknown-add-tags":"unknown",
+			 "prio":"22",
+			 "dir":"postfixrules",
+			 "refresh":"false"
+		 }
+	},
+	"output":{
+		"system-out":{}
+	}
+	
+}

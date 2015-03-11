@@ -68,6 +68,9 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
         LogType current = null;
 
         for (String line = br.readLine(); line != null; line = br.readLine()) {
+            if (line.isEmpty()) {
+                continue;
+            }
             if (line.startsWith("##")) {
                 parseConfig(basegrok, line.substring(2));
             } else if (line.startsWith("#")) {
@@ -128,7 +131,13 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
     }
 
     private void parseConfig(Grok grok, String line) {
-        if (line.startsWith("grok.dir")) {
+        if (line.startsWith("grok.file")) {
+            try {
+                grok.addPatternFromFile(line.substring(9).trim());
+            } catch (Exception e) {
+                warn("can not read file" + line.substring(9).trim(), e);
+            }
+        } else if (line.startsWith("grok.dir")) {
 
             String dir = line.substring(8).trim();
             if (dir != null && !dir.isEmpty()) {
@@ -148,6 +157,9 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
                     }
                 }
             }
+
+        } else {
+            warn("invalid command: " + line);
 
         }
 

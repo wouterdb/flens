@@ -20,9 +20,12 @@
 
 package flens.typing.scripting;
 
+import org.joda.time.DateTime;
+import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.time.Month;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,11 +38,11 @@ public class GrokUtil {
 
     private Map<String, Object> out;
 
-    private Set<String> tags ;
+    private Set<String> tags;
 
     public GrokUtil(Map<String, Object> out, Set<String> tags) {
         this.out = out;
-        this.tags=tags;
+        this.tags = tags;
     }
 
     public void addTag(String tag) {
@@ -54,16 +57,41 @@ public class GrokUtil {
         }
     }
 
+    public void splitKV(String value, String linesep, String sep) {
+        for (String pair : value.split(linesep)) {
+            String[] kv = pair.split(sep, 2);
+            if (kv.length == 1) {
+                out.put(kv[0].trim(), "");
+            } else {
+                out.put(kv[0].trim(), kv[1].trim());
+            }
+        }
+    }
+
     public void cleanTime() {
-        out.remove("MONTH");
-        out.remove("HOUR");
-        out.remove("YEAR");
-        out.remove("MINUTE");
         out.remove("TIME");
-        out.remove("SECOND");
-        out.remove("MONTHDAY");
-        out.remove("INT");
-        out.put("time", format.parseMillis((String) out.get("timestamp")));
+        Object year = out.remove("YEAR");
+        if (year == null) {
+            year = new DateTime().getYear();
+        }
+        String month = (String) out.remove("MONTH");
+        Object day = out.remove("MONTHDAY");
+
+        Object hour = out.remove("HOUR");
+        if (hour == null) {
+            return;
+        }
+        Object min = out.remove("MINUTE");
+        Object sec = out.remove("SECOND");
+
+        String tz = (String) out.remove("INT");
+        if (tz == null) {
+            tz = "+0000";
+        }
+
+        // "dd/MMM/yyyy:HH:mm:ss Z"
+
+        out.put("time", format.parseMillis(String.format("%s/%s/%s:%s:%s:%s %s", day, month, year, hour, min, sec, tz)));
     }
 
     public Set<String> getTags() {

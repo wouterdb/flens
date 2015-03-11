@@ -56,6 +56,10 @@ public abstract class AbstractPlugin {
     protected void info(String msg,Object ... args) {
         Logger.getLogger(getClass().getName()).log(Level.INFO, msg,args);
     }
+    
+    protected void fine(String msg,Object ... args) {
+        Logger.getLogger(getClass().getName()).log(Level.FINE, msg,args);
+    }
 
     public abstract String getName();
 

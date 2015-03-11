@@ -44,13 +44,12 @@ public class LogTypeChecker extends AbstractConfig {
         Tagger unknown = readTagger("unknown-");
         String dir = get("dir", "");
         boolean refresh = getBool("refresh", false);
-        boolean breakOnMatch = getBool("breakOnMatch", true);
 
         if (dir.isEmpty()) {
             throw new UnsupportedOperationException();
         } else {
             engine.addFilter(new flens.filter.LogTypeChecker(name, plugin, matcher, prio, tagger, unknown,
-                    new LogTypesDb(dir,refresh), dir, refresh, breakOnMatch));
+                    new LogTypesDb(dir,refresh), dir, refresh));
         }
 
     }

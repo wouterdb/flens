@@ -133,9 +133,14 @@ public class LogType {
             StatsdUtil stats = new StatsdUtil(out, tags);
             out.put("_grok", groks);
             out.put("_statsd", stats);
-            MVEL.executeExpression(compiledscript, out);
+            try {
+                MVEL.executeExpression(compiledscript, out);
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "script failure", e);
+            }
 
-            out.remove("_util");
+            out.remove("_grok");
+            out.remove("_statsd");
         }
         return new LogMatch(out, tags, this);
 
