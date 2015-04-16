@@ -23,6 +23,13 @@ interface	if_octets	*		collectd.if_octets.rx,collectd.if_octets.tx	interface	byt
 interface	if_packets	*		collectd.if_packets.rx,collectd.if_packets.tx	interface	packets C 0 -
 interface	if_errors	*		collectd.if_errors.rx,collectd.if_errors.tx	interface	errors C 0 -
 #
+ipmi		fanspeed	*		collectd.fanspeed	fan	rpms G 0 -
+ipmi		current		*		collectd.power	host watt G 0 -
+ipmi		voltage		*		collectd.inputvoltage	host V G 0 -
+ipmi		temperature	*		collectd.temperature	host degreesC G 0 -
+#
+irq			irq			*		collectd.irq 		irq	interrupt	C 0 -
+#
 load		load		*		collectd.load.1m,collectd.load.5m,collectd.load.15m	host load G 0 5000
 #
 memory		memory		buffered	collectd.mem.buffered host bytes G 0 281474976710656
@@ -38,10 +45,20 @@ network		if_octets	*		collectd.net.octets.rx,collectd.net.octets.tx collectd byt
 network		if_packets	*		collectd.net.packets.rx,collectd.net.packets.tx collectd packets C 0 -
 network		queue_length *		collectd.net.queue_length collectd records C 0 -
 #
+processes	ps_state	running		collectd.os.running os processes G 0 -
+processes	ps_state	paging		collectd.os.paging os processes G 0 -
+processes	ps_state	stopped		collectd.os.stopped os processes G 0 -
+processes	ps_state	zombies		collectd.os.zombies os processes G 0 -
+processes	ps_state	blocked		collectd.os.blocked os processes G 0 -
+processes	ps_state	sleeping	collectd.os.sleeping os processes G 0 -
+processes	fork_rate	*	collectd.os.forkrate os forks C 0 -
+#
 swap		swap_io		in		collectd.swap.in host bytes C 0 -
 swap		swap_io		out		collectd.swap.out host bytes C 0 -
 swap		swap		cached	collectd.swap.cached host bytes G 0 1099511627776
 swap		swap		used	collectd.swap.used host bytes G 0 1099511627776 	 	
 swap		swap		free	collectd.swap.free host bytes G 0 1099511627776
 #
-uptime		uptime		*		collectd.uptime host	seconds G 0 4294967295	
+uptime		uptime		*		collectd.uptime host	seconds G 0 4294967295
+#
+users		users		*		collectd.os.users	os	users	C 0 -

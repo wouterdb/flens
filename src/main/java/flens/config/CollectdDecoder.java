@@ -21,8 +21,17 @@
 package flens.config;
 
 import flens.config.util.AbstractConfig;
+import flens.input.collectd.CollectdInput;
 
-public class JSonDecoder extends AbstractConfig {
+import java.util.LinkedList;
+import java.util.List;
+
+public class CollectdDecoder extends AbstractConfig {
+
+    @Override
+    protected void construct() {
+        engine.addFilter(new flens.filter.CollectdDecoder(name, plugin, tagger,matcher,prio ));
+    }
 
     @Override
     protected boolean isIn() {
@@ -30,19 +39,15 @@ public class JSonDecoder extends AbstractConfig {
     }
 
     @Override
-    protected void construct() {
-        boolean inlist = getBool("inlist", false);
-        engine.addFilter(new flens.filter.JSonDecoder(name, plugin, tagger, matcher, prio,inlist));
-    }
-
-    @Override
     protected boolean isOut() {
         return false;
     }
 
+  
+
     @Override
     public String getDescription() {
-        return "decode json messages, take input from the message field";
+        return "Decode collectd messages";
     }
 
 }

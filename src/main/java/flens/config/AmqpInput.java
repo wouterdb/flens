@@ -35,9 +35,11 @@ public class AmqpInput extends AbstractConfig {
         String user = get("user", "guest");
         String pass = get("pass", "guest");
         String exchange = get("exchange", null);
+        String exchangetype = get("exchangetype", "topic");
         String queue = get("queue", null);
         String key = get("routingKey", "*");
-        engine.addInput(new flens.input.AmqpInput(name, plugin, tagger, host, port, vhost, user, pass, exchange, queue,
+        boolean trycreatexchange = getBool("trycreateexchange", true);
+        engine.addInput(new flens.input.AmqpInput(name, plugin, tagger, host, port, vhost, user, pass, exchange,exchangetype,trycreatexchange, queue,
                 key));
     }
 
@@ -60,7 +62,10 @@ public class AmqpInput extends AbstractConfig {
         out.add(new Option("user", "String", "guest", "username"));
         out.add(new Option("pass", "String", "guest", "password"));
         out.add(new Option("exchange", "String", null, "exchange to bind to"));
+        out.add(new Option("exchangetype", "String", "topic", "exchange type use to create exchange"));
         out.add(new Option("queue", "String", null, "queue name"));
+        out.add(new Option("trycreateexchange", "boolean", "true", "try to create the exchange?"));
+
         out.add(new Option("routingKey", "String", "*", "routing key to bind queue to exchange"));
         return out;
     }

@@ -5,6 +5,7 @@
  "batching":"flens.config.BatchPlugin",
   
  "collectd-in" : "flens.config.CollectdIn",
+ "collectd-decoder" : "flens.config.CollectdDecoder",
  "cookbook":"flens.config.CookbookConfig",
  
  "decoder" : "flens.config.CharacterDecoder",

@@ -34,7 +34,7 @@ import java.util.Collection;
 
 public class TypeingTable {
 
-    protected static class Mapping {
+    public static class Mapping {
 
         public Mapping(String plugin, String type, String typeInstance, String[] names, MetricType[] otype) {
             super();

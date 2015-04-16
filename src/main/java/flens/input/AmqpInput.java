@@ -50,6 +50,8 @@ public class AmqpInput extends AbstractInput implements Consumer {
     private boolean closed;
     private boolean reconnecting = false;
     private int reconnectDelay = 10000;
+    private String exchangetype;
+    private boolean trycreateexchange;
 
     /**
      * @param name
@@ -77,7 +79,8 @@ public class AmqpInput extends AbstractInput implements Consumer {
      *            if connected to an exchange, use this as routingkey
      */
     public AmqpInput(String name, String plugin, Tagger tagger, String host, int port, String vhost, String user,
-        String pass, String exchange, String queue, String routingkey) {
+            String pass, String exchange, String exchangetype, boolean trycreateexchange, String queue,
+            String routingkey) {
         super(name, plugin, tagger);
 
         factory = new ConnectionFactory();
@@ -92,6 +95,8 @@ public class AmqpInput extends AbstractInput implements Consumer {
         this.queue = queue;
         this.exchange = exchange;
         this.key = routingkey;
+        this.exchangetype = exchangetype;
+        this.trycreateexchange = trycreateexchange;
     }
 
     @Override
@@ -116,11 +121,13 @@ public class AmqpInput extends AbstractInput implements Consumer {
             }
 
             if (exchange != null) {
-                try {
-                    // TODO add config
-                    channel.exchangeDeclare(exchange, "topic", false);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (trycreateexchange) {
+                    try {
+                        // TODO add config
+                        channel.exchangeDeclare(exchange, exchangetype, false);
+                    } catch (IOException e) {
+                        warn("could not create exchange", e);
+                    }
                 }
                 if (key != null) {
                     channel.queueBind(queue, exchange, key);
@@ -175,7 +182,7 @@ public class AmqpInput extends AbstractInput implements Consumer {
 
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
-        throws IOException {
+            throws IOException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("amqp-tag", consumerTag);
         fields.put("body", body);

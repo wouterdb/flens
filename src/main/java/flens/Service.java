@@ -41,8 +41,8 @@ public class Service {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void main(String[] args) {
         try {
-            LogManager.getLogManager().readConfiguration(
-                    Service.class.getClassLoader().getResourceAsStream("logging.properties"));
+/*            LogManager.getLogManager().readConfiguration(
+                    Service.class.getClassLoader().getResourceAsStream("logging.properties"));*/
             ConfigParser ch = new ConfigParser();
 
             Map<String, Object> myconfig = collectConfig(args[0]);

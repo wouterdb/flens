@@ -60,7 +60,7 @@ public class TestDbTest {
         GrepInput gin = new GrepInput("testinput", "grep",
                 new InputTagger("", "logs", Collections.<String>emptyList()),
                 "src/test/resources/logtypes/teststream.data", ".*", false);
-        JSonDecoder jd = new JSonDecoder("decoder", "decoder", Tagger.empty, new AllMatcher(), 5);
+        JSonDecoder jd = new JSonDecoder("decoder", "decoder", Tagger.empty, new AllMatcher(), 5,false);
         LogTypesDb db = new LogTypesDb("src/test/resources/logtypes",false);
         LogTypeChecker ltc = new LogTypeChecker("xfilter", "log-type-checker", new AllMatcher(), 14, new TypeTagger("",
                 "matched"), Tagger.empty, db, "src/test/resources/logtypes", false);
