@@ -39,7 +39,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.management.RuntimeErrorException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class AbstractConfig implements Config {

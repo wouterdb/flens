@@ -36,18 +36,23 @@ public class TypeingTable {
 
     public static class Mapping {
 
-        public Mapping(String plugin, String type, String typeInstance, String[] names, MetricType[] otype) {
+        public Mapping(String plugin, String type, String typeInstance, String[] names, MetricType[] otype,
+                boolean usetypeinstance) {
             super();
             this.plugin = plugin;
             this.type = type;
             this.typeInstance = typeInstance;
             this.names = names;
             this.otype = otype;
+
+            this.usetypeinstance = usetypeinstance;
         }
 
         public String plugin;
         public String type;
         public String typeInstance;
+
+        public boolean usetypeinstance;
 
         // for expansion
         public String[] names;
@@ -162,22 +167,23 @@ public class TypeingTable {
         super();
     }
 
-    protected void add(String plugin, String type, String typeinstance, MetricType... types) {
-        String[] names = new String[types.length];
-        for (int i = 0; i < names.length; i++) {
-            names[i] = types[i].getName();
-        }
-        mappings.put(plugin, new Mapping(plugin, type, typeinstance, names, types));
-
-    }
+    /*
+     * protected void add(String plugin, String type, String typeinstance,
+     * MetricType... types) { String[] names = new String[types.length]; for
+     * (int i = 0; i < names.length; i++) { names[i] = types[i].getName(); }
+     * mappings.put(plugin, new Mapping(plugin, type, typeinstance, names,
+     * types,false));
+     * 
+     * }
+     */
 
     protected void add(String plugin, String type, String typeinstance, String[] names, String resource, String unit,
-            MetricForm form, Number low, Number high, boolean isint) {
+            MetricForm form, Number low, Number high, boolean isint, boolean useTypeInstance) {
         MetricType[] types = new MetricType[names.length];
         for (int i = 0; i < names.length; i++) {
             types[i] = new MetricType(names[i], unit, resource, form, low, high, isint);
         }
-        mappings.put(plugin, new Mapping(plugin, type, typeinstance, names, types));
+        mappings.put(plugin, new Mapping(plugin, type, typeinstance, names, types, useTypeInstance));
 
     }
 

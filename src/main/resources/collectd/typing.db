@@ -30,6 +30,17 @@ ipmi		temperature	*		collectd.temperature	host degreesC G 0 -
 #
 irq			irq			*		collectd.irq 		irq	interrupt	C 0 -
 #
+#
+libvirt		disk_octets	+		collectd.disk_octets.read,collectd.disk_octets.write	vm.disk	bytes C 0 -
+libvirt		disk_ops	+		collectd.disk_ops.read,collectd.disk_ops.write			vm.disk	ops C 0 -
+libvirt		if_packets  +		collectd.if_packets.rx,collectd.if_packets.tx vm.interface bytes C 0 -
+libvirt		if_octets  +		collectd.if_octets.rx,collectd.if_octets.tx vm.interface bytes C 0 -
+libvirt		if_errors  +		collectd.if_errors.rx,collectd.if_errors.tx vm.interface bytes C 0 -
+libvirt		if_dropped  +		collectd.if_dropped.rx,collectd.if_dropped.tx vm.interface bytes C 0 -
+libvirt		memory		total	collectd.mem.total vm bytes G 0 281474976710656
+libvirt		virt_vcpu		+		collectd.vcpu		vm.cpu	ns C 0 -
+libvirt		virt_cpu_total		*	collectd.vcpu_total		vm.cpu	ns C 0 -
+#
 load		load		*		collectd.load.1m,collectd.load.5m,collectd.load.15m	host load G 0 5000
 #
 memory		memory		buffered	collectd.mem.buffered host bytes G 0 281474976710656

@@ -29,15 +29,20 @@ import flens.typing.MetricForm;
 public class ParseUtil {
 
     /**
-     * indicate an item that may occur, or be a wildcard ('*'). Null for empty
+     * indicate an item that may occur, or be a wildcard ('*', '+'). Null for empty
      * and wildcard.
      */
     public static String may(String in) {
-        if (in.equals("*")) {
+        if (in.equals("*") || in.equals("+")) {
             return null;
         }
         return in;
     }
+    
+    public static boolean isPlus(String in) {
+        return in.equals("+") ;
+    }
+    
 
     public static String[] list(String in) {
         return in.split(",");

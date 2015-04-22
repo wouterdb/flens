@@ -6,6 +6,7 @@ After=syslog.target
 User=root
 Group=root
 Type=simple
+WorkingDirectory=/etc/flens.d
 ExecStart=/usr/bin/java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/flens.hprof -cp /usr/share/java/flens/*:/usr/lib/jvm/java-1.7.0/lib/tools.jar flens.Service /etc/flens.d
 
 [Install]
