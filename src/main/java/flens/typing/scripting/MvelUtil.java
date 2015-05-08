@@ -18,39 +18,43 @@
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
 
-package flens.typing;
+package flens.typing.scripting;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class LogMatch {
+public class MvelUtil {
+
+    private Map<String, Object> out;
 
     private Set<String> tags;
-    private LogType owner;
-    private boolean mustcontinue;
 
-    public LogMatch(Set<String> tags, LogType owner, boolean mustcontinue) {
-        super();
-        
+    public MvelUtil(Map<String, Object> out, Set<String> tags) {
+        this.out = out;
         this.tags = tags;
-        this.owner = owner;
-        this.mustcontinue = mustcontinue;
     }
 
-   
+    public void remove(String name) {
+        out.remove(name);
+    }
+
     public Set<String> getTags() {
         return tags;
     }
 
-    public LogType getOwner() {
-        return owner;
+    public void removeNulls() {
+        List<String> badkeys = new LinkedList<>();
+        for (Map.Entry<String, Object> pair : out.entrySet()) {
+            if (pair.getValue() == null) {
+                badkeys.add(pair.getKey());
+            }
+        }
+        
+        for (String key : badkeys) {
+            out.remove(key);
+        }
     }
-
-    public boolean mustcontinue() {
-        return mustcontinue;
-    }
-
-    
-  
 
 }

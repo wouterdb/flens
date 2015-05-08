@@ -1,0 +1,44 @@
+{
+	"init":{
+  		"input" : {
+                "amqp-in":{
+                    "type" : "log",
+         			"add-tags" : ["binary","json"],
+         			"host": "stratus.cs.kuleuven.be",
+                    "port":5672,
+                    "vhost":"metrics",
+         			"exchange":"logs",
+                    "user":"metrics",
+                    "pass":"88qxSW7byootRfCLyudo",
+                    "trycreateexchange":false
+               }
+         },"filter" : {
+                "decoder" : {
+                   	"tags" : ["binary"],
+                   	"remove-tags" : ["binary"],
+                   	"prio": -10
+				},"json-decoder" : { 
+                  	"tags" : ["json"],
+                    "remove-tags" : ["json"],
+                    "prio": -9
+                },"log-type-check":{
+			 		"type":"log",
+			 		"add-tags":"typed",
+			 		"unknown-add-tags":"unknown",
+			 		"prio":"22",
+			 		"dir":".",
+			 		"refresh":"true"
+		 		}
+         }, "output":{
+                "system-out":{"type":"log"},
+                "elasticsearch":{
+ 					"host":"stratus.cs.kuleuven.be",
+ 					"port":9301,
+ 					"type" : "log",
+ 					"exclude-fields":["body","amqp-tag"]
+ 				}
+            }
+
+	}
+	
+}

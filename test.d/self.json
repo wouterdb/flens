@@ -1,0 +1,20 @@
+{
+	"name":"esperserver",
+	"tags":{},
+	"init":{
+	
+	"input":{
+        "self" : {
+            "type":"self",
+            "interval":1000
+        }
+    },"output":{
+		
+		"system-out-self":{
+		    "matches":"isdef metric && metric.contains('size') && value > 0",
+			"plugin":"system-out",
+			"type":"self"
+		}
+	}
+	}
+}

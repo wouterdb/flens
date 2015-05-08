@@ -1,0 +1,3 @@
+[os.heat]
+filter tags=='heat'
+mvel _es.cleanTime();_es.clean(); source=host.substring(0,host.length-1); message=msg ; _.remove("msg");  _.remove("host"); _.removeNulls();

@@ -101,6 +101,8 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
                     addExpressions(current, parts[1]);
                 } else if (parts[0].equals("mvel")) {
                     addScript(current, parts[1]);
+                } else if (parts[0].equals("continue")) {
+                    current.setContinue();
                 } else {
                     warn("unknown line in types db: " + filename + " " + line);
                 }

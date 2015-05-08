@@ -61,50 +61,50 @@ public class LogTypeChecker extends AbstractFilter {
     public Collection<Record> process(Record in) {
         if (in.isLog()) {
             LogMatch adding = null;
+            boolean known = false;
             for (LogType lt : types.getAll()) {
                 adding = lt.match(in);
                 if (adding != null) {
-                    break;
+                    known = true;
+                    
+                    in.getValues().put(Constants.TYPE, adding.getOwner().getName());
+                    in.getTags().addAll(adding.getTags());
+                    
+                    if (!adding.mustcontinue()) {
+                        break;
+                    }
                 }
             }
 
-            if (adding == null) {
+            if (!known) {
                 unknown.adapt(in);
             } else {
-                safemerge(in, adding);
                 tag(in);
             }
         }
         return Collections.emptyList();
     }
 
-    private void safemerge(Record in, LogMatch match) {
-
-        Map<String, Object> parts = match.getValues();
-        for (String key : parts.keySet()) {
-            Object value = parts.get(key);
-            safeset(match.getOwner(), in, key, value);
-        }
-
-        in.getValues().put(Constants.TYPE, match.getOwner().getName());
-        in.getTags().addAll(match.getTags());
-
-    }
-
-    private boolean safeset(LogType logType, Record in, String name, Object value) {
-        Object old = in.getValues().put(name, value);
-        if (old == null) {
-            return true;
-        }
-        if (value.equals(old)) {
-            return true;
-        } else {
-            // we consider newer value to be more precise, s we replace
-            //in.getValues().put(name, old);
-            fine("colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}", logType.getName(),
-                    name, value, old);
-            return false;
-        }
-
-    }
+    /*
+     * private void safemerge(Record in, LogMatch match) {
+     * 
+     * Map<String, Object> parts = match.getValues(); for (String key :
+     * parts.keySet()) { Object value = parts.get(key);
+     * safeset(match.getOwner(), in, key, value); }
+     * 
+     * in.getValues().put(Constants.TYPE, match.getOwner().getName());
+     * in.getTags().addAll(match.getTags());
+     * 
+     * }
+     * 
+     * private boolean safeset(LogType logType, Record in, String name, Object
+     * value) { Object old = in.getValues().put(name, value); if (old == null) {
+     * return true; } if (value.equals(old)) { return true; } else { // we
+     * consider newer value to be more precise, s we replace //
+     * in.getValues().put(name, old); fine(
+     * "colliding pattern match: rule named {0} attempts to set {1} to {2} but was {3}"
+     * , logType.getName(), name, value, old); return false; }
+     * 
+     * }
+     */
 }
