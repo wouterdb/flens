@@ -26,10 +26,7 @@ import static org.junit.Assert.assertThat;
 import flens.core.ConfigBuilder;
 import flens.core.Flengine;
 import flens.core.Record;
-import flens.core.util.AllMatcher;
 import flens.core.util.StandardMatcher;
-import flens.core.util.TypeTagger;
-import flens.input.util.InputQueueExposer;
 import flens.output.util.OutputQueueExposer;
 
 import org.junit.Test;
@@ -49,7 +46,8 @@ public class LogTyperTest {
         cb.run();
         Flengine fl = cb.getEngine();
        
-        OutputQueueExposer opq = new OutputQueueExposer(new StandardMatcher("log",Collections.singletonList("typed")), "out");
+        OutputQueueExposer opq = new OutputQueueExposer(
+                new StandardMatcher("log",Collections.singletonList("typed")), "out");
         fl.addOutput(opq); 
         
         fl.start();

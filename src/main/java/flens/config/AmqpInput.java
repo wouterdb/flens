@@ -39,8 +39,11 @@ public class AmqpInput extends AbstractConfig {
         String queue = get("queue", null);
         String key = get("routingKey", "*");
         boolean trycreatexchange = getBool("trycreateexchange", true);
-        engine.addInput(new flens.input.AmqpInput(name, plugin, tagger, host, port, vhost, user, pass, exchange,exchangetype,trycreatexchange, queue,
-                key));
+        engine.addInput(
+                new flens.input.AmqpInput(
+                        name, plugin, tagger,
+                        host, port, vhost, user, pass, 
+                        exchange,exchangetype,trycreatexchange, queue, key));
     }
 
     @Override

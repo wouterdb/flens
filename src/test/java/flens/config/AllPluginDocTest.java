@@ -29,6 +29,7 @@ import flens.core.Config;
 import flens.core.Config.Option;
 import flens.core.Flengine;
 import flens.core.PluginRepo;
+import flens.test.util.DefaultOverrides;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,8 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,9 +86,10 @@ public class AllPluginDocTest {
     static PluginRepo pr = new PluginRepo();
 
     @Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> data() {
+    public static Iterable<Object[]> data() throws FileNotFoundException {
         List<Object[]> out = new LinkedList<>();
-        for (String name : pr.names()) {
+        PluginRepo limitedpr = new PluginRepo(new File("src/main/resources/plugins.json"));
+        for (String name : limitedpr.names()) {
             out.add(new Object[] { name });
         }
         return out;
@@ -107,6 +111,7 @@ public class AllPluginDocTest {
         ArgumentCollector ac = new ArgumentCollector(plugin);
         when(mockmap.get(anyString())).thenAnswer(ac);
         when(mockmap.remove(anyString())).thenAnswer(ac);
+        when(mockmap.isEmpty()).thenReturn(true);
 
         Flengine mocke = mock(Flengine.class);
         when(mocke.getPluginRepo()).thenReturn(pr);

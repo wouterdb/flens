@@ -62,8 +62,8 @@ public class FileInput extends AbstractActiveInput {
 
     @Override
     public void run() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(file)));
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(file)))) {
+           
 
             while (br.ready()) {
                 handle(br.readLine());

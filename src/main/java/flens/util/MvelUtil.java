@@ -25,18 +25,11 @@ import flens.typing.MetricType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.mvel2.Macro;
 import org.mvel2.ParserContext;
-import org.mvel2.ast.ASTNode;
-import org.mvel2.integration.*;
 import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MvelUtil {
 

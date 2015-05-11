@@ -20,7 +20,7 @@
 
 package flens.input.collectd;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 

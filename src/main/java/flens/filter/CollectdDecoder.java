@@ -20,18 +20,13 @@
 
 package flens.filter;
 
-import flens.core.Constants;
 import flens.core.Matcher;
 import flens.core.Record;
 import flens.core.Tagger;
 import flens.filter.util.AbstractFilter;
-import flens.input.collectd.CollectdConstants;
 import flens.input.collectd.CollectdTypeingTable;
-import flens.input.collectd.TypeingTable.Mapping;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CollectdDecoder extends AbstractFilter {

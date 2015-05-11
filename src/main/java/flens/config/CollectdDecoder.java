@@ -21,10 +21,6 @@
 package flens.config;
 
 import flens.config.util.AbstractConfig;
-import flens.input.collectd.CollectdInput;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class CollectdDecoder extends AbstractConfig {
 

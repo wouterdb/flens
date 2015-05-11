@@ -21,14 +21,10 @@
 package flens.typing.scripting;
 
 import org.joda.time.DateTime;
-import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.time.Month;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,6 +53,7 @@ public class GrokUtil {
         }
     }
 
+  //CHECKSTYLE:OFF
     public void splitKV(String value, String linesep, String sep) {
         for (String pair : value.split(linesep)) {
             String[] kv = pair.split(sep, 2);
@@ -67,6 +64,7 @@ public class GrokUtil {
             }
         }
     }
+  //CHECKSTYLE:ON
 
     public void cleanTime() {
         out.remove("TIME");
@@ -93,7 +91,8 @@ public class GrokUtil {
 
         // "dd/MMM/yyyy:HH:mm:ss Z"
 
-        out.put("time", format.parseMillis(String.format("%s/%s/%s:%s:%s:%s %s", day, month, year, hour, min, sec, tz)));
+        out.put("time",
+                format.parseMillis(String.format("%s/%s/%s:%s:%s:%s %s", day, month, year, hour, min, sec, tz)));
     }
 
     public Set<String> getTags() {

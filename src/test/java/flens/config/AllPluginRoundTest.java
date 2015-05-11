@@ -20,9 +20,12 @@
 
 package flens.config;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import flens.core.Config;
 import flens.core.Config.Option;
@@ -33,6 +36,7 @@ import flens.core.Output;
 import flens.core.Plugin;
 import flens.core.PluginRepo;
 import flens.core.QueryHandler;
+import flens.test.util.DefaultOverrides;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,6 +45,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.ArgumentCaptor;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,12 +58,12 @@ public class AllPluginRoundTest {
     static PluginRepo pr = new PluginRepo();
 
     @Parameters(name = "{index}: {0}")
-    public static Iterable<Object[]> data() {
+    public static Iterable<Object[]> data() throws FileNotFoundException {
         List<Object[]> out = new LinkedList<>();
-        for (String name : pr.names()) {
+        PluginRepo limitedpr = new PluginRepo(new File("src/main/resources/plugins.json"));
+        for (String name : limitedpr.names()) {
             out.add(new Object[] { name });
         }
-        //out.add(new Object[] { "metric-type-check" });
         return out;
     }
 

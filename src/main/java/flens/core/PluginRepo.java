@@ -24,6 +24,9 @@ import flens.core.Config.Option;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -43,7 +46,8 @@ public class PluginRepo {
     private Map<String, Config> processed = new HashMap<String, Config>();
 
     /**
-     * Initialise the plugin repo, load config from all plugins.json in the classpath
+     * Initialise the plugin repo, load config from all plugins.json in the
+     * classpath
      */
     public PluginRepo() {
         List<URL> configs;
@@ -55,6 +59,16 @@ public class PluginRepo {
         } catch (IOException e) {
             throw new Error("IOEXception via classloader, this should NOT occur", e);
         }
+
+    }
+
+    /**
+     * Initialise the plugin repo, load config a specific plugins.json
+     * @throws FileNotFoundException 
+     */
+    public PluginRepo(File file) throws FileNotFoundException {
+
+        load(new FileInputStream(file));
 
     }
 

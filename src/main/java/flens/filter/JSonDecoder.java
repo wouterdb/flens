@@ -43,7 +43,7 @@ public class JSonDecoder extends AbstractFilter {
     public JSonDecoder(String name, String plugin, Tagger tagger, Matcher matcher, int prio, boolean inlist) {
         super(name, plugin, tagger, matcher, prio);
         decoder = (new GsonBuilder()).serializeSpecialFloatingPointValues().create();
-        this.inlist=inlist;
+        this.inlist = inlist;
     }
 
     @SuppressWarnings("unchecked")
@@ -51,29 +51,27 @@ public class JSonDecoder extends AbstractFilter {
     public Collection<Record> process(Record in) {
         // TODO config
         try {
-            if(inlist){
+            if (inlist) {
                 List<Map<String, Object>> values = decoder.fromJson((String) in.get("message"), List.class);
-                if(values.size()>1){
+                if (values.size() > 1) {
                     warn("multiple records in single json message, may produce unexpected behavior");
                     in.getValues().putAll(values.get(0));
                     tag(in);
-                    
+
                     List<Record> out = new LinkedList<Record>();
                     for (int i = 1; i < values.size(); i++) {
-                        
+
                         out.add(tag(Record.createWithValues(values.get(i))));
                     }
-                    
+
                     return out;
-                }else{
+                } else {
                     in.getValues().putAll(values.get(0));
                     tag(in);
                     return Collections.emptyList();
                 }
-                
-                
-                
-            }else{
+
+            } else {
                 Map<String, Object> values = decoder.fromJson((String) in.get("message"), HashMap.class);
                 if (values != null) {
                     in.getValues().putAll(values);
@@ -81,12 +79,13 @@ public class JSonDecoder extends AbstractFilter {
                 tag(in);
                 return Collections.emptyList();
             }
-            
-           
+
         } catch (Exception e) {
-            warn("could not parse json {0}",((String) in.get("message")).replace("\n", " ") );
+            warn("could not parse json {0}", ((String) in.get("message")).replace("\n", " "));
             return Collections.emptyList();
         }
     }
 
+    
+    
 }

@@ -20,7 +20,7 @@
 
 package flens.filter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import flens.core.Flengine;
 import flens.core.PluginRepo;
@@ -34,7 +34,6 @@ import flens.input.GrepInput;
 import flens.output.util.OutputQueueExposer;
 import flens.typing.LogTypesDb;
 
-
 import org.junit.Test;
 
 import java.util.Collections;
@@ -45,13 +44,13 @@ public class TestDbTest {
 
     @Test
     public void test() throws Exception {
-        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",false);
+        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes", false);
         assertEquals(ltdb.getAll().size(), 2);
     }
-    
+
     @Test
     public void testrefresh() throws Exception {
-        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes",true);
+        LogTypesDb ltdb = new LogTypesDb("src/test/resources/logtypes", true);
         assertEquals(ltdb.getAll().size(), 2);
     }
 
@@ -60,8 +59,8 @@ public class TestDbTest {
         GrepInput gin = new GrepInput("testinput", "grep",
                 new InputTagger("", "logs", Collections.<String>emptyList()),
                 "src/test/resources/logtypes/teststream.data", ".*", false);
-        JSonDecoder jd = new JSonDecoder("decoder", "decoder", Tagger.empty, new AllMatcher(), 5,false);
-        LogTypesDb db = new LogTypesDb("src/test/resources/logtypes",false);
+        JSonDecoder jd = new JSonDecoder("decoder", "decoder", Tagger.empty, new AllMatcher(), 5, false);
+        LogTypesDb db = new LogTypesDb("src/test/resources/logtypes", false);
         LogTypeChecker ltc = new LogTypeChecker("xfilter", "log-type-checker", new AllMatcher(), 14, new TypeTagger("",
                 "matched"), Tagger.empty, db, "src/test/resources/logtypes", false);
         OutputQueueExposer poutp = new OutputQueueExposer(new StandardMatcher("matched",
@@ -75,10 +74,13 @@ public class TestDbTest {
         testenFlengine.addOutput(poutp);
 
         testenFlengine.start();
-        Thread.sleep(100);
+        while (gin.getRecordsSent() < 5) {
+            Thread.sleep(10);
+        }
+
+        testenFlengine.stop(false);
         List<Record> output = new LinkedList<>();
         poutp.getOutputQueue().drainTo(output);
-        testenFlengine.stop();
         System.out.println(output);
         assertEquals(output.size(), 2);
         assertEquals(output.get(0).get("sid"), 7895);

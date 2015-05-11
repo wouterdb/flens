@@ -38,8 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GeoIPFilter extends AbstractFilter {
-    private Map<String, String> pairs = new HashMap<>();
+public class GeoIpFilter extends AbstractFilter {
     private String field;
     private String outfield;
     private String database;
@@ -67,7 +66,7 @@ public class GeoIPFilter extends AbstractFilter {
      *              could not load geoip database
      */
 
-    public GeoIPFilter(String name, String plugin, Tagger tagger, Matcher matcher, int prio, String infield,
+    public GeoIpFilter(String name, String plugin, Tagger tagger, Matcher matcher, int prio, String infield,
             String outfield, String dbfile) throws IOException {
         super(name, plugin, tagger, matcher, prio);
         this.field = infield;

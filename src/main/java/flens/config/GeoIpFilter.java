@@ -24,23 +24,21 @@ import flens.config.util.AbstractConfig;
 import flens.core.Config;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GeoIPFilter extends AbstractConfig {
+public class GeoIpFilter extends AbstractConfig {
     protected boolean isIn() {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     protected void construct() {
         String from = get("from-field", "source");
         String to = get("to-field", "geoip");
         String db = get("database", "");
 
         try {
-            this.engine.addFilter(new flens.filter.GeoIPFilter(this.name, plugin, this.tagger, this.matcher, prio,
+            this.engine.addFilter(new flens.filter.GeoIpFilter(this.name, plugin, this.tagger, this.matcher, prio,
                     from, to, db));
         } catch (IOException e) {
             warn("GeoIP plugin not started", e);

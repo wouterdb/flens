@@ -20,10 +20,6 @@
 
 package flens.input.collectd;
 
-import flens.core.Constants;
-import flens.core.Record;
-import flens.input.collectd.TypeingTable.Mapping;
-
 import static flens.util.ParseUtil.bool;
 import static flens.util.ParseUtil.form;
 import static flens.util.ParseUtil.isPlus;
@@ -31,6 +27,9 @@ import static flens.util.ParseUtil.list;
 import static flens.util.ParseUtil.may;
 import static flens.util.ParseUtil.nrHigh;
 import static flens.util.ParseUtil.nrLow;
+
+import flens.core.Constants;
+import flens.core.Record;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

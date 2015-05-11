@@ -1,4 +1,4 @@
-package flens.config;
+package flens.test.util;
 
 import flens.core.Config.Option;
 

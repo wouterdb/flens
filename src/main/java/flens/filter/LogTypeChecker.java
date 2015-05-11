@@ -29,15 +29,8 @@ import flens.typing.LogMatch;
 import flens.typing.LogType;
 import flens.typing.LogTypesDb;
 
-import oi.thekraken.grok.api.Match;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class LogTypeChecker extends AbstractFilter {
 

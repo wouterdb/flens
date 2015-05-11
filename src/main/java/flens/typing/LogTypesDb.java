@@ -20,7 +20,6 @@
 
 package flens.typing;
 
-import static flens.util.ParseUtil.may;
 
 import flens.util.GrokUtil;
 
@@ -172,7 +171,7 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
         typesm.put(metricType.getName(), metricType);
     }
 
-    private LogType get(String name) {
+   /* private LogType get(String name) {
         LogType out = typesm.get(name);
         if (out == null) {
             out = new LogType(name);
@@ -180,7 +179,7 @@ public class LogTypesDb extends AbstractTypesDb<LogTypesDb> {
 
         }
         return out;
-    }
+    }*/
 
     public List<LogType> getAll() {
         return types;

@@ -1,7 +1,5 @@
 package flens.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
@@ -30,9 +28,9 @@ import java.util.logging.LogRecord;
 public class SingleLineFormatter extends Formatter {
 
     private final Date dat = new Date();
-    
+
     public synchronized String format(LogRecord record) {
-        //based on SimpleFormatter
+        // based on SimpleFormatter
         dat.setTime(record.getMillis());
         String source;
         if (record.getSourceClassName() != null) {
@@ -52,10 +50,10 @@ public class SingleLineFormatter extends Formatter {
             record.getThrown().printStackTrace(pw);
             pw.close();
             throwable = sw.toString().replace("\n", ",");
-            throwable = throwable.substring(0,throwable.length()-2)+"]";
-            
+            throwable = throwable.substring(0, throwable.length() - 2) + "]";
+
         }
-        return String.format("%tQ %s %s %s %s %s%n", dat, record.getLoggerName(), source,  record.getLevel().getName(),
+        return String.format("%tQ %s %s %s %s %s%n", dat, record.getLoggerName(), source, record.getLevel().getName(),
                 message, throwable);
     }
 }

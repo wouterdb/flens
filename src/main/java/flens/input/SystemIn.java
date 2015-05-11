@@ -24,7 +24,6 @@ import flens.core.Record;
 import flens.core.Tagger;
 import flens.input.util.AbstractActiveInput;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;

@@ -82,7 +82,7 @@ public class LZ4Test{
 
         testenFlengine.start();
         pinp.join();
-        Thread.sleep(1000);
+        
         testenFlengine.stop();
 
         System.out.println(pinp.getRecordsSent());

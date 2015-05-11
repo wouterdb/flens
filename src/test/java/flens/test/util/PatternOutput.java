@@ -20,7 +20,7 @@
 
 package flens.test.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import flens.core.Constants;
 import flens.core.Flengine;

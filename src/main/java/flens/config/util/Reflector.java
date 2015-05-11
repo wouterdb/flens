@@ -23,6 +23,8 @@ package flens.config.util;
 import flens.core.Config;
 import flens.core.Config.Option;
 
+import org.mvel2.templates.CompiledTemplate;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,14 +68,19 @@ public class Reflector {
 
                     Option opt = optmap.get(f.getName());
                     if (opt != null) {
-                        assertPremissable(object);
-                        out.put(f.getName(), object);
+                        Object serialised = serializeOverride(object);
+                        if (serialised != null) {
+                            out.put(f.getName(), serialised);
+                        } else {
+                            assertPremissable(object);
+                            out.put(f.getName(), object);
+                        }
                     }
                 }
 
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new IllegalStateException("bad config description", e);
+            throw new IllegalStateException("bad config description for " + tostore, e);
         }
         return out;
     }
@@ -100,6 +107,16 @@ public class Reflector {
             }
         }
 
+    }
+
+    private static Object serializeOverride(Object object) {
+        if (object == null) {
+            return null;
+        }
+        if (object instanceof CompiledTemplate) {
+            return new String(((CompiledTemplate) object).getTemplate());
+        }
+        return null;
     }
 
     private static List<Field> getFields(Class<? extends Object> class1) {

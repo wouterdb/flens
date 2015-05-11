@@ -1,13 +1,9 @@
 package flens.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.Map;
 import java.util.logging.Formatter;
-import java.util.logging.Level;
 /*
  *
  *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet

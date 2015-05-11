@@ -63,9 +63,10 @@ public class LogTypeChecker extends AbstractConfig {
     public List<Option> getOptions() {
         List<Option> out = new LinkedList<Option>(super.getOptions());
         out.add(new Option("unknown-add-tags", "[String]", "[]", "add following tags to records with unknown type"));
-        out.add(new Option("unknown-remove-tags", "[String]", "[]", "add following tags from records with unknown type"));
-        out.add(new Option("unknown-set-type", "String", "", "add following type to records with unknown type"));
-
+        out.add(new Option("unknown-remove-tags", "[String]", "[]", 
+                "add following tags from records with unknown type"));
+        out.add(new Option("unknown-set-type", "String", "", 
+                "add following type to records with unknown type"));
         out.add(new Option("dir", "String", "", "directory to from which to read .db files"));
         out.add(new Option("refresh", "boolean", "false", "scan for file updates continuously"));
        

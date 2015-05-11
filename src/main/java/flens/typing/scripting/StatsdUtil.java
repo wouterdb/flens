@@ -20,18 +20,12 @@
 
 package flens.typing.scripting;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class StatsdUtil {
-
-    private static DateTimeFormatter format = DateTimeFormat.forPattern("dd/MMM/yyyy:HH:mm:ss Z");
 
     private Map<String, Object> out;
 

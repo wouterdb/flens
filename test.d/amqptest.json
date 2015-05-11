@@ -35,8 +35,12 @@
  					"host":"stratus.cs.kuleuven.be",
  					"port":9301,
  					"type" : "log",
- 					"exclude-fields":["body","amqp-tag"]
- 				}
+ 					"exclude-fields":["body","amqp-tag","statsd", "args"]
+ 				},"statsd-out":{
+ 					"type":"log",
+ 					"tags":"statsd",
+ 					"metric":"@foreach{stat : statsd}@{stat}@end{'; '}"
+ 				  }
             }
 
 	}

@@ -20,14 +20,9 @@
 
 package flens.typing.scripting;
 
-import org.joda.time.DateTime;
-import org.joda.time.Months;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import java.time.Month;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

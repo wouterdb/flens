@@ -20,7 +20,8 @@
 
 package flens.input;
 
-import static flens.core.Constants.*;
+import static flens.core.Constants.MESSAGE;
+import static flens.core.Constants.TIME;
 
 import flens.core.Record;
 import flens.input.util.InputQueueExposer;
