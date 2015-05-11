@@ -116,6 +116,10 @@ public class Reflector {
         if (object instanceof CompiledTemplate) {
             return new String(((CompiledTemplate) object).getTemplate());
         }
+        
+        if (object instanceof String[]) {
+            return Arrays.asList((String[])object);
+        }
         return null;
     }
 
