@@ -105,7 +105,6 @@ public class AllPluginDocTest {
 
     @Test
     public void testAll() {
-
         @SuppressWarnings("unchecked")
         Map<String, Object> mockmap = mock(Map.class);
         ArgumentCollector ac = new ArgumentCollector(plugin);

@@ -64,7 +64,8 @@ public class PluginRepo {
 
     /**
      * Initialise the plugin repo, load config a specific plugins.json
-     * @throws FileNotFoundException 
+     * 
+     * @throws FileNotFoundException
      */
     public PluginRepo(File file) throws FileNotFoundException {
 
@@ -74,7 +75,10 @@ public class PluginRepo {
 
     @SuppressWarnings("unchecked")
     private void load(InputStream in) {
-        this.raw.putAll(gson.fromJson(new InputStreamReader(in), HashMap.class));
+        Map inm = gson.fromJson(new InputStreamReader(in), HashMap.class);
+        if (inm != null) {
+            this.raw.putAll(inm);
+        }
     }
 
     /**

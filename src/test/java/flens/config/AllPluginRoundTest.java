@@ -85,7 +85,7 @@ public class AllPluginRoundTest {
         if (config1.equals(defaults)) {
             return;
         }
-        
+
         Map<String, Object> config2 = configRoundTrip(config1);
         assertThat(config2, equalTo(config1));
 
@@ -95,6 +95,7 @@ public class AllPluginRoundTest {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> configRoundTrip(Map<String, Object> defaults) {
+
         Flengine mocke = mock(Flengine.class);
         when(mocke.getPluginRepo()).thenReturn(pr);
         plugin.readConfigPart(pluginName, new HashMap<>(defaults), mocke);
