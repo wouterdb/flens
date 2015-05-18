@@ -1,6 +1,6 @@
 /*
  *
- *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
+ *     Copyright 2013-2015 KU Leuven Research and Development - iMinds - Distrinet
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-
 package flens.test.util;
 
 import static org.junit.Assert.assertEquals;
@@ -91,8 +90,14 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
         }
 
         for (Pair<Long, Record> rec : que) {
-            System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME) + "\t"
+            if (rec.getValue().isLog()){
+                System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME) + "\t"
                     + rec.getValue().getValues().get("message"));
+            } else{
+                System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME) + "\t"
+                        + rec.getValue().getValues().get("metric") + "\t" + rec.getValue().getValues().get("value"));
+            }
+                
         }
 
         for (Pattern p : sequence) {

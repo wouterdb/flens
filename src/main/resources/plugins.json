@@ -49,6 +49,7 @@
  "socket-out":"flens.config.SocketOutput",
  "spec":"flens.config.SpecInput",
  "statsd-out" : "flens.config.StatsdOut",
+ "statsd-server" : "flens.config.StatsdServer",
  "system-in" : "flens.config.SystemIn",
  "system-out" : "flens.config.SystemOut",
  

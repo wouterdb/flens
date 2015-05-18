@@ -1,6 +1,6 @@
 /*
  *
- *     Copyright 2013 KU Leuven Research and Development - iMinds - Distrinet
+ *     Copyright 2013-2015 KU Leuven Research and Development - iMinds - Distrinet
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
-
 package flens.core;
 
 import flens.typing.MetricForm;

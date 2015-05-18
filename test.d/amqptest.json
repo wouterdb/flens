@@ -28,19 +28,18 @@
 			 		"prio":"22",
 			 		"dir":".",
 			 		"refresh":"true"
+		 		},"statsd-server":{
+		 			"type":"log",
+		 			"tags":"statsd",
+		 			"out-type":"statsd",
+		 			"interval":1000
 		 		}
          }, "output":{
-                "system-out":{"type":"log"},
-                "elasticsearch":{
- 					"host":"stratus.cs.kuleuven.be",
- 					"port":9301,
- 					"type" : "log",
- 					"exclude-fields":["body","amqp-tag","statsd", "args"]
- 				},"statsd-out":{
- 					"type":"log",
- 					"tags":"statsd",
- 					"metric":"@foreach{stat : statsd}@{stat}@end{'; '}"
- 				  }
+                "system-out":{"type":"statsd"},
+                "raw-output":{
+                   "plugin":"system-out",
+                   "type":"log"
+                 }
             }
 
 	}
