@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+        
 package flens.output.util;
 
 import flens.core.Matcher;
@@ -59,6 +60,12 @@ public abstract class AbstractPeriodicOutput extends AbstractPumpOutput {
         restartTimer();
     }
 
+    @Override
+    public void stop() {
+        tt.cancel();
+        super.stop();
+    }
+    
     protected synchronized void restartTimer() {
         if (tt != null) {
             tt.cancel();

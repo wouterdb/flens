@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+
 package flens.test.util;
 
 import static org.junit.Assert.assertEquals;
@@ -90,14 +91,14 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
         }
 
         for (Pair<Long, Record> rec : que) {
-            if (rec.getValue().isLog()){
+            if (rec.getValue().isLog()) {
                 System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME) + "\t"
-                    + rec.getValue().getValues().get("message"));
-            } else{
+                        + rec.getValue().getValues().get("message"));
+            } else {
                 System.out.println(rec.getKey() + "\t" + rec.getValue().getValues().get(Constants.TIME) + "\t"
                         + rec.getValue().getValues().get("metric") + "\t" + rec.getValue().getValues().get("value"));
             }
-                
+
         }
 
         for (Pattern p : sequence) {
@@ -137,8 +138,8 @@ public class PatternOutput extends AbstractPumpOutput implements Output, Pattern
 
                 if (!(Math.abs(p.msgrate - rate) < deltarate)) {
                     System.out.println(String.format(
-                            "rate change at packet %d (pattern offset=%d) to %f (expected %f)",
-                            index,current, rate, p.msgrate));
+                            "rate change at packet %d (pattern offset=%d) to %f (expected %f)", index, current, rate,
+                            p.msgrate));
                     break;
                 }
 

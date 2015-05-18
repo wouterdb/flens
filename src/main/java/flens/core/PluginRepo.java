@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+        
 package flens.core;
 
 import flens.core.Config.Option;
@@ -72,7 +73,7 @@ public class PluginRepo {
 
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void load(InputStream in) {
         Map inm = gson.fromJson(new InputStreamReader(in), HashMap.class);
         if (inm != null) {

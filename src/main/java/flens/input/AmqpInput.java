@@ -17,6 +17,7 @@
  *     Administrative Contact: dnet-project-office@cs.kuleuven.be
  *     Technical Contact: wouter.deborger@cs.kuleuven.be
  */
+        
 package flens.input;
 
 import flens.core.Record;
@@ -181,7 +182,7 @@ public class AmqpInput extends AbstractInput implements Consumer {
 
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
-            throws IOException {
+        throws IOException {
         Map<String, Object> fields = new HashMap<String, Object>();
         fields.put("amqp-tag", consumerTag);
         fields.put("body", body);
